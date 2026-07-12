@@ -46,8 +46,8 @@ Use this skill when modifying or expanding the iBod One-Page video editing agenc
 * Label `.section-tag` has a solid black background (`#000000`), rounded pill shape, blue border, and blue text.
 
 ## Production & Deployment Branch
-* The official production branch connected to Cloudflare is **`master`**.
-* Ensure you push commits to the `master` branch to trigger live deploys.
+* The official production branch connected to Cloudflare is **`main`**.
+* Ensure you push commits to the `main` branch to trigger live deploys.
 
 ## Rule Guidelines
 - Do NOT insert native `scroll-behavior` rules.

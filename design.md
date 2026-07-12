@@ -69,8 +69,8 @@ El sitio web utiliza Google Fonts para cargar fuentes geométricas y limpias:
 ---
 
 ## 5. Rama de Producción & Despliegues
-* **Rama Principal**: La rama oficial de producción para los despliegues automáticos en Cloudflare es **`master`**.
-* **Despliegue**: Asegúrate de estar en la rama `master` y ejecutar `git push origin master` para lanzar cualquier cambio probado a producción.
+* **Rama Principal**: La rama oficial de producción para los despliegues automáticos en Cloudflare es **`main`**.
+* **Despliegue**: Asegúrate de estar en la rama `master` y ejecutar `git push origin main` para lanzar cualquier cambio probado a producción.
 
 ## 5. Reglas para Futuras Modificaciones
 
