@@ -449,4 +449,27 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  /* ==========================================================================
+     10. OCULTAR/MOSTRAR NAVBAR AL HACER SCROLL (AUTO-HIDE NAVBAR ON SCROLL)
+     ========================================================================== */
+  const navbar = document.querySelector('.navbar');
+  let lastScrollY = window.scrollY || window.pageYOffset;
+
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY || window.pageYOffset;
+    
+    // Si el menú móvil está abierto, no ocultamos la barra
+    const isMobileMenuOpen = mobileMenu && mobileMenu.classList.contains('active');
+    
+    if (currentScrollY > lastScrollY && currentScrollY > 150 && !isMobileMenuOpen) {
+      // Deslizando hacia abajo: Ocultar
+      navbar.classList.add('nav-hidden');
+    } else if (currentScrollY < lastScrollY) {
+      // Deslizando hacia arriba: Mostrar
+      navbar.classList.remove('nav-hidden');
+    }
+    
+    lastScrollY = currentScrollY;
+  });
 });

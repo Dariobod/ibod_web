@@ -196,6 +196,12 @@ body {
   align-items: center;
 }
 
+.navbar.nav-hidden {
+  transform: translate(-50%, -120px) scale(0.95);
+  opacity: 0;
+  pointer-events: none;
+}
+
 .navbar-container {
   display: flex;
   align-items: center;
