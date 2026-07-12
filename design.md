@@ -68,6 +68,10 @@ El sitio web utiliza Google Fonts para cargar fuentes geométricas y limpias:
 
 ---
 
+## 5. Rama de Producción & Despliegues
+* **Rama Principal**: La rama oficial de producción para los despliegues automáticos en Cloudflare es **`master`**.
+* **Despliegue**: Asegúrate de estar en la rama `master` y ejecutar `git push origin master` para lanzar cualquier cambio probado a producción.
+
 ## 5. Reglas para Futuras Modificaciones
 
 1. **Evitar Reflows en Scroll**: No utilices `getBoundingClientRect()` dentro del listener de scroll global. Lee en su lugar propiedades directas (`window.scrollY`) u offsets precalculados.
