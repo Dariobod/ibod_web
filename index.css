@@ -184,7 +184,7 @@ body {
   width: max-content;
   max-width: 90%;
   z-index: 100;
-  background-color: rgba(14, 14, 19, 0.7);
+  background-color: rgba(14, 14, 19, 0.45); /* Aumentada la transparencia de 0.7 a 0.45 */
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-primary);
