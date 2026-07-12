@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS Metadata
+.DS_Store
+Thumbs.db
+
+# Reference/Raw files (Optional, keeping them since they are small, but let's keep it clean)
+# creatorcut.html
+# creatorcut_text.txt
