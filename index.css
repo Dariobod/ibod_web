@@ -1013,18 +1013,18 @@ body {
 
 .step-num-bg {
   position: absolute;
-  right: 16px;
-  top: 16px;
+  right: 24px;
+  top: 24px;
   font-family: var(--font-display);
-  font-size: 3.5rem;
-  font-weight: 900;
+  font-size: 1.5rem; /* Más chica */
+  font-weight: 700;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.02);
+  color: var(--primary); /* Color azul/celeste del design system */
   transition: color var(--transition-normal);
 }
 
 .step-card:hover .step-num-bg {
-  color: rgba(2, 142, 224, 0.06);
+  color: var(--primary-hover); /* Cambio suave al hover */
 }
 
 .step-content {
