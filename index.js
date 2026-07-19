@@ -206,76 +206,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   /* ==========================================================================
-     6. MOCKUP INTERACTIVO DE CALENDARIO (CALENDLY MOCKUP)
+     6. INTEGRACIÓN Y ENVÍO DE FORMULARIO DE CONTACTO A GOOGLE FORMS
      ========================================================================== */
-  const calendarDays = document.querySelectorAll('.calendar-day.active-day');
-  const calendarHours = document.querySelector('.calendar-hours');
-  const selectedDayLabel = document.querySelector('.selected-day-label');
-  const hourButtons = document.querySelectorAll('.hour-btn');
-  const calendlyForm = document.querySelector('.calendly-form');
-  const calendlySuccess = document.querySelector('.calendly-success');
-  const successIcon = document.querySelector('.success-icon');
-  
-  // Opciones iniciales ocultas
-  let selectedDate = '';
-  let selectedHour = '';
+  const contactForm = document.getElementById('google-contact-form');
+  const formSuccessMessage = document.querySelector('.form-success-message');
+  const submitBtn = document.getElementById('submit-contact-btn');
 
-  calendarDays.forEach(day => {
-    day.addEventListener('click', () => {
-      // Remover selección previa
-      calendarDays.forEach(d => d.classList.remove('selected-day'));
-      day.classList.add('selected-day');
+  const enviarFormulario = async (nombre, correo, descripcion) => {
+    const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfObL2NoAv89-CQAS-QnMQ48klo-Vht4RI1mAkb72nR1K6Ijg/formResponse';
 
-      // Obtener el día seleccionado
-      selectedDate = day.getAttribute('data-day');
-      selectedDayLabel.textContent = `${selectedDate} de Julio`;
+    const formData = new URLSearchParams();
+    formData.append('entry.815257742', nombre);      // Campo: Nombre
+    formData.append('entry.401319057', correo);      // Campo: Correo
+    formData.append('entry.367001380', descripcion); // Campo: Descripción
 
-      // Mostrar horas y ocultar formulario/éxito si estuvieran abiertos
-      calendarHours.classList.remove('hidden');
-      calendlyForm.classList.add('hidden');
-      calendlySuccess.classList.add('hidden');
+    try {
+      await fetch(formUrl, {
+        method: 'POST',
+        mode: 'no-cors', // Permite enviar sin errores de seguridad CORS
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData
+      });
+      
+      console.log('¡Datos enviados exitosamente a Google Forms!');
+      return true;
+    } catch (error) {
+      console.error('Error al intentar enviar el formulario:', error);
+      return false;
+    }
+  };
 
-      // Limpiar selección de horas
-      hourButtons.forEach(h => h.classList.remove('selected-hour'));
-    });
-  });
-
-  hourButtons.forEach(hour => {
-    hour.addEventListener('click', () => {
-      hourButtons.forEach(h => h.classList.remove('selected-hour'));
-      hour.classList.add('selected-hour');
-
-      selectedHour = hour.textContent;
-
-      // Mostrar formulario
-      calendlyForm.classList.remove('hidden');
-      calendlySuccess.classList.add('hidden');
-    });
-  });
-
-  // Envío del Formulario
-  if (calendlyForm) {
-    calendlyForm.addEventListener('submit', (e) => {
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      // Ocultar todo lo demás y mostrar éxito
-      calendarHours.classList.add('hidden');
-      calendlyForm.classList.add('hidden');
+      const nombreInput = document.getElementById('contact-name');
+      const emailInput = document.getElementById('contact-email');
+      const descInput = document.getElementById('contact-desc');
       
-      // Deseleccionar días y horas del calendario
-      calendarDays.forEach(d => d.classList.remove('selected-day'));
+      if (!nombreInput || !emailInput || !descInput) return;
       
-      calendlySuccess.classList.remove('hidden');
-    });
-  }
-
-  // Reset del Calendario
-  const btnReset = document.querySelector('.btn-reset-calendly');
-  if (btnReset) {
-    btnReset.addEventListener('click', () => {
-      calendlySuccess.classList.add('hidden');
-      selectedDate = '';
-      selectedHour = '';
+      const nombre = nombreInput.value.trim();
+      const correo = emailInput.value.trim();
+      const descripcion = descInput.value.trim();
+      
+      // Cambiar estado del botón a cargando
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando...';
+      }
+      
+      // Enviar datos
+      await enviarFormulario(nombre, correo, descripcion);
+      
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enviar Mensaje';
+      }
+      
+      // Ocultar inputs del formulario y mostrar mensaje de éxito
+      const formGroups = contactForm.querySelectorAll('.form-group, #submit-contact-btn, .form-subtitle');
+      formGroups.forEach(el => el.style.display = 'none');
+      
+      if (formSuccessMessage) {
+        formSuccessMessage.classList.remove('hidden');
+      }
+      
+      // Limpiar formulario
+      contactForm.reset();
     });
   }
 

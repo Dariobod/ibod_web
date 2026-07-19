@@ -504,9 +504,9 @@
       <div class="book-grid">
         <div class="book-info reveal">
           <span class="section-tag">Contacto</span>
-          <h2 class="section-title">Agenda una videollamada</h2>
+          <h2 class="section-title">Hablemos de tu canal</h2>
           <p class="book-desc">
-            Hablemos sobre tu canal, tu estilo de contenido y tus necesidades de edición. Analizaremos tus objetivos y cómo podemos apoyarte para escalar.
+            Cuéntanos sobre tu canal, tu estilo de contenido y tus objetivos. Analizaremos tus necesidades y nos pondremos en contacto contigo para ver cómo podemos ayudarte a escalar.
           </p>
           <div class="contact-details">
             <div class="contact-item">
@@ -525,60 +525,38 @@
           </div>
         </div>
         
-        <!-- Mockup de Widget de Calendario de Reservas (Calendly Mockup) -->
-        <div class="book-widget-container reveal">
-          <div class="calendly-mock">
-            <div class="calendly-header">
-              <div class="calendly-avatar">i</div>
-              <div class="calendly-header-info">
-                <span class="calendly-brand">iBod</span>
-                <h4 class="calendly-event">Llamada de Descubrimiento de 15 Min</h4>
-              </div>
+        <!-- Formulario de Contacto (Google Forms Integration) -->
+        <div class="contact-form-container reveal">
+          <form id="google-contact-form" class="contact-form">
+            <h3 class="form-title">Envíanos un mensaje</h3>
+            <p class="form-subtitle">Completa el formulario y nos pondremos en contacto contigo lo antes posible.</p>
+            
+            <div class="form-group">
+              <label for="contact-name" class="form-label">Nombre</label>
+              <input type="text" id="contact-name" name="nombre" placeholder="Tu Nombre" required class="form-input">
             </div>
-            <div class="calendly-body">
-              <p class="calendly-prompt">Selecciona una fecha y hora:</p>
-              
-              <!-- Calendario Simple Mock -->
-              <div class="calendar-grid">
-                <div class="calendar-day disabled">Lu</div>
-                <div class="calendar-day disabled">Ma</div>
-                <div class="calendar-day active-day" data-day="Miércoles 15">Mi</div>
-                <div class="calendar-day active-day" data-day="Jueves 16">Ju</div>
-                <div class="calendar-day active-day" data-day="Viernes 17">Vi</div>
-                <div class="calendar-day disabled">Sá</div>
-                <div class="calendar-day disabled">Do</div>
-              </div>
-              
-              <!-- Horas Mock -->
-              <div class="calendar-hours hidden">
-                <h5 class="selected-day-label">Miércoles 15 de Julio</h5>
-                <div class="hours-grid">
-                  <button class="hour-btn">10:00 AM</button>
-                  <button class="hour-btn">11:30 AM</button>
-                  <button class="hour-btn">02:00 PM</button>
-                  <button class="hour-btn">03:30 PM</button>
-                </div>
-              </div>
-              
-              <form class="calendly-form hidden">
-                <h5 class="form-title">Completa tus datos:</h5>
-                <input type="text" placeholder="Tu Nombre" required class="calendly-input">
-                <input type="email" placeholder="Tu Email" required class="calendly-input">
-                <input type="text" placeholder="Enlace a tu canal (Opcional)" class="calendly-input">
-                <button type="submit" class="btn btn-primary btn-block">Confirmar Cita</button>
-              </form>
-              
-              <div class="calendly-success hidden">
-                <svg viewBox="0 0 24 24" width="48" height="48" stroke="#1aff75" stroke-width="2" fill="none" class="success-icon">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-                <h4>¡Cita Reservada!</h4>
-                <p>Te hemos enviado la invitación de Google Meet al correo electrónico ingresado.</p>
-                <button class="btn btn-secondary btn-reset-calendly">Reservar otra fecha</button>
-              </div>
+            
+            <div class="form-group">
+              <label for="contact-email" class="form-label">Email</label>
+              <input type="email" id="contact-email" name="mail" placeholder="Tu Email" required class="form-input">
             </div>
-          </div>
+            
+            <div class="form-group">
+              <label for="contact-desc" class="form-label">Descripción</label>
+              <textarea id="contact-desc" name="descripcion" placeholder="Cuéntanos sobre tu canal o tu proyecto..." required class="form-input form-textarea"></textarea>
+            </div>
+            
+            <button type="submit" id="submit-contact-btn" class="btn btn-primary btn-block">Enviar Mensaje</button>
+            
+            <div class="form-success-message hidden">
+              <svg viewBox="0 0 24 24" width="48" height="48" stroke="#1aff75" stroke-width="2" fill="none" class="success-icon">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <h4>¡Mensaje Enviado!</h4>
+              <p>Gracias por contactarnos. Te responderemos en un plazo de 24 a 48 horas.</p>
+            </div>
+          </form>
         </div>
       </div>
     </div>
