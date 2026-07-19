@@ -1309,7 +1309,11 @@ body {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
   gap: 64px;
-  align-items: center;
+  align-items: start; /* Alineado en la parte superior */
+}
+
+.book-info {
+  padding-top: 12px; /* Ajuste visual orgánico para alinear con el contenido de la card */
 }
 
 .book-desc {
