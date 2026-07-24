@@ -431,13 +431,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lenis) {
           // Desplazamiento ultra-suave y amortiguado con Lenis
           lenis.scrollTo(targetElement, {
-            offset: -110,
+            offset: -20,
             duration: 1.6,
             easing: (t) => 1 - Math.pow(1 - t, 5) // easeOutQuint (frenado progresivo largo)
           });
         } else {
           // Fallback clásico si la librería Lenis falla al cargar
-          const navbarOffset = 110;
+          const navbarOffset = 20;
           const startPosition = window.scrollY || window.pageYOffset;
           const targetPosition = targetElement.getBoundingClientRect().top + startPosition - navbarOffset;
           
