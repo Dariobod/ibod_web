@@ -429,8 +429,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCardOffsets();
         
         let scrollOffset = -20; // Detiene el scroll 20px antes de la sección por defecto
-        if (targetId === '#services') {
-          scrollOffset = 30; // Desplaza 30px por debajo del inicio para balancear el título y las tarjetas
+        if (targetId === '#services' || targetId === '#work') {
+          scrollOffset = 30; // Desplaza 30px por debajo del inicio para balancear el título y el contenido
         }
 
         if (lenis) {
