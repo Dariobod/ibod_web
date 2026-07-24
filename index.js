@@ -428,16 +428,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // Recalcular offsets por si hubo cambios de layout
         updateCardOffsets();
         
+        let scrollOffset = -20; // Detiene el scroll 20px antes de la sección por defecto
+        if (targetId === '#services') {
+          scrollOffset = 130; // Desplaza 130px por debajo del inicio para alinear la primera tarjeta en su top: 140px sticky
+        }
+
         if (lenis) {
           // Desplazamiento ultra-suave y amortiguado con Lenis
           lenis.scrollTo(targetElement, {
-            offset: -20,
+            offset: scrollOffset,
             duration: 1.6,
             easing: (t) => 1 - Math.pow(1 - t, 5) // easeOutQuint (frenado progresivo largo)
           });
         } else {
           // Fallback clásico si la librería Lenis falla al cargar
-          const navbarOffset = 20;
+          const navbarOffset = -scrollOffset;
           const startPosition = window.scrollY || window.pageYOffset;
           const targetPosition = targetElement.getBoundingClientRect().top + startPosition - navbarOffset;
           
