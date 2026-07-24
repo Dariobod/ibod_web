@@ -430,7 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let scrollOffset = -20; // Detiene el scroll 20px antes de la sección por defecto
         if (targetId === '#services') {
-          scrollOffset = 130; // Desplaza 130px por debajo del inicio para alinear la primera tarjeta en su top: 140px sticky
+          scrollOffset = 30; // Desplaza 30px por debajo del inicio para balancear el título y las tarjetas
         }
 
         if (lenis) {
