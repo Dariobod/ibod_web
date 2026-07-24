@@ -352,7 +352,7 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 240px;
+  padding-top: 180px; /* Reducido de 240px para subir el contenido de la home */
   padding-bottom: 60px; /* Pequeño espacio de separación antes de servicios */
   background-color: var(--bg-primary);
 }
@@ -1727,7 +1727,7 @@ body {
 @media (max-width: 1024px) {
   .hero-section {
     min-height: 60vh;
-    padding-top: 200px;
+    padding-top: 160px; /* Reducido de 200px */
     padding-bottom: 50px;
   }
   
@@ -1777,7 +1777,7 @@ body {
 @media (max-width: 768px) {
   .hero-section {
     min-height: 55vh;
-    padding-top: 170px;
+    padding-top: 140px; /* Reducido de 170px */
     padding-bottom: 40px;
   }
   
@@ -1864,7 +1864,7 @@ body {
 @media (max-width: 480px) {
   .hero-section {
     min-height: 50vh;
-    padding-top: 140px;
+    padding-top: 115px; /* Reducido de 140px */
     padding-bottom: 30px;
   }
   
