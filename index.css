@@ -7,15 +7,15 @@
   --bg-primary: #070709;
   --bg-secondary: #0e0e13;
   --bg-tertiary: #14141c;
-  --primary: #028ee0;
-  --primary-hover: #009cff;
-  --primary-glow: rgba(2, 142, 224, 0.15);
-  --primary-gradient: linear-gradient(135deg, #028ee0 0%, #005090 100%);
+  --primary: #ff0000;
+  --primary-hover: #e60000;
+  --primary-glow: rgba(255, 0, 0, 0.15);
+  --primary-gradient: linear-gradient(135deg, #ff0000 0%, #990000 100%);
   --text-primary: #ffffff;
   --text-secondary: #b3b3b7;
   --text-muted: #73737b;
   --border-primary: rgba(255, 255, 255, 0.08);
-  --border-blue: rgba(2, 142, 224, 0.2);
+  --border-blue: rgba(255, 0, 0, 0.2);
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Outfit', -apple-system, sans-serif;
   --transition-fast: 0.2s ease;
@@ -74,7 +74,7 @@ body {
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #ffffff 30%, #028ee0 100%);
+  background: linear-gradient(135deg, #ffffff 30%, var(--primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
