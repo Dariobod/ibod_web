@@ -414,7 +414,28 @@ document.addEventListener('DOMContentLoaded', () => {
   localLinks.forEach(link => {
     link.addEventListener('click', (e) => {
       const targetId = link.getAttribute('href');
-      if (targetId === '#') return;
+      
+      if (targetId === '#') {
+        e.preventDefault();
+        
+        // Cerrar menú móvil si está abierto
+        if (typeof closeMobileMenu === 'function') {
+          closeMobileMenu();
+        }
+        
+        if (lenis) {
+          lenis.scrollTo(0, {
+            duration: 1.2,
+            easing: (t) => 1 - Math.pow(1 - t, 5)
+          });
+        } else {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }
+        return;
+      }
       
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
