@@ -7,10 +7,10 @@
   --bg-primary: #070709;
   --bg-secondary: #0e0e13;
   --bg-tertiary: #14141c;
-  --primary: #ff0000;
-  --primary-hover: #e60000;
-  --primary-glow: rgba(255, 0, 0, 0.15);
-  --primary-gradient: linear-gradient(135deg, #ff0000 0%, #990000 100%);
+  --primary: #372AAC;
+  --primary-hover: #493cc9;
+  --primary-glow: rgba(55, 42, 172, 0.15);
+  --primary-gradient: linear-gradient(135deg, #372AAC 0%, #1e1370 100%);
   --celeste: #028ee0;
   --celeste-hover: #009cff;
   --celeste-glow: rgba(2, 142, 224, 0.15);
@@ -18,7 +18,7 @@
   --text-secondary: #b3b3b7;
   --text-muted: #73737b;
   --border-primary: rgba(255, 255, 255, 0.08);
-  --border-blue: rgba(255, 0, 0, 0.2);
+  --border-blue: rgba(55, 42, 172, 0.2);
   --border-celeste: rgba(2, 142, 224, 0.2);
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Outfit', -apple-system, sans-serif;
