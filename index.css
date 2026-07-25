@@ -12,6 +12,7 @@
   --primary-glow: rgba(255, 0, 0, 0.15);
   --primary-gradient: linear-gradient(135deg, #ff0000 0%, #990000 100%);
   --celeste: #028ee0;
+  --celeste-hover: #009cff;
   --text-primary: #ffffff;
   --text-secondary: #b3b3b7;
   --text-muted: #73737b;
@@ -1027,12 +1028,12 @@ body {
   font-size: 1.5rem; /* Más chica */
   font-weight: 700;
   line-height: 1;
-  color: var(--primary); /* Color azul/celeste del design system */
+  color: var(--celeste); /* Color celeste del design system */
   transition: color var(--transition-normal);
 }
 
 .step-card:hover .step-num-bg {
-  color: var(--primary-hover); /* Cambio suave al hover */
+  color: var(--celeste-hover); /* Cambio suave al hover */
 }
 
 .step-content {
