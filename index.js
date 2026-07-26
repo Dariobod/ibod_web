@@ -145,8 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
      4. FILTROS DE PORTAFOLIO E INTEGRACIÓN CON GOOGLE APPS SCRIPT API
      ========================================================================== */
   // URL de tu Web App de Google Apps Script. 
-  // Reemplaza esta URL por la tuya generada en "Nueva implementación" en Google Apps Script
-  const API_URL = "URL_DE_TU_NUEVO_APP_SCRIPT_AQUI?tipo=trabajos";
+  const API_URL = "https://script.google.com/macros/s/AKfycbyCvC_0rZkvu0mUtKRiaWlQvdnkXLmNCMMnVOg9Db9Gfx6ApcadwkSNA4KyXeWEVNVs8Q/exec?tipo=trabajos";
 
   let allTrabajos = [];
 
