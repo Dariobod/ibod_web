@@ -229,7 +229,14 @@ document.addEventListener('DOMContentLoaded', () => {
       
       card.innerHTML = `
         <div class="portfolio-thumbnail">
-          <img src="${v.thumbnail}" alt="${v.title}" class="portfolio-thumb-img" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/${v.ytId}/hqdefault.jpg';" />
+          <iframe 
+            src="https://www.youtube-nocookie.com/embed/${v.ytId}?autoplay=1&mute=1&loop=1&playlist=${v.ytId}&controls=0&showinfo=0&rel=0&enablejsapi=1&playsinline=1&modestbranding=1" 
+            title="${v.title}" 
+            class="portfolio-thumb-video" 
+            frameborder="0" 
+            allow="autoplay; encrypted-media; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
           <div class="portfolio-thumb-overlay"></div>
           <span class="project-tag">${v.category}</span>
           <a href="${v.urlOriginal}" target="_blank" rel="noopener noreferrer" class="project-play-btn" aria-label="Ver video en YouTube">
