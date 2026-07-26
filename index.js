@@ -541,9 +541,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Progreso de apilamiento: 0 (tarjeta entrante aún abajo) a 1 (apilada sobre la tarjeta actual)
         const progress = Math.min(Math.max((cardHeight - distanceToSticky) / cardHeight, 0), 1);
 
-        // Escala progresiva hasta 0.93 y oscurecimiento a 0.65 de brillo
-        const scale = 1 - (progress * 0.07);
-        const brightness = 1 - (progress * 0.35);
+        // Escala progresiva hasta 0.88 y oscurecimiento a 0.60 de brillo para mayor contraste 3D
+        const scale = 1 - (progress * 0.12);
+        const brightness = 1 - (progress * 0.40);
 
         card.style.transform = `scale(${scale})`;
         card.style.filter = `brightness(${brightness})`;
