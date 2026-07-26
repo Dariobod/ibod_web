@@ -142,31 +142,144 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   /* ==========================================================================
-     4. FILTROS DE PORTAFOLIO
+     4. FILTROS DE PORTAFOLIO E INTEGRACIÓN CON GOOGLE APPS SCRIPT API
      ========================================================================== */
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  const portfolioCards = document.querySelectorAll('.portfolio-card');
+  // URL de tu Web App de Google Apps Script. 
+  // Reemplaza esta URL por la tuya generada en "Nueva implementación" en Google Apps Script
+  const API_URL = "URL_DE_TU_NUEVO_APP_SCRIPT_AQUI?tipo=trabajos";
 
+  let allTrabajos = [];
+
+  // Función para extraer el ID del video de YouTube a partir de la URL
+  function getYouTubeId(url) {
+    if (!url) return null;
+    const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+    const match = url.match(regExp); 
+    return (match && match[1].length === 11) ? match[1] : null;
+  }
+
+  // Helper para mapear categorías de la API a los filtros (all, long, short)
+  function getCategoryFilter(catStr) {
+    if (!catStr) return 'long';
+    const lower = catStr.toLowerCase();
+    if (lower.includes('short') || lower.includes('reel') || lower.includes('tiktok') || lower.includes('corto')) {
+      return 'short';
+    }
+    return 'long';
+  }
+
+  // Función para renderizar las tarjetas (Cards) en el DOM
+  function renderGrid(data, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = '';
+    
+    if (!data || data.length === 0) {
+      container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px;">No se encontraron trabajos.</p>';
+      return;
+    }
+
+    data.forEach(v => {
+      const card = document.createElement('div');
+      card.className = "portfolio-card reveal visible";
+      card.setAttribute('data-category', v.categoryFilter);
+      
+      card.innerHTML = `
+        <div class="portfolio-thumbnail">
+          <img src="${v.thumbnail}" alt="${v.title}" class="portfolio-thumb-img" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/${v.ytId}/hqdefault.jpg';" />
+          <div class="portfolio-thumb-overlay"></div>
+          <span class="project-tag">${v.category}</span>
+          <a href="${v.urlOriginal}" target="_blank" rel="noopener noreferrer" class="project-play-btn" aria-label="Ver video en YouTube">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+              <path d="M8 5v14l11-7z"></path>
+            </svg>
+          </a>
+        </div>
+        <div class="portfolio-info">
+          <h4 class="project-creator">${v.title}</h4>
+          <p class="project-desc">${v.desc}</p>
+          <div style="margin-top: 14px;">
+            <a href="${v.urlOriginal}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 6px;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="color: #ff0000;">
+                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+              </svg>
+              Ver en YouTube
+            </a>
+          </div>
+        </div>
+      `;
+      
+      container.appendChild(card);
+    });
+  }
+
+  // Función principal para cargar los trabajos (videos) desde Google Apps Script
+  async function loadVideos() {
+    const container = document.getElementById('portfolio-grid');
+    if (!container) return;
+
+    if (!API_URL || API_URL.includes('URL_DE_TU_NUEVO_APP_SCRIPT_AQUI')) {
+      console.log("API_URL no configurada aún en index.js. Mostrando trabajos por defecto.");
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URL);
+      const rawResponse = await response.json();
+      const rawData = rawResponse.data || rawResponse; 
+
+      if (!Array.isArray(rawData) || rawData.length === 0) {
+        return;
+      }
+
+      const videos = rawData.map(item => {
+        const link = item.link || item.url || '';
+        const ytId = getYouTubeId(link);
+        const cat = (item.categoria || item.category || 'General').trim();
+        return {
+          title: item.titulo || item.title || 'Sin Título',
+          desc: item.descripcion || item.desc || '',
+          category: cat,
+          categoryFilter: getCategoryFilter(cat),
+          urlOriginal: link,
+          ytId: ytId,
+          thumbnail: ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : ''
+        };
+      }).filter(v => v.ytId !== null);
+
+      if (videos.length > 0) {
+        allTrabajos = videos;
+        renderGrid(allTrabajos, 'portfolio-grid');
+      }
+    } catch (error) {
+      console.error("Error al cargar trabajos desde API:", error);
+    }
+  }
+
+  // Iniciar la carga de videos desde la API
+  loadVideos();
+
+  // Escuchador de filtros de portafolio
+  const filterButtons = document.querySelectorAll('.filter-btn');
   filterButtons.forEach(button => {
     button.addEventListener('click', () => {
-      // Cambiar clase activa en botones
       filterButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
 
       const filterValue = button.getAttribute('data-filter');
+      const currentCards = document.querySelectorAll('.portfolio-card');
 
-      portfolioCards.forEach(card => {
+      currentCards.forEach(card => {
         const category = card.getAttribute('data-category');
 
         if (filterValue === 'all' || category === filterValue) {
-          // Animación suave de aparición
           card.style.display = 'flex';
           setTimeout(() => {
             card.style.opacity = '1';
             card.style.transform = 'scale(1)';
           }, 50);
         } else {
-          // Desaparición suave
           card.style.opacity = '0';
           card.style.transform = 'scale(0.95)';
           setTimeout(() => {
