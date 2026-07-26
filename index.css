@@ -864,6 +864,78 @@ body {
   align-items: start;
 }
 
+/* Skeleton Loading Animation & Placeholder Cards */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.09) 50%, rgba(255, 255, 255, 0.03) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+.skeleton-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+.skeleton-thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  position: relative;
+}
+
+.skeleton-tag {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 70px;
+  height: 22px;
+  border-radius: 4px;
+}
+
+.skeleton-info {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-title {
+  width: 75%;
+  height: 20px;
+}
+
+.skeleton-desc {
+  width: 90%;
+  height: 14px;
+}
+
+.skeleton-btn {
+  width: 120px;
+  height: 32px;
+  border-radius: 8px;
+  margin-top: 6px;
+}
+
+.skeleton-filter-btn {
+  width: 90px;
+  height: 38px;
+  border-radius: 100px;
+}
+
 .portfolio-card {
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-primary);

@@ -272,10 +272,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Renderizar esqueletos de carga grisados (Skeleton Loading)
+  function renderSkeletons() {
+    const container = document.getElementById('portfolio-grid');
+    const filtersContainer = document.getElementById('portfolio-filters');
+
+    if (filtersContainer) {
+      filtersContainer.innerHTML = `
+        <div class="skeleton skeleton-filter-btn"></div>
+        <div class="skeleton skeleton-filter-btn"></div>
+        <div class="skeleton skeleton-filter-btn"></div>
+      `;
+    }
+
+    if (container) {
+      let skeletonHtml = '';
+      for (let i = 0; i < 6; i++) {
+        skeletonHtml += `
+          <div class="skeleton-card">
+            <div class="skeleton skeleton-thumb">
+              <div class="skeleton skeleton-tag"></div>
+            </div>
+            <div class="skeleton-info">
+              <div class="skeleton skeleton-title"></div>
+              <div class="skeleton skeleton-desc"></div>
+              <div class="skeleton skeleton-btn"></div>
+            </div>
+          </div>
+        `;
+      }
+      container.innerHTML = skeletonHtml;
+    }
+  }
+
   // Función principal para cargar los trabajos (videos) desde Google Apps Script
   async function loadVideos() {
     const container = document.getElementById('portfolio-grid');
     if (!container) return;
+
+    // Mostrar estado de carga grisado con efecto Shimmer mientras se espera la API
+    renderSkeletons();
 
     if (!API_URL || API_URL.includes('URL_DE_TU_NUEVO_APP_SCRIPT_AQUI')) {
       console.log("API_URL no configurada aún en index.js. Mostrando trabajos por defecto.");
