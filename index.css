@@ -221,9 +221,10 @@ body {
   display: block;
 }
 
-/* Doble del tamaño para el logo en el menú y el menú móvil */
+/* Tamaño para el logo en el menú, el menú móvil y el footer */
 .navbar .brand-logo,
-.mobile-menu-header .brand-logo {
+.mobile-menu-header .brand-logo,
+.footer .brand-logo {
   height: 56px;
 }
 
