@@ -157,14 +157,57 @@ document.addEventListener('DOMContentLoaded', () => {
     return (match && match[1].length === 11) ? match[1] : null;
   }
 
-  // Helper para mapear categorías de la API a los filtros (all, long, short)
-  function getCategoryFilter(catStr) {
-    if (!catStr) return 'long';
-    const lower = catStr.toLowerCase();
-    if (lower.includes('short') || lower.includes('reel') || lower.includes('tiktok') || lower.includes('corto')) {
-      return 'short';
-    }
-    return 'long';
+  // Renderizado dinámico de botones de filtro por categoría
+  function renderFilterButtons(categories) {
+    const filtersContainer = document.getElementById('portfolio-filters');
+    if (!filtersContainer) return;
+
+    filtersContainer.innerHTML = `
+      <button class="filter-btn active" data-filter="all">Todas</button>
+    `;
+
+    categories.forEach(cat => {
+      if (!cat) return;
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.setAttribute('data-filter', cat);
+      btn.textContent = cat;
+      filtersContainer.appendChild(btn);
+    });
+
+    setupFilterListeners();
+  }
+
+  // Escuchador dinámico para los botones de filtro
+  function setupFilterListeners() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        const filterValue = button.getAttribute('data-filter');
+        const currentCards = document.querySelectorAll('.portfolio-card');
+
+        currentCards.forEach(card => {
+          const category = card.getAttribute('data-category');
+
+          if (filterValue === 'all' || category === filterValue) {
+            card.style.display = 'flex';
+            setTimeout(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'scale(1)';
+            }, 50);
+          } else {
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+              card.style.display = 'none';
+            }, 300);
+          }
+        });
+      });
+    });
   }
 
   // Función para renderizar las tarjetas (Cards) en el DOM
@@ -182,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
     data.forEach(v => {
       const card = document.createElement('div');
       card.className = "portfolio-card reveal visible";
-      card.setAttribute('data-category', v.categoryFilter);
+      card.setAttribute('data-category', v.category);
       
       card.innerHTML = `
         <div class="portfolio-thumbnail">
@@ -240,7 +283,6 @@ document.addEventListener('DOMContentLoaded', () => {
           title: item.titulo || item.title || 'Sin Título',
           desc: item.descripcion || item.desc || '',
           category: cat,
-          categoryFilter: getCategoryFilter(cat),
           urlOriginal: link,
           ytId: ytId,
           thumbnail: ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : ''
@@ -249,6 +291,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (videos.length > 0) {
         allTrabajos = videos;
+        // Obtener categorías únicas dinámicamente desde los datos de la planilla
+        const uniqueCategories = [...new Set(videos.map(v => v.category))];
+        renderFilterButtons(uniqueCategories);
         renderGrid(allTrabajos, 'portfolio-grid');
       }
     } catch (error) {
@@ -258,36 +303,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Iniciar la carga de videos desde la API
   loadVideos();
-
-  // Escuchador de filtros de portafolio
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-
-      const filterValue = button.getAttribute('data-filter');
-      const currentCards = document.querySelectorAll('.portfolio-card');
-
-      currentCards.forEach(card => {
-        const category = card.getAttribute('data-category');
-
-        if (filterValue === 'all' || category === filterValue) {
-          card.style.display = 'flex';
-          setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'scale(1)';
-          }, 50);
-        } else {
-          card.style.opacity = '0';
-          card.style.transform = 'scale(0.95)';
-          setTimeout(() => {
-            card.style.display = 'none';
-          }, 300);
-        }
-      });
-    });
-  });
 
 
   /* ==========================================================================
