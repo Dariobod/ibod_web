@@ -157,6 +157,16 @@ document.addEventListener('DOMContentLoaded', () => {
     return (match && match[1].length === 11) ? match[1] : null;
   }
 
+  // Detector de formato vertical (Shorts / Reels / TikTok)
+  function isVerticalVideo(url, category) {
+    if (!url) url = '';
+    if (!category) category = '';
+    const isShortUrl = /\/shorts\//i.test(url);
+    const catLower = category.toLowerCase();
+    const isShortCat = catLower.includes('short') || catLower.includes('reel') || catLower.includes('tiktok') || catLower.includes('vertical');
+    return isShortUrl || isShortCat;
+  }
+
   // Renderizado dinámico de botones de filtro por categoría
   function renderFilterButtons(categories) {
     const filtersContainer = document.getElementById('portfolio-filters');
@@ -223,8 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     data.forEach(v => {
+      const isVertical = isVerticalVideo(v.urlOriginal, v.category);
       const card = document.createElement('div');
-      card.className = "portfolio-card reveal visible";
+      card.className = `portfolio-card reveal visible ${isVertical ? 'portfolio-card-vertical' : ''}`;
       card.setAttribute('data-category', v.category);
       
       card.innerHTML = `
