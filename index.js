@@ -783,11 +783,47 @@ document.addEventListener('DOMContentLoaded', () => {
   loadFaqFromApi();
 
   // Función para agregar burbujas al historial de chat
-  const appendChatBubble = (text, sender = 'bot') => {
+  const appendChatBubble = (text, sender = 'bot', showContactBtn = false) => {
     if (!chatbotBody) return;
     const bubble = document.createElement('div');
     bubble.className = `chat-bubble ${sender}-bubble`;
-    bubble.textContent = text;
+    
+    const textPara = document.createElement('p');
+    textPara.style.margin = '0';
+    textPara.textContent = text;
+    bubble.appendChild(textPara);
+
+    if (showContactBtn) {
+      const btnWrapper = document.createElement('div');
+      btnWrapper.style.marginTop = '10px';
+      
+      const contactBtn = document.createElement('a');
+      contactBtn.href = '#book';
+      contactBtn.className = 'btn btn-primary';
+      contactBtn.style.padding = '6px 14px';
+      contactBtn.style.fontSize = '0.78rem';
+      contactBtn.style.borderRadius = '100px';
+      contactBtn.style.textDecoration = 'none';
+      contactBtn.style.display = 'inline-flex';
+      contactBtn.style.alignItems = 'center';
+      contactBtn.style.gap = '6px';
+      contactBtn.innerHTML = `
+        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        Ir a Contacto
+      `;
+
+      contactBtn.addEventListener('click', () => {
+        if (chatbotWindow) chatbotWindow.classList.remove('active');
+        if (fabIconChat) fabIconChat.style.display = 'block';
+        if (fabIconClose) fabIconClose.style.display = 'none';
+      });
+
+      btnWrapper.appendChild(contactBtn);
+      bubble.appendChild(btnWrapper);
+    }
+
     chatbotBody.appendChild(bubble);
     chatbotBody.scrollTop = chatbotBody.scrollHeight;
   };
@@ -827,7 +863,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (answer) {
         appendChatBubble(answer, 'bot');
       } else {
-        appendChatBubble("No encontré esa consulta exacta en nuestra base de datos, pero puedes dejarnos tu mensaje en nuestro formulario de contacto o escribirnos directamente a ibod.bot@gmail.com para ayudarte inmediatamente.", 'bot');
+        appendChatBubble("No encontré esa consulta exacta en nuestra base de datos, pero puedes dejarnos tu mensaje en nuestro formulario de contacto o escribirnos directamente a ibod.bot@gmail.com para ayudarte inmediatamente.", 'bot', true);
       }
     }, 400);
   };
