@@ -157,14 +157,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return (match && match[1].length === 11) ? match[1] : null;
   }
 
-  // Detector de formato vertical (Shorts / Reels / TikTok)
+  // Regla de formato: Solamente si la categoría empieza con "Reel-" se muestra la tarjeta en formato vertical (9:16). El resto en horizontal (16:9).
   function isVerticalVideo(url, category) {
-    if (!url) url = '';
     if (!category) category = '';
-    const isShortUrl = /\/shorts\//i.test(url);
-    const catLower = category.toLowerCase();
-    const isShortCat = catLower.includes('short') || catLower.includes('reel') || catLower.includes('tiktok') || catLower.includes('vertical');
-    return isShortUrl || isShortCat;
+    const catTrimmed = category.trim().toLowerCase();
+    const isShortUrl = /\/shorts\//i.test(url || '');
+    return catTrimmed.startsWith('reel-') || isShortUrl;
   }
 
   // Renderizado dinámico de botones de filtro por categoría
