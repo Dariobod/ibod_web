@@ -520,47 +520,31 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ==========================================================================
      8. EFECTO DE ESCALADO EN TARJETAS DE SERVICIOS (SCROLL STACKING SCALE)
      ========================================================================== */
-  const serviceCards = document.querySelectorAll('.service-card');
-  const stickyTop = 140; // Valor del top en CSS
-  let cardOffsets = [];
-
-  // Función para precalcular las posiciones absolutas de las tarjetas y evitar Layout Thrashing (saltos)
-  const updateCardOffsets = () => {
-    cardOffsets = [];
-    serviceCards.forEach(card => {
-      let offset = 0;
-      let el = card;
-      while (el) {
-        offset += el.offsetTop;
-        el = el.offsetParent;
-      }
-      cardOffsets.push(offset);
-    });
-  };
+  const serviceCards = Array.from(document.querySelectorAll('.service-card'));
+  const stickyTop = 140; // Coincide con top: 140px en CSS
 
   const handleServiceCardsScale = () => {
-    if (window.innerWidth > 768) {
-      const scrollY = window.scrollY || window.pageYOffset;
-      
+    if (window.innerWidth > 768 && serviceCards.length > 0) {
       serviceCards.forEach((card, index) => {
-        // No aplicamos escalado a la última tarjeta ya que ninguna se apila sobre ella
+        // La última tarjeta no se escala ya que ninguna otra se apila sobre ella
         if (index === serviceCards.length - 1) return;
-        
-        const nextCardOffsetTop = cardOffsets[index + 1];
-        if (nextCardOffsetTop === undefined) return;
-        
-        const cardHeight = 480; // Altura fija de la tarjeta
-        
-        // Distancia desde el top de la siguiente tarjeta hasta la posición sticky (cálculo ultra-rápido)
-        const distance = nextCardOffsetTop - scrollY - stickyTop;
-        
-        // Progreso de 0 (lejos) a 1 (apilada sobre la tarjeta actual)
-        const progress = Math.min(Math.max((cardHeight - distance) / cardHeight, 0), 1);
-        
-        // Escala final de 0.95 y brillo de 0.7
-        const scale = 1 - (progress * 0.05);
-        const brightness = 1 - (progress * 0.3);
-        
+
+        const nextCard = serviceCards[index + 1];
+        if (!nextCard) return;
+
+        const nextRect = nextCard.getBoundingClientRect();
+        const cardHeight = card.offsetHeight || 480;
+
+        // Distancia desde el tope sticky (140px) hasta el borde superior de la tarjeta entrante
+        const distanceToSticky = nextRect.top - stickyTop;
+
+        // Progreso de apilamiento: 0 (tarjeta entrante aún abajo) a 1 (apilada sobre la tarjeta actual)
+        const progress = Math.min(Math.max((cardHeight - distanceToSticky) / cardHeight, 0), 1);
+
+        // Escala progresiva hasta 0.93 y oscurecimiento a 0.65 de brillo
+        const scale = 1 - (progress * 0.07);
+        const brightness = 1 - (progress * 0.35);
+
         card.style.transform = `scale(${scale})`;
         card.style.filter = `brightness(${brightness})`;
       });
@@ -573,17 +557,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Precalcular offsets al cargar e iniciar
-  updateCardOffsets();
+  // Iniciar el efecto inmediatamente
   handleServiceCardsScale();
 
-  window.addEventListener('scroll', handleServiceCardsScale);
-  
-  // Recalcular posiciones solo cuando se redimensiona la ventana
-  window.addEventListener('resize', () => {
-    updateCardOffsets();
-    handleServiceCardsScale();
-  });
+  // Escuchar scroll nativo, cambios de tamaño y eventos de Lenis
+  window.addEventListener('scroll', handleServiceCardsScale, { passive: true });
+  window.addEventListener('resize', handleServiceCardsScale, { passive: true });
+
+  if (typeof lenis !== 'undefined' && lenis) {
+    lenis.on('scroll', handleServiceCardsScale);
+  }
 
 
   /* ==========================================================================
@@ -624,9 +607,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof closeMobileMenu === 'function') {
           closeMobileMenu();
         }
-        
-        // Recalcular offsets por si hubo cambios de layout
-        updateCardOffsets();
         
         let scrollOffset = -20; // Detiene el scroll 20px antes de la sección por defecto
         if (targetId === '#services' || targetId === '#work') {

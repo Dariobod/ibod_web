@@ -610,7 +610,7 @@ body {
 
 .service-card {
   position: sticky;
-  top: 140px; /* where they stack at the top */
+  top: 140px; /* donde se apilan las tarjetas */
   height: 480px;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-primary);
@@ -624,6 +624,8 @@ body {
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
   transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
   transform-origin: center top;
+  will-change: transform, filter;
+  transform: translateZ(0);
 }
 
 /* Stacking Order */
