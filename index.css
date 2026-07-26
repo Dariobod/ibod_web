@@ -944,6 +944,7 @@ body {
   transition: all var(--transition-normal);
   display: flex;
   flex-direction: column;
+  transform: translateZ(0);
 }
 
 .portfolio-card:hover {
@@ -956,11 +957,23 @@ body {
   aspect-ratio: 16/9;
   width: 100%;
   overflow: hidden;
+  border-top-left-radius: calc(var(--radius-md) - 1px);
+  border-top-right-radius: calc(var(--radius-md) - 1px);
+  transform: translateZ(0);
+}
+
+.portfolio-card-vertical {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transform: translateZ(0);
 }
 
 .portfolio-card-vertical .portfolio-thumbnail {
   aspect-ratio: 9/16;
   max-height: 480px;
+  border-top-left-radius: calc(var(--radius-md) - 1px);
+  border-top-right-radius: calc(var(--radius-md) - 1px);
+  overflow: hidden;
 }
 
 .portfolio-thumb-img {
