@@ -829,8 +829,11 @@ body {
 .portfolio-filters {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 48px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .filter-btn {
@@ -2285,5 +2288,37 @@ body {
 
 .chatbot-send-btn:hover {
   background: var(--primary-hover);
+}
+
+/* Mobile Responsive Adjustments for Chatbot & Navigation */
+@media (max-width: 600px) {
+  .chatbot-window {
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-width: none;
+    bottom: 80px;
+    height: 420px;
+    border-radius: 16px;
+  }
+
+  .chatbot-toggle-fab {
+    bottom: 16px;
+    right: 16px;
+    width: 52px;
+    height: 52px;
+  }
+
+  .navbar {
+    width: calc(100% - 32px);
+    max-width: 400px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 12px 6px 18px;
+  }
+
+  .navbar .brand-logo {
+    height: 44px;
+  }
 }
 
