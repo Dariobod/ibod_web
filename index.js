@@ -677,4 +677,167 @@ document.addEventListener('DOMContentLoaded', () => {
     
     lastScrollY = currentScrollY;
   });
+
+
+  /* ==========================================================================
+     11. ASISTENTE VIRTUAL CHATBOT Y CONEXIÓN A FAQ APPS SCRIPT API
+     ========================================================================== */
+  const FAQ_API_URL = "https://script.google.com/macros/s/AKfycbyCvC_0rZkvu0mUtKRiaWlQvdnkXLmNCMMnVOg9Db9Gfx6ApcadwkSNA4KyXeWEVNVs8Q/exec?tipo=faq";
+
+  const chatbotFab = document.getElementById('chatbot-toggle-fab');
+  const chatbotWindow = document.getElementById('chatbot-window');
+  const chatbotCloseBtn = document.getElementById('chatbot-close-btn');
+  const chatbotBody = document.getElementById('chatbot-body');
+  const chatbotForm = document.getElementById('chatbot-form');
+  const chatbotInput = document.getElementById('chatbot-input');
+  const chatChipsContainer = document.getElementById('chat-chips-container');
+  const fabIconChat = chatbotFab ? chatbotFab.querySelector('.fab-icon-chat') : null;
+  const fabIconClose = chatbotFab ? chatbotFab.querySelector('.fab-icon-close') : null;
+
+  let faqList = [
+    {
+      question: "¿Cuál es el tiempo de entrega de un video?",
+      answer: "Para videos cortos (Shorts/Reels/TikTok), la entrega promedio es de 48 a 72 horas. Para videos de YouTube largos (de 10 a 20 minutos), la entrega del primer corte suele tardar entre 4 a 5 días hábiles.",
+      keywords: ["tiempo", "tardan", "entrega", "demora", "plazo", "dias", "horas"]
+    },
+    {
+      question: "¿Cómo funcionan las revisiones?",
+      answer: "Utilizamos enlaces interactivos de Frame.io donde puedes hacer comentarios y marcas exactamente en el segundo del video donde deseas un ajuste. Las revisiones menores se resuelven en menos de 24 horas.",
+      keywords: ["revision", "revisiones", "cambio", "cambios", "frame.io", "ajuste"]
+    },
+    {
+      question: "¿Pueden adaptarse a mi estilo de edición?",
+      answer: "Sí, absolutamente. Analizamos tus videos anteriores para replicar tus tipografías, colores de marca, tipo de transiciones, uso de efectos de sonido e identidad visual.",
+      keywords: ["estilo", "marca", "adaptar", "propio", "identidad", "personalizado"]
+    },
+    {
+      question: "¿Qué necesito para empezar a trabajar?",
+      answer: "Sólo necesitas agendar una breve llamada o enviarnos un mensaje con los objetivos de tu canal. Posteriormente subirás el metraje bruto a nuestra carpeta compartida.",
+      keywords: ["empezar", "comenzar", "requisitos", "inicio", "contratar"]
+    }
+  ];
+
+  // Alternar apertura/cierre del Chatbot
+  const toggleChatbot = () => {
+    if (!chatbotWindow) return;
+    const isActive = chatbotWindow.classList.contains('active');
+    if (isActive) {
+      chatbotWindow.classList.remove('active');
+      if (fabIconChat) fabIconChat.style.display = 'block';
+      if (fabIconClose) fabIconClose.style.display = 'none';
+    } else {
+      chatbotWindow.classList.add('active');
+      if (fabIconChat) fabIconChat.style.display = 'none';
+      if (fabIconClose) fabIconClose.style.display = 'block';
+      if (chatbotInput) chatbotInput.focus();
+    }
+  };
+
+  if (chatbotFab) chatbotFab.addEventListener('click', toggleChatbot);
+  if (chatbotCloseBtn) chatbotCloseBtn.addEventListener('click', toggleChatbot);
+
+  // Renderizar chips de preguntas rápidas
+  const renderChatChips = () => {
+    if (!chatChipsContainer) return;
+    chatChipsContainer.innerHTML = '';
+
+    faqList.forEach((item) => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'chat-chip';
+      chip.textContent = item.question;
+      chip.addEventListener('click', () => {
+        handleUserMessage(item.question);
+      });
+      chatChipsContainer.appendChild(chip);
+    });
+  };
+
+  // Cargar FAQs desde la API de Google Apps Script (tipo=faq)
+  async function loadFaqFromApi() {
+    try {
+      const response = await fetch(FAQ_API_URL);
+      const rawResponse = await response.json();
+      const rawData = rawResponse.data || rawResponse;
+
+      if (Array.isArray(rawData) && rawData.length > 0) {
+        const apiFaqs = rawData.map(item => {
+          const q = item.Pregunta_Frecuente || item.pregunta || item.question || '';
+          const a = item.Respuesta_Sintetizada || item.respuesta || item.answer || '';
+          const kwStr = item.Palabras_Clave || item.keywords || '';
+          const kw = kwStr.split(',').map(k => k.trim().toLowerCase());
+          return { question: q, answer: a, keywords: kw };
+        }).filter(f => f.question && f.answer);
+
+        if (apiFaqs.length > 0) {
+          faqList = [...apiFaqs, ...faqList];
+        }
+      }
+    } catch (error) {
+      console.log("Cargadas FAQs por defecto.");
+    }
+    renderChatChips();
+  }
+
+  // Iniciar la carga de FAQs
+  loadFaqFromApi();
+
+  // Función para agregar burbujas al historial de chat
+  const appendChatBubble = (text, sender = 'bot') => {
+    if (!chatbotBody) return;
+    const bubble = document.createElement('div');
+    bubble.className = `chat-bubble ${sender}-bubble`;
+    bubble.textContent = text;
+    chatbotBody.appendChild(bubble);
+    chatbotBody.scrollTop = chatbotBody.scrollHeight;
+  };
+
+  // Buscar mejor respuesta en las FAQs
+  const findFaqAnswer = (userText) => {
+    const query = userText.toLowerCase().trim();
+    if (!query) return null;
+
+    // 1. Coincidencia exacta o parcial en la pregunta
+    for (const item of faqList) {
+      if (item.question.toLowerCase().includes(query) || query.includes(item.question.toLowerCase())) {
+        return item.answer;
+      }
+    }
+
+    // 2. Coincidencia por palabras clave
+    for (const item of faqList) {
+      if (item.keywords && item.keywords.some(kw => kw && kw.length > 2 && query.includes(kw))) {
+        return item.answer;
+      }
+    }
+
+    return null;
+  };
+
+  // Manejar envío de mensaje del usuario
+  const handleUserMessage = (text) => {
+    if (!text || !text.trim()) return;
+
+    appendChatBubble(text, 'user');
+    if (chatbotInput) chatbotInput.value = '';
+
+    // Mostrar respuesta simulando tiempo de escritura
+    setTimeout(() => {
+      const answer = findFaqAnswer(text);
+      if (answer) {
+        appendChatBubble(answer, 'bot');
+      } else {
+        appendChatBubble("No encontré esa consulta exacta en nuestra base de datos, pero puedes dejarnos tu mensaje en nuestro formulario de contacto o escribirnos directamente a ibod.bot@gmail.com para ayudarte inmediatamente.", 'bot');
+      }
+    }, 400);
+  };
+
+  if (chatbotForm) {
+    chatbotForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (chatbotInput) {
+        handleUserMessage(chatbotInput.value);
+      }
+    });
+  }
 });
