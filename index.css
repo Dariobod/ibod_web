@@ -1963,17 +1963,17 @@ body {
   .navbar {
     top: 16px;
     width: calc(100% - 32px);
-    max-width: 380px;
-    padding: 5px 14px 5px 16px;
+    max-width: 400px;
+    padding: 6px 16px 6px 20px;
   }
 
   .navbar-container {
-    height: 44px;
+    height: 52px;
     gap: 16px;
   }
 
   .navbar .brand-logo {
-    height: 32px;
+    height: 46px;
   }
   
   .nav-menu {
@@ -2366,20 +2366,20 @@ body {
 
   .navbar {
     width: calc(100% - 32px);
-    max-width: 350px;
+    max-width: 370px;
     left: 50%;
     transform: translateX(-50%);
     top: 14px;
-    padding: 4px 12px 4px 14px;
+    padding: 5px 14px 5px 16px;
   }
 
   .navbar-container {
-    height: 40px;
+    height: 48px;
     gap: 12px;
   }
 
   .navbar .brand-logo {
-    height: 28px;
+    height: 42px;
   }
 }
 
