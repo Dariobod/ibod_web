@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.innerHTML = `
         <div class="portfolio-thumbnail">
           <iframe 
-            src="https://www.youtube-nocookie.com/embed/${v.ytId}?autoplay=1&mute=1&loop=1&playlist=${v.ytId}&controls=0&showinfo=0&rel=0&enablejsapi=1&playsinline=1&modestbranding=1&cc_load_policy=0&cc_lang_pref=off&iv_load_policy=3" 
+            src="https://www.youtube-nocookie.com/embed/${v.ytId}?autoplay=1&mute=1&loop=1&playlist=${v.ytId}&controls=0&showinfo=0&rel=0&enablejsapi=1&playsinline=1&modestbranding=1&cc_load_policy=0&cc_lang_pref=none&iv_load_policy=3" 
             title="${v.title}" 
             class="portfolio-thumb-video" 
             frameborder="0" 
@@ -261,6 +261,26 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       
       container.appendChild(card);
+
+      const iframe = card.querySelector('iframe');
+      if (iframe) {
+        const disableCaptions = () => {
+          try {
+            if (iframe.contentWindow) {
+              iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unloadModule', args: ['captions'] }), '*');
+              iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setOption', args: ['captions', 'track', {}] }), '*');
+              iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setOption', args: ['cc', 'track', {}] }), '*');
+            }
+          } catch (e) {}
+        };
+
+        iframe.addEventListener('load', () => {
+          disableCaptions();
+          setTimeout(disableCaptions, 400);
+          setTimeout(disableCaptions, 1200);
+          setTimeout(disableCaptions, 2500);
+        });
+      }
     });
   }
 
