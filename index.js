@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.innerHTML = `
         <div class="portfolio-thumbnail">
           <iframe 
-            src="https://www.youtube-nocookie.com/embed/${v.ytId}?autoplay=1&mute=1&loop=1&playlist=${v.ytId}&controls=0&showinfo=0&rel=0&enablejsapi=1&playsinline=1&modestbranding=1&cc_load_policy=0&iv_load_policy=3" 
+            src="https://www.youtube-nocookie.com/embed/${v.ytId}?autoplay=1&mute=1&loop=1&playlist=${v.ytId}&controls=0&showinfo=0&rel=0&enablejsapi=1&playsinline=1&modestbranding=1&cc_load_policy=0&cc_lang_pref=off&iv_load_policy=3" 
             title="${v.title}" 
             class="portfolio-thumb-video" 
             frameborder="0" 
