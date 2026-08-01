@@ -284,6 +284,25 @@ body {
   border: none;
   color: var(--text-primary);
   cursor: pointer;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transition: background-color var(--transition-fast);
+}
+
+.menu-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.menu-toggle svg {
+  width: 26px;
+  height: 26px;
+  stroke-width: 2.2px;
+  display: block;
 }
 
 /* Mobile Menu Overlay */
