@@ -736,17 +736,21 @@
   <!-- Modal de Reproductor de Video -->
   <div class="video-modal-overlay">
     <div class="video-modal-container">
-      <button class="video-modal-close" aria-label="Cerrar Reproductor">
-        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-      <div class="video-modal-content">
-        <video controls class="modal-video-element">
-          <source src="ibod_video_slider_principal.webm" type="video/webm">
-          Tu navegador no soporta videos HTML5.
-        </video>
+      <div class="video-modal-card">
+        <button class="video-modal-close" aria-label="Cerrar Reproductor">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <div class="video-modal-player-col" id="modal-player-container">
+          <!-- Video HTML5 o iframe dinámico de YouTube -->
+        </div>
+        <div class="video-modal-info-col">
+          <span class="modal-project-tag" id="modal-project-tag">Categoría</span>
+          <h3 class="modal-project-title" id="modal-project-title">Título del Proyecto</h3>
+          <p class="modal-project-desc" id="modal-project-desc">Descripción detallada del trabajo de edición y narrativa del video.</p>
+        </div>
       </div>
     </div>
   </div>

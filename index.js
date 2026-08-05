@@ -350,17 +350,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      const playBtn = card.querySelector('button.project-play-btn[data-video]');
-      if (playBtn) {
-        playBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const videoSrc = playBtn.getAttribute('data-video');
-          if (videoSrc && typeof openVideoModal === 'function') {
-            openVideoModal(videoSrc);
-          }
-        });
-      }
+      card.style.cursor = 'pointer';
+
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (typeof openVideoModal === 'function') {
+          openVideoModal({
+            url: v.urlOriginal,
+            title: v.title,
+            desc: v.desc,
+            category: v.category,
+            provider: v.provider,
+            ytId: v.ytId,
+            isVertical: isVertical
+          });
+        }
+      });
 
       const iframe = card.querySelector('iframe');
       if (iframe) {
@@ -577,38 +582,117 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   /* ==========================================================================
-     7. MODAL DE REPRODUCTOR DE VIDEO
+     7. MODAL DE REPRODUCTOR DE VIDEO (SPLIT-VIEW PLAYER & INFO)
      ========================================================================== */
   const videoModal = document.querySelector('.video-modal-overlay');
   const videoModalClose = document.querySelector('.video-modal-close');
-  const modalVideoElement = document.querySelector('.modal-video-element');
-  const playButtons = document.querySelectorAll('.project-play-btn, .showcase-play-btn');
 
-  function openVideoModal(videoSrc) {
-    if (videoModal && modalVideoElement) {
-      modalVideoElement.src = videoSrc;
-      videoModal.classList.add('active');
-      modalVideoElement.play().catch(e => console.log('Autoplay blocked:', e));
-      document.body.style.overflow = 'hidden';
+  function openVideoModal(videoData) {
+    const playerContainer = document.getElementById('modal-player-container');
+    const tagEl = document.getElementById('modal-project-tag');
+    const titleEl = document.getElementById('modal-project-title');
+    const descEl = document.getElementById('modal-project-desc');
+
+    if (!videoModal || !playerContainer) return;
+
+    let data = {};
+    if (typeof videoData === 'string') {
+      data = { url: videoData, title: 'Video de Portafolio', desc: 'Edición profesional de contenido audiovisual realizada por el equipo de iBod.', category: 'Trabajo' };
+    } else {
+      data = videoData || {};
+    }
+
+    const url = data.url || data.urlOriginal || '';
+    const title = data.title || 'Sin Título';
+    const desc = data.desc || 'Edición profesional de contenido audiovisual realizada por el equipo de iBod.';
+    const category = data.category || 'Trabajo';
+
+    // 1. Actualizar Información de la tarjeta en la columna derecha
+    if (tagEl) tagEl.textContent = category;
+    if (titleEl) titleEl.textContent = title;
+    if (descEl) descEl.textContent = desc;
+
+    // 2. Determinar si el video es vertical (Shorts / Reels)
+    const isVert = data.isVertical !== undefined ? data.isVertical : isVerticalVideo(url, category);
+    if (isVert) {
+      playerContainer.classList.add('is-vertical');
+    } else {
+      playerContainer.classList.remove('is-vertical');
+    }
+
+    // 3. Determinar proveedor del video (YouTube o Cloudinary / Directo)
+    const provider = data.provider || (getYouTubeId(url) ? 'youtube' : 'cloudinary');
+    playerContainer.innerHTML = '';
+
+    if (provider === 'youtube') {
+      const ytId = data.ytId || getYouTubeId(url);
+      playerContainer.innerHTML = `
+        <iframe 
+          src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0&controls=1&enablejsapi=1&playsinline=1" 
+          title="${title}" 
+          class="modal-iframe-element" 
+          frameborder="0" 
+          allow="autoplay; encrypted-media; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      `;
+    } else {
+      playerContainer.innerHTML = `
+        <video 
+          src="${url}" 
+          controls 
+          autoplay 
+          playsinline 
+          class="modal-video-element">
+        </video>
+      `;
+      const videoEl = playerContainer.querySelector('video');
+      if (videoEl) {
+        videoEl.muted = false; // Sonido activado en modal
+        const playPromise = videoEl.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(e => console.log('Autoplay modal blocked:', e));
+        }
+      }
+    }
+
+    videoModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeVideoModal() {
+    const playerContainer = document.getElementById('modal-player-container');
+    if (videoModal) {
+      videoModal.classList.remove('active');
+      if (playerContainer) {
+        const videoEl = playerContainer.querySelector('video');
+        if (videoEl) {
+          videoEl.pause();
+          videoEl.src = '';
+        }
+        playerContainer.innerHTML = '';
+      }
+      document.body.style.overflow = '';
     }
   }
 
-  const closeVideoModal = () => {
-    if (videoModal && modalVideoElement) {
-      videoModal.classList.remove('active');
-      modalVideoElement.pause();
-      modalVideoElement.src = '';
-      document.body.style.overflow = '';
-    }
-  };
+  // Delegación de clics para cualquier elemento estático de portafolio o showcase
+  document.querySelectorAll('.portfolio-card:not([data-dynamic])').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      const playBtn = card.querySelector('.project-play-btn');
+      const videoSrc = playBtn ? playBtn.getAttribute('data-video') : 'ibod_video_slider_principal.webm';
+      const title = card.querySelector('.project-creator')?.textContent || 'Proyecto Destacado';
+      const desc = card.querySelector('.project-desc')?.textContent || 'Edición y producción audiovisual profesional.';
+      const tag = card.querySelector('.project-tag')?.textContent || 'Destacado';
 
-  playButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation(); // Evita clics en la tarjeta
-      
-      // Si el botón tiene un data-video específico, lo cargamos. Si no, usamos el por defecto.
-      const videoSrc = btn.getAttribute('data-video') || 'ibod_video_slider_principal.webm';
-      openVideoModal(videoSrc);
+      openVideoModal({
+        url: videoSrc || 'ibod_video_slider_principal.webm',
+        title: title,
+        desc: desc,
+        category: tag
+      });
     });
   });
 
@@ -618,7 +702,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (videoModal) {
     videoModal.addEventListener('click', (e) => {
-      // Cierra si hace clic fuera del contenedor del video
       if (e.target === videoModal) {
         closeVideoModal();
       }
