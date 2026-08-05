@@ -157,12 +157,55 @@ document.addEventListener('DOMContentLoaded', () => {
     return (match && match[1].length === 11) ? match[1] : null;
   }
 
-  // Regla de formato: Solamente si la categoría empieza con "Reel-" se muestra la tarjeta en formato vertical (9:16). El resto en horizontal (16:9).
+  // Generador de poster/thumbnail para URLs de Cloudinary
+  function getCloudinaryPoster(url) {
+    if (!url || typeof url !== 'string') return '';
+    if (!/cloudinary\.com/i.test(url)) return '';
+    try {
+      return url
+        .replace(/\/video\/upload\/(?:[^\/]+\/)?/, '/video/upload/so_0,f_jpg,q_auto/')
+        .replace(/\.[a-z0-9]+$/i, '.jpg');
+    } catch (e) {
+      return '';
+    }
+  }
+
+  // Función para detectar la fuente del video (YouTube, Cloudinary o archivo de video directo)
+  function parseVideoSource(url) {
+    if (!url) return { provider: 'unknown', url: '' };
+
+    const ytId = getYouTubeId(url);
+    if (ytId) {
+      return {
+        provider: 'youtube',
+        ytId: ytId,
+        url: url,
+        thumbnail: `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`
+      };
+    }
+
+    const isCloudinary = /cloudinary\.com/i.test(url) || /\/video\/upload\//i.test(url);
+    const isDirectVideo = /\.(mp4|webm|mov|m4v|ogg)(\?.*)?$/i.test(url);
+
+    if (isCloudinary || isDirectVideo || /^https?:\/\//i.test(url)) {
+      const poster = isCloudinary ? getCloudinaryPoster(url) : '';
+      return {
+        provider: 'cloudinary',
+        url: url,
+        thumbnail: poster
+      };
+    }
+
+    return { provider: 'unknown', url: url };
+  }
+
+  // Regla de formato: Formato vertical (9:16) si la categoría contiene "Reel" o "Short", o si la URL indica formato vertical / reel.
   function isVerticalVideo(url, category) {
     if (!category) category = '';
     const catTrimmed = category.trim().toLowerCase();
-    const isShortUrl = /\/shorts\//i.test(url || '');
-    return catTrimmed.startsWith('reel-') || isShortUrl;
+    const urlLower = (url || '').toLowerCase();
+    const isShortOrReelUrl = /\/shorts\//i.test(urlLower) || /reel/i.test(urlLower) || /vertical/i.test(urlLower);
+    return catTrimmed.startsWith('reel-') || catTrimmed.includes('reel') || catTrimmed.includes('short') || isShortOrReelUrl;
   }
 
   // Renderizado dinámico de botones de filtro por categoría
@@ -198,9 +241,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentCards = document.querySelectorAll('.portfolio-card');
 
         currentCards.forEach(card => {
-          const category = card.getAttribute('data-category');
+          const category = card.getAttribute('data-category') || '';
 
-          if (filterValue === 'all' || category === filterValue) {
+          if (filterValue === 'all' || category.toLowerCase() === filterValue.toLowerCase()) {
             card.style.display = 'flex';
             setTimeout(() => {
               card.style.opacity = '1';
@@ -218,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Función para renderizar las tarjetas (Cards) en el DOM
+  // Función para renderizar las tarjetas (Cards) en el DOM (YouTube y Cloudinary/Video directo)
   function renderGrid(data, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -235,9 +278,33 @@ document.addEventListener('DOMContentLoaded', () => {
       const card = document.createElement('div');
       card.className = `portfolio-card reveal visible ${isVertical ? 'portfolio-card-vertical' : ''}`;
       card.setAttribute('data-category', v.category);
-      
-      card.innerHTML = `
-        <div class="portfolio-thumbnail">
+
+      let mediaHtml = '';
+      let playBtnHtml = '';
+
+      if (v.provider === 'cloudinary') {
+        const posterAttr = v.thumbnail ? `poster="${v.thumbnail}"` : '';
+        mediaHtml = `
+          <video 
+            src="${v.urlOriginal}" 
+            ${posterAttr}
+            class="portfolio-thumb-video" 
+            autoplay 
+            muted 
+            loop 
+            playsinline 
+            webkit-playsinline
+            preload="auto"
+            aria-label="${v.title}">
+          </video>`;
+        playBtnHtml = `
+          <button class="project-play-btn" data-video="${v.urlOriginal}" aria-label="Ver video">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+              <path d="M8 5v14l11-7z"></path>
+            </svg>
+          </button>`;
+      } else {
+        mediaHtml = `
           <iframe 
             src="https://www.youtube-nocookie.com/embed/${v.ytId}?autoplay=1&mute=1&loop=1&playlist=${v.ytId}&controls=0&showinfo=0&rel=0&enablejsapi=1&playsinline=1&modestbranding=1&cc_load_policy=0&cc_lang_pref=none&iv_load_policy=3" 
             title="${v.title}" 
@@ -245,14 +312,21 @@ document.addEventListener('DOMContentLoaded', () => {
             frameborder="0" 
             allow="autoplay; encrypted-media; picture-in-picture" 
             allowfullscreen>
-          </iframe>
-          <div class="portfolio-thumb-overlay"></div>
-          <span class="project-tag">${v.category}</span>
+          </iframe>`;
+        playBtnHtml = `
           <a href="${v.urlOriginal}" target="_blank" rel="noopener noreferrer" class="project-play-btn" aria-label="Ver video en YouTube">
             <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
               <path d="M8 5v14l11-7z"></path>
             </svg>
-          </a>
+          </a>`;
+      }
+      
+      card.innerHTML = `
+        <div class="portfolio-thumbnail">
+          ${mediaHtml}
+          <div class="portfolio-thumb-overlay"></div>
+          <span class="project-tag">${v.category}</span>
+          ${playBtnHtml}
         </div>
         <div class="portfolio-info">
           <h4 class="project-creator">${v.title}</h4>
@@ -261,6 +335,32 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       
       container.appendChild(card);
+
+      // Si es un video HTML5 (Cloudinary / Directo), asegurar mute e inicialización por JS
+      const videoEl = card.querySelector('video');
+      if (videoEl) {
+        videoEl.muted = true;
+        videoEl.defaultMuted = true;
+        videoEl.playsInline = true;
+        const playPromise = videoEl.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(err => {
+            console.log('Autoplay silencioso diferido:', err);
+          });
+        }
+      }
+
+      const playBtn = card.querySelector('button.project-play-btn[data-video]');
+      if (playBtn) {
+        playBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const videoSrc = playBtn.getAttribute('data-video');
+          if (videoSrc && typeof openVideoModal === 'function') {
+            openVideoModal(videoSrc);
+          }
+        });
+      }
 
       const iframe = card.querySelector('iframe');
       if (iframe) {
@@ -336,22 +436,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const rawData = rawResponse.data || rawResponse; 
 
       if (!Array.isArray(rawData) || rawData.length === 0) {
+        renderGrid([], 'portfolio-grid');
         return;
       }
 
       const videos = rawData.map(item => {
-        const link = item.link || item.url || '';
-        const ytId = getYouTubeId(link);
+        const link = (item.link || item.url || '').trim();
+        const parsed = parseVideoSource(link);
         const cat = (item.categoria || item.category || 'General').trim();
         return {
           title: item.titulo || item.title || 'Sin Título',
           desc: item.descripcion || item.desc || '',
           category: cat,
           urlOriginal: link,
-          ytId: ytId,
-          thumbnail: ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : ''
+          provider: parsed.provider,
+          ytId: parsed.ytId || null,
+          thumbnail: parsed.thumbnail || ''
         };
-      }).filter(v => v.ytId !== null);
+      }).filter(v => v.provider !== 'unknown');
 
       if (videos.length > 0) {
         allTrabajos = videos;
@@ -359,9 +461,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const uniqueCategories = [...new Set(videos.map(v => v.category))];
         renderFilterButtons(uniqueCategories);
         renderGrid(allTrabajos, 'portfolio-grid');
+      } else {
+        renderGrid([], 'portfolio-grid');
       }
     } catch (error) {
       console.error("Error al cargar trabajos desde API:", error);
+      renderGrid([], 'portfolio-grid');
     }
   }
 
@@ -479,14 +584,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalVideoElement = document.querySelector('.modal-video-element');
   const playButtons = document.querySelectorAll('.project-play-btn, .showcase-play-btn');
 
-  const openVideoModal = (videoSrc) => {
+  function openVideoModal(videoSrc) {
     if (videoModal && modalVideoElement) {
       modalVideoElement.src = videoSrc;
       videoModal.classList.add('active');
-      modalVideoElement.play();
+      modalVideoElement.play().catch(e => console.log('Autoplay blocked:', e));
       document.body.style.overflow = 'hidden';
     }
-  };
+  }
 
   const closeVideoModal = () => {
     if (videoModal && modalVideoElement) {
