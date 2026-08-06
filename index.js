@@ -589,6 +589,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openVideoModal(videoData) {
     const playerContainer = document.getElementById('modal-player-container');
+    const modalContainer = videoModal ? videoModal.querySelector('.video-modal-container') : null;
+    const modalCard = videoModal ? videoModal.querySelector('.video-modal-card') : null;
     const tagEl = document.getElementById('modal-project-tag');
     const titleEl = document.getElementById('modal-project-title');
     const descEl = document.getElementById('modal-project-desc');
@@ -612,17 +614,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (titleEl) titleEl.textContent = title;
     if (descEl) descEl.textContent = desc;
 
+    const setVerticalState = (isVertical) => {
+      if (isVertical) {
+        playerContainer.classList.add('is-vertical');
+        if (modalContainer) modalContainer.classList.add('is-vertical');
+        if (modalCard) modalCard.classList.add('is-vertical');
+      } else {
+        playerContainer.classList.remove('is-vertical');
+        if (modalContainer) modalContainer.classList.remove('is-vertical');
+        if (modalCard) modalCard.classList.remove('is-vertical');
+      }
+    };
+
     // 2. Determinar si el video es vertical (Shorts / Reels)
     const isVert = data.isVertical !== undefined ? data.isVertical : isVerticalVideo(url, category);
-    if (isVert) {
-      playerContainer.classList.add('is-vertical');
-    } else {
-      playerContainer.classList.remove('is-vertical');
-    }
+    setVerticalState(isVert);
 
     // 3. Determinar proveedor del video (YouTube o Cloudinary / Directo)
     const provider = data.provider || (getYouTubeId(url) ? 'youtube' : 'cloudinary');
     playerContainer.innerHTML = '';
+    playerContainer.style.cssText = ''; // limpiar cualquier estilo inline previo
 
     if (provider === 'youtube') {
       const ytId = data.ytId || getYouTubeId(url);
@@ -649,6 +660,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const videoEl = playerContainer.querySelector('video');
       if (videoEl) {
         videoEl.muted = false; // Sonido activado en modal
+        
+        const updateRatio = () => {
+          if (videoEl.videoWidth && videoEl.videoHeight) {
+            const isVertical = videoEl.videoHeight > videoEl.videoWidth;
+            setVerticalState(isVertical);
+          }
+        };
+
+        if (videoEl.readyState >= 1) {
+          updateRatio();
+        } else {
+          videoEl.addEventListener('loadedmetadata', updateRatio);
+        }
+
         const playPromise = videoEl.play();
         if (playPromise !== undefined) {
           playPromise.catch(e => console.log('Autoplay modal blocked:', e));
@@ -662,16 +687,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function closeVideoModal() {
     const playerContainer = document.getElementById('modal-player-container');
+    const modalContainer = videoModal ? videoModal.querySelector('.video-modal-container') : null;
+    const modalCard = videoModal ? videoModal.querySelector('.video-modal-card') : null;
     if (videoModal) {
       videoModal.classList.remove('active');
       if (playerContainer) {
+        playerContainer.classList.remove('is-vertical');
+        playerContainer.style.cssText = ''; // limpiar estilos inline
         const videoEl = playerContainer.querySelector('video');
         if (videoEl) {
           videoEl.pause();
           videoEl.src = '';
+          videoEl.style.aspectRatio = '';
         }
         playerContainer.innerHTML = '';
       }
+      if (modalContainer) modalContainer.classList.remove('is-vertical');
+      if (modalCard) modalCard.classList.remove('is-vertical');
       document.body.style.overflow = '';
     }
   }
