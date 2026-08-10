@@ -208,19 +208,40 @@ document.addEventListener('DOMContentLoaded', () => {
     return catTrimmed.startsWith('reel-') || catTrimmed.includes('reel') || catTrimmed.includes('short') || isShortOrReelUrl;
   }
 
+  // Función para aplicar filtro a las tarjetas por categoría
+  function filterCardsByCategory(filterValue) {
+    if (!filterValue) return;
+    const currentCards = document.querySelectorAll('.portfolio-card');
+    currentCards.forEach(card => {
+      const category = card.getAttribute('data-category') || '';
+
+      if (category.toLowerCase() === filterValue.toLowerCase()) {
+        card.style.display = 'flex';
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'scale(1)';
+        }, 50);
+      } else {
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          card.style.display = 'none';
+        }, 300);
+      }
+    });
+  }
+
   // Renderizado dinámico de botones de filtro por categoría
   function renderFilterButtons(categories) {
     const filtersContainer = document.getElementById('portfolio-filters');
     if (!filtersContainer) return;
 
-    filtersContainer.innerHTML = `
-      <button class="filter-btn active" data-filter="all">Todas</button>
-    `;
+    filtersContainer.innerHTML = '';
 
-    categories.forEach(cat => {
+    categories.forEach((cat, index) => {
       if (!cat) return;
       const btn = document.createElement('button');
-      btn.className = 'filter-btn';
+      btn.className = `filter-btn ${index === 0 ? 'active' : ''}`;
       btn.setAttribute('data-filter', cat);
       btn.textContent = cat;
       filtersContainer.appendChild(btn);
@@ -238,25 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.classList.add('active');
 
         const filterValue = button.getAttribute('data-filter');
-        const currentCards = document.querySelectorAll('.portfolio-card');
-
-        currentCards.forEach(card => {
-          const category = card.getAttribute('data-category') || '';
-
-          if (filterValue === 'all' || category.toLowerCase() === filterValue.toLowerCase()) {
-            card.style.display = 'flex';
-            setTimeout(() => {
-              card.style.opacity = '1';
-              card.style.transform = 'scale(1)';
-            }, 50);
-          } else {
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-              card.style.display = 'none';
-            }, 300);
-          }
-        });
+        filterCardsByCategory(filterValue);
       });
     });
   }
@@ -466,6 +469,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const uniqueCategories = [...new Set(videos.map(v => v.category))];
         renderFilterButtons(uniqueCategories);
         renderGrid(allTrabajos, 'portfolio-grid');
+        if (uniqueCategories.length > 0) {
+          filterCardsByCategory(uniqueCategories[0]);
+        }
       } else {
         renderGrid([], 'portfolio-grid');
       }
