@@ -7,10 +7,10 @@
   --bg-primary: #070709;
   --bg-secondary: #0e0e13;
   --bg-tertiary: #14141c;
-  --primary: #372AAC;
-  --primary-hover: #493cc9;
-  --primary-glow: rgba(55, 42, 172, 0.15);
-  --primary-gradient: linear-gradient(135deg, #372AAC 0%, #1e1370 100%);
+  --primary: #028ee0;
+  --primary-hover: #0077bd;
+  --primary-glow: rgba(2, 142, 224, 0.15);
+  --primary-gradient: linear-gradient(135deg, #028ee0 0%, #015c93 100%);
   --celeste: #028ee0;
   --celeste-hover: #009cff;
   --celeste-glow: rgba(2, 142, 224, 0.15);
@@ -18,7 +18,7 @@
   --text-secondary: #b3b3b7;
   --text-muted: #73737b;
   --border-primary: rgba(255, 255, 255, 0.08);
-  --border-blue: rgba(55, 42, 172, 0.2);
+  --border-blue: rgba(2, 142, 224, 0.2);
   --border-celeste: rgba(2, 142, 224, 0.2);
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Outfit', -apple-system, sans-serif;
@@ -2253,7 +2253,7 @@ body {
   background: var(--primary);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 30px rgba(55, 42, 172, 0.5);
+  box-shadow: 0 8px 30px rgba(2, 142, 224, 0.5);
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -2265,7 +2265,7 @@ body {
 .chatbot-toggle-fab:hover {
   transform: scale(1.08);
   background-color: var(--primary-hover);
-  box-shadow: 0 10px 35px rgba(55, 42, 172, 0.7);
+  box-shadow: 0 10px 35px rgba(2, 142, 224, 0.7);
 }
 
 /* Ventana de Diálogo */
