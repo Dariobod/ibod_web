@@ -948,6 +948,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (chatbotFab) chatbotFab.addEventListener('click', toggleChatbot);
   if (chatbotCloseBtn) chatbotCloseBtn.addEventListener('click', toggleChatbot);
 
+  // Evitar que el scroll del mouse sobre la ventana del chatbot desplace la página principal
+  if (chatbotWindow) {
+    const preventParentScroll = (e) => {
+      e.stopPropagation();
+    };
+    chatbotWindow.addEventListener('wheel', preventParentScroll, { passive: true });
+    chatbotWindow.addEventListener('touchmove', preventParentScroll, { passive: true });
+  }
+
   // Renderizar chips de preguntas rápidas
   const renderChatChips = () => {
     if (!chatChipsContainer) return;

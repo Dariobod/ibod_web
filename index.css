@@ -2291,6 +2291,7 @@ body {
   transform: translateY(20px) scale(0.95);
   pointer-events: none;
   transition: all var(--transition-normal);
+  overscroll-behavior: contain;
 }
 
 .chatbot-window.active {
@@ -2368,6 +2369,8 @@ body {
   flex-direction: column;
   gap: 12px;
   scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .chatbot-body::-webkit-scrollbar {
