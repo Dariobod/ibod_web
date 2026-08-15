@@ -2819,6 +2819,29 @@ body {
   transform: scale(1.08);
 }
 
+.chatbot-faq-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-primary);
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.chatbot-faq-btn:hover {
+  background: rgba(2, 142, 224, 0.15);
+  color: var(--celeste);
+  border-color: var(--border-blue);
+  transform: scale(1.08);
+}
+
 .chatbot-input {
   flex: 1;
   background: transparent;

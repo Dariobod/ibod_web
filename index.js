@@ -1028,6 +1028,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const chatbotContactAction = document.getElementById('chatbot-contact-action');
+  const chatbotFaqAction = document.getElementById('chatbot-faq-action');
 
   if (chatbotFab) chatbotFab.addEventListener('click', toggleChatbot);
   if (chatbotCloseBtn) chatbotCloseBtn.addEventListener('click', toggleChatbot);
@@ -1039,6 +1040,57 @@ document.addEventListener('DOMContentLoaded', () => {
       if (bookSec) {
         bookSec.scrollIntoView({ behavior: 'smooth' });
       }
+    });
+  }
+
+  const showFaqMenu = () => {
+    if (!chatbotBody) return;
+
+    const existingChips = chatbotBody.querySelector('.chat-chips-wrapper');
+    const allBubbles = chatbotBody.querySelectorAll('.chat-bubble');
+
+    // Si ya hubo interacción o mensajes en la conversación, agregar un bloque fresco de FAQs
+    if (allBubbles.length > 2) {
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble bot-bubble';
+      bubble.textContent = 'Aquí tienes las preguntas frecuentes sobre nuestro servicio:';
+
+      const chipsWrap = document.createElement('div');
+      chipsWrap.className = 'chat-chips-wrapper';
+      chipsWrap.style.marginTop = '10px';
+
+      const container = document.createElement('div');
+      container.className = 'chat-chips-container';
+
+      faqList.forEach((item) => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'chat-chip';
+        chip.textContent = item.question;
+        chip.addEventListener('click', () => {
+          handleUserMessage(item.question);
+        });
+        container.appendChild(chip);
+      });
+
+      chipsWrap.appendChild(container);
+      bubble.appendChild(chipsWrap);
+      chatbotBody.appendChild(bubble);
+      chatbotBody.scrollTop = chatbotBody.scrollHeight;
+    } else if (existingChips) {
+      existingChips.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      existingChips.style.transition = 'transform 0.2s ease';
+      existingChips.style.transform = 'scale(1.02)';
+      setTimeout(() => {
+        existingChips.style.transform = 'scale(1)';
+      }, 250);
+    }
+  };
+
+  if (chatbotFaqAction) {
+    chatbotFaqAction.addEventListener('click', (e) => {
+      e.preventDefault();
+      showFaqMenu();
     });
   }
 
