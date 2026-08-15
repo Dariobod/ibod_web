@@ -264,6 +264,11 @@ body {
   color: var(--text-primary);
 }
 
+.nav-link-highlight {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
 .nav-link::after {
   content: '';
   position: absolute;
