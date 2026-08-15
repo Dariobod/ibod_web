@@ -1417,26 +1417,63 @@ body {
   padding: 16px 20px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   background-color: rgba(255, 255, 255, 0.01);
   border-top: 1px solid var(--border-primary);
 }
 
+.testimonial-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
 .testimonial-account-name {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.testimonial-account-tag {
-  font-size: 0.8rem;
+.testimonial-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.star-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.star-icon.star-filled {
+  fill: #ffb800;
+  stroke: #ffb800;
+}
+
+.star-icon.star-empty {
+  fill: none;
+  stroke: #ffb800;
+  stroke-width: 2px;
+}
+
+.testimonial-card-desc {
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  font-weight: 500;
+  line-height: 1.4;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
 /* Carrusel Navigation Arrows */

@@ -1134,6 +1134,65 @@ document.addEventListener('DOMContentLoaded', () => {
     testimonialsTrack.innerHTML = skeletonHtml;
   }
 
+  // Parser seguro para cantidad de estrellas (admite "3/5", fechas de Google Sheets, enteros y strings)
+  function parseStars(val) {
+    if (val === undefined || val === null || val === '') return 5;
+    
+    if (typeof val === 'number') {
+      return Math.max(1, Math.min(5, Math.round(val)));
+    }
+    
+    const str = String(val).trim();
+    
+    // Formato "3/5", "4/5", "5/5"
+    const slashMatch = str.match(/^(\d+)\s*\/\s*(\d+)/);
+    if (slashMatch) {
+      const num = parseInt(slashMatch[1], 10);
+      return Math.max(1, Math.min(5, num));
+    }
+    
+    // Fallback para autoconversión de fecha en Google Sheets (ej: "2026-05-03T03:00:00.000Z" -> 3 estrellas)
+    if (str.includes('T') && str.includes('-')) {
+      try {
+        const d = new Date(str);
+        const day = d.getUTCDate();
+        if (day >= 1 && day <= 5) {
+          return day;
+        }
+      } catch (e) {}
+    }
+    
+    // Número como string ("5", "4", "3")
+    const num = parseInt(str, 10);
+    if (!isNaN(num)) {
+      return Math.max(1, Math.min(5, num));
+    }
+    
+    return 5;
+  }
+
+  // Generador de SVG de estrellas amarillas (llenas y con solo borde)
+  function renderStarRating(starsCount) {
+    const total = 5;
+    const filledCount = Math.max(1, Math.min(5, starsCount));
+    let starsHtml = '<div class="testimonial-stars" aria-label="' + filledCount + ' de 5 estrellas">';
+    for (let i = 1; i <= total; i++) {
+      if (i <= filledCount) {
+        starsHtml += `
+          <svg viewBox="0 0 24 24" class="star-icon star-filled">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>`;
+      } else {
+        starsHtml += `
+          <svg viewBox="0 0 24 24" class="star-icon star-empty">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>`;
+      }
+    }
+    starsHtml += '</div>';
+    return starsHtml;
+  }
+
   // Cargar testimonios desde la API
   async function loadTestimonios() {
     if (!testimonialsTrack) return;
@@ -1154,9 +1213,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       items.forEach(item => {
         const cuenta = item.cuenta || 'Cliente iBod';
-        const videoUrl = (item.video || item.link || '').trim();
+        const videoUrl = (item.video || '').trim();
         if (!videoUrl) return;
 
+        const descripcion = (item.descripcion || item.desc || '').trim();
+        const stars = parseStars(item.estrellas);
         const poster = getCloudinaryPoster(videoUrl);
 
         const card = document.createElement('div');
@@ -1185,8 +1246,11 @@ document.addEventListener('DOMContentLoaded', () => {
             </button>
           </div>
           <div class="testimonial-video-info">
-            <h4 class="testimonial-account-name">${cuenta}</h4>
-            <span class="testimonial-account-tag">Experiencia de edición</span>
+            <div class="testimonial-header-row">
+              <h4 class="testimonial-account-name">${cuenta}</h4>
+              ${renderStarRating(stars)}
+            </div>
+            ${descripcion ? `<p class="testimonial-card-desc" title="${descripcion}">${descripcion}</p>` : ''}
           </div>
         `;
 
@@ -1204,14 +1268,14 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
 
-        // Al hacer clic, abrir modal vertical con audio
+        // Al hacer clic, abrir modal vertical con audio y la descripción completa
         card.addEventListener('click', (e) => {
           e.preventDefault();
           if (typeof openVideoModal === 'function') {
             openVideoModal({
               url: videoUrl,
               title: cuenta,
-              desc: 'Testimonio de cliente',
+              desc: descripcion || 'Testimonio de cliente de iBod.',
               category: 'Testimonio',
               isVertical: true,
               provider: 'cloudinary'
