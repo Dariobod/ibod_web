@@ -2735,12 +2735,17 @@ body {
   align-self: flex-end;
 }
 
-/* Chips / Preguntas Frecuentes Rápidas */
+/* Chips / Preguntas Frecuentes Rápidas y Mapa de Sitio */
 .chat-chips-wrapper {
   margin-top: 6px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.chat-sitemap-wrapper {
+  margin-top: 8px;
+  margin-bottom: 4px;
 }
 
 .chat-chips-label {
@@ -2773,6 +2778,35 @@ body {
   background: var(--border-blue);
   color: #ffffff;
   border-color: var(--primary);
+}
+
+.chat-bot-action-row {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.chat-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--celeste);
+  background: rgba(2, 142, 224, 0.1);
+  border: 1px solid rgba(2, 142, 224, 0.25);
+  padding: 5px 12px;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.chat-contact-link:hover {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  transform: translateY(-1px);
 }
 
 /* Footer / Input del Chatbot */

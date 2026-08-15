@@ -1150,7 +1150,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadFaqFromApi();
 
   // Función para agregar burbujas al historial de chat
-  const appendChatBubble = (text, sender = 'bot', showContactBtn = false) => {
+  const appendChatBubble = (text, sender = 'bot') => {
     if (!chatbotBody) return;
     const bubble = document.createElement('div');
     bubble.className = `chat-bubble ${sender}-bubble`;
@@ -1160,35 +1160,32 @@ document.addEventListener('DOMContentLoaded', () => {
     textPara.textContent = text;
     bubble.appendChild(textPara);
 
-    if (showContactBtn) {
-      const btnWrapper = document.createElement('div');
-      btnWrapper.style.marginTop = '10px';
+    // En todas las respuestas del bot, agregar botón/link al formulario de contacto
+    if (sender === 'bot') {
+      const actionRow = document.createElement('div');
+      actionRow.className = 'chat-bot-action-row';
       
       const contactBtn = document.createElement('a');
       contactBtn.href = '#book';
-      contactBtn.className = 'btn btn-primary';
-      contactBtn.style.padding = '6px 14px';
-      contactBtn.style.fontSize = '0.78rem';
-      contactBtn.style.borderRadius = '100px';
-      contactBtn.style.textDecoration = 'none';
-      contactBtn.style.display = 'inline-flex';
-      contactBtn.style.alignItems = 'center';
-      contactBtn.style.gap = '6px';
+      contactBtn.className = 'chat-contact-link';
       contactBtn.innerHTML = `
-        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
         </svg>
-        Ir a Contacto
+        Ir al formulario de contacto
       `;
 
-      contactBtn.addEventListener('click', () => {
-        if (chatbotWindow) chatbotWindow.classList.remove('active');
-        if (fabIconChat) fabIconChat.style.display = 'block';
-        if (fabIconClose) fabIconClose.style.display = 'none';
+      contactBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleChatbot();
+        const bookSec = document.getElementById('book');
+        if (bookSec) {
+          bookSec.scrollIntoView({ behavior: 'smooth' });
+        }
       });
 
-      btnWrapper.appendChild(contactBtn);
-      bubble.appendChild(btnWrapper);
+      actionRow.appendChild(contactBtn);
+      bubble.appendChild(actionRow);
     }
 
     chatbotBody.appendChild(bubble);
@@ -1230,7 +1227,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (answer) {
         appendChatBubble(answer, 'bot');
       } else {
-        appendChatBubble("No encontré esa consulta exacta en nuestra base de datos, pero puedes dejarnos tu mensaje en nuestro formulario de contacto o escribirnos directamente a ibod.bot@gmail.com para ayudarte inmediatamente.", 'bot', true);
+        appendChatBubble("No encontré esa consulta exacta en nuestra base de datos, pero puedes dejarnos tu mensaje en nuestro formulario de contacto o escribirnos directamente a ibod.bot@gmail.com para ayudarte inmediatamente.", 'bot');
       }
     }, 400);
   };
@@ -1240,6 +1237,24 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       if (chatbotInput) {
         handleUserMessage(chatbotInput.value);
+      }
+    });
+  }
+
+  // Delegación de clics para los chips del mapa del sitio
+  if (chatbotBody) {
+    chatbotBody.addEventListener('click', (e) => {
+      const sitemapBtn = e.target.closest('.sitemap-chip');
+      if (sitemapBtn) {
+        e.preventDefault();
+        const targetSelector = sitemapBtn.getAttribute('data-target');
+        if (targetSelector) {
+          toggleChatbot();
+          const targetEl = document.querySelector(targetSelector);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
       }
     });
   }
