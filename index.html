@@ -569,50 +569,18 @@
         <p class="section-subtitle">Lo que dicen las marcas y creadores que confían en nuestro flujo de edición mensual.</p>
       </div>
       
-      <div class="testimonials-grid">
-        <!-- Testimonio 1 -->
-        <div class="testimonial-card reveal">
-          <div class="testimonial-author">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&fit=crop" alt="Daniel Brooks" class="author-avatar">
-            <div class="author-info">
-              <span class="author-name">Daniel Brooks</span>
-            </div>
-          </div>
-          <p class="testimonial-quote">"Trabajar con iBod ha cambiado totalmente mi flujo. Los edits son limpios, dinámicos y lo más importante: ¡siempre se entregan a tiempo!"</p>
+      <div class="testimonials-carousel-wrapper reveal">
+        <button class="carousel-nav-btn prev" id="testimonials-prev" aria-label="Testimonio anterior">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        
+        <div class="testimonials-track" id="testimonials-track">
+          <!-- Las tarjetas de video se cargarán dinámicamente desde la API -->
         </div>
         
-        <!-- Testimonio 2 -->
-        <div class="testimonial-card reveal">
-          <div class="testimonial-author">
-            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop" alt="Maya Rodriguez" class="author-avatar">
-            <div class="author-info">
-              <span class="author-name">Maya Rodriguez</span>
-            </div>
-          </div>
-          <p class="testimonial-quote">"El nivel de atención a los detalles —desde la corrección de color hasta la sincronización del audio de efectos— hace que mis videos resalten en el feed."</p>
-        </div>
-        
-        <!-- Testimonio 3 -->
-        <div class="testimonial-card reveal">
-          <div class="testimonial-author">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&fit=crop" alt="Sophie Turner" class="author-avatar">
-            <div class="author-info">
-              <span class="author-name">Sophie Turner</span>
-            </div>
-          </div>
-          <p class="testimonial-quote">"El equilibrio perfecto entre creatividad y profesionalismo. Capturaron mi estilo nativo inmediatamente y mi retención creció un 25%."</p>
-        </div>
-        
-        <!-- Testimonio 4 -->
-        <div class="testimonial-card reveal">
-          <div class="testimonial-author">
-            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&fit=crop" alt="Olivia Bennett" class="author-avatar">
-            <div class="author-info">
-              <span class="author-name">Olivia Bennett</span>
-            </div>
-          </div>
-          <p class="testimonial-quote">"Valoro mucho cómo logran equilibrar la creatividad y la prolijidad en cada edición, manteniendo siempre una estética limpia y sofisticada."</p>
-        </div>
+        <button class="carousel-nav-btn next" id="testimonials-next" aria-label="Siguiente testimonio">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
       </div>
     </div>
   </section>

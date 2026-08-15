@@ -1103,4 +1103,194 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+
+  /* ==========================================================================
+     12. CARRUSEL DINÁMICO DE TESTIMONIOS (REELS DE CLIENTES CON API)
+     ========================================================================== */
+  const TESTIMONIOS_API_URL = "https://script.google.com/macros/s/AKfycbzncM-ncIHcE69Pc1LPzNSXSEsVxkRioIeuKnzYWKakOPTF0SXNDZZRtTctE_SX4JGH/exec?tipo=testimonios";
+
+  const testimonialsTrack = document.getElementById('testimonials-track');
+  const testimonialsPrev = document.getElementById('testimonials-prev');
+  const testimonialsNext = document.getElementById('testimonials-next');
+
+  // Renderizar esqueletos de carga de testimonios
+  function renderTestimonialSkeletons() {
+    if (!testimonialsTrack) return;
+    let skeletonHtml = '';
+    for (let i = 0; i < 4; i++) {
+      skeletonHtml += `
+        <div class="skeleton-testimonial-card">
+          <div class="skeleton skeleton-testimonial-thumb">
+            <div class="skeleton skeleton-tag"></div>
+          </div>
+          <div class="skeleton-testimonial-info">
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-desc"></div>
+          </div>
+        </div>
+      `;
+    }
+    testimonialsTrack.innerHTML = skeletonHtml;
+  }
+
+  // Cargar testimonios desde la API
+  async function loadTestimonios() {
+    if (!testimonialsTrack) return;
+
+    renderTestimonialSkeletons();
+
+    try {
+      const response = await fetch(TESTIMONIOS_API_URL);
+      const rawResponse = await response.json();
+      const items = rawResponse.data || rawResponse;
+
+      if (!Array.isArray(items) || items.length === 0) {
+        testimonialsTrack.innerHTML = '<p style="color: var(--text-muted); padding: 40px; width: 100%; text-align: center;">No hay testimonios disponibles en este momento.</p>';
+        return;
+      }
+
+      testimonialsTrack.innerHTML = '';
+
+      items.forEach(item => {
+        const cuenta = item.cuenta || 'Cliente iBod';
+        const videoUrl = (item.video || item.link || '').trim();
+        if (!videoUrl) return;
+
+        const poster = getCloudinaryPoster(videoUrl);
+
+        const card = document.createElement('div');
+        card.className = 'testimonial-video-card reveal visible';
+
+        card.innerHTML = `
+          <div class="testimonial-video-thumb">
+            <video 
+              src="${videoUrl}" 
+              ${poster ? `poster="${poster}"` : ''} 
+              class="testimonial-thumb-video" 
+              autoplay 
+              muted 
+              loop 
+              playsinline 
+              webkit-playsinline
+              preload="auto"
+              aria-label="Testimonio de ${cuenta}">
+            </video>
+            <div class="portfolio-thumb-overlay"></div>
+            <span class="project-tag">Testimonio</span>
+            <button class="project-play-btn" data-video="${videoUrl}" aria-label="Ver testimonio de ${cuenta}">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                <path d="M8 5v14l11-7z"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="testimonial-video-info">
+            <h4 class="testimonial-account-name">${cuenta}</h4>
+            <span class="testimonial-account-tag">Experiencia de edición</span>
+          </div>
+        `;
+
+        testimonialsTrack.appendChild(card);
+
+        // Autoplay silenciado seguro para el video thumbnail
+        const videoEl = card.querySelector('video');
+        if (videoEl) {
+          videoEl.muted = true;
+          videoEl.defaultMuted = true;
+          videoEl.playsInline = true;
+          const playPromise = videoEl.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(e => console.log('Autoplay testimonial diferido:', e));
+          }
+        }
+
+        // Al hacer clic, abrir modal vertical con audio
+        card.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (typeof openVideoModal === 'function') {
+            openVideoModal({
+              url: videoUrl,
+              title: cuenta,
+              desc: 'Testimonio de cliente',
+              category: 'Testimonio',
+              isVertical: true,
+              provider: 'cloudinary'
+            });
+          }
+        });
+      });
+
+      // Inicializar navegación y gestos de desplazamiento del carrusel
+      setupTestimonialsCarousel();
+
+    } catch (error) {
+      console.error('Error al cargar testimonios:', error);
+      testimonialsTrack.innerHTML = '<p style="color: var(--text-muted); padding: 40px; width: 100%; text-align: center;">No se pudieron cargar los testimonios.</p>';
+    }
+  }
+
+  // Configuración de controles y arrastre (drag-to-scroll) para el carrusel
+  function setupTestimonialsCarousel() {
+    if (!testimonialsTrack) return;
+
+    if (testimonialsPrev) {
+      testimonialsPrev.addEventListener('click', () => {
+        const cardWidth = testimonialsTrack.querySelector('.testimonial-video-card')?.offsetWidth || 280;
+        testimonialsTrack.scrollBy({ left: -(cardWidth + 24), behavior: 'smooth' });
+      });
+    }
+
+    if (testimonialsNext) {
+      testimonialsNext.addEventListener('click', () => {
+        const cardWidth = testimonialsTrack.querySelector('.testimonial-video-card')?.offsetWidth || 280;
+        testimonialsTrack.scrollBy({ left: (cardWidth + 24), behavior: 'smooth' });
+      });
+    }
+
+    // Arrastre con mouse (Mouse Drag)
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    let hasMoved = false;
+
+    testimonialsTrack.addEventListener('mousedown', (e) => {
+      isDown = true;
+      hasMoved = false;
+      testimonialsTrack.classList.add('is-dragging');
+      startX = e.pageX - testimonialsTrack.offsetLeft;
+      scrollLeft = testimonialsTrack.scrollLeft;
+    });
+
+    testimonialsTrack.addEventListener('mouseleave', () => {
+      isDown = false;
+      testimonialsTrack.classList.remove('is-dragging');
+    });
+
+    testimonialsTrack.addEventListener('mouseup', () => {
+      isDown = false;
+      testimonialsTrack.classList.remove('is-dragging');
+    });
+
+    testimonialsTrack.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - testimonialsTrack.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      if (Math.abs(walk) > 5) {
+        hasMoved = true;
+      }
+      testimonialsTrack.scrollLeft = scrollLeft - walk;
+    });
+
+    // Prevenir apertura de modal si el usuario estuvo arrastrando el carrusel
+    testimonialsTrack.addEventListener('click', (e) => {
+      if (hasMoved) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+  }
+
+  // Iniciar carga de testimonios
+  loadTestimonios();
 });
