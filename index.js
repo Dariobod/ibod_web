@@ -1065,15 +1065,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (Array.isArray(rawData) && rawData.length > 0) {
         const apiFaqs = rawData.map(item => {
-          const q = item.Pregunta_Frecuente || item.pregunta || item.question || '';
-          const a = item.Respuesta_Sintetizada || item.respuesta || item.answer || '';
-          const kwStr = item.Palabras_Clave || item.keywords || '';
-          const kw = kwStr.split(',').map(k => k.trim().toLowerCase());
+          const q = (item.Pregunta_Frecuente || item.pregunta || item.question || '').trim();
+          const a = (item.Respuesta_Sintetizada || item.respuesta || item.answer || '').trim();
+          const kwStr = (item.Palabras_Clave || item.keywords || '').trim();
+          const kw = kwStr ? kwStr.split(',').map(k => k.trim().toLowerCase()).filter(Boolean) : [];
           return { question: q, answer: a, keywords: kw };
         }).filter(f => f.question && f.answer);
 
         if (apiFaqs.length > 0) {
-          faqList = [...apiFaqs, ...faqList];
+          faqList = apiFaqs;
         }
       }
     } catch (error) {
