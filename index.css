@@ -1774,6 +1774,27 @@ body {
   color: var(--primary);
 }
 
+.contact-brand-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 48px;
+  width: 100%;
+}
+
+.contact-brand-logo {
+  height: 64px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 16px rgba(2, 142, 224, 0.2));
+  transition: transform var(--transition-normal), filter var(--transition-normal);
+}
+
+.contact-brand-logo:hover {
+  transform: scale(1.04);
+  filter: drop-shadow(0 0 24px rgba(2, 142, 224, 0.4));
+}
+
 /* Contact Form Container */
 .contact-form-container {
   background-color: var(--bg-secondary);
