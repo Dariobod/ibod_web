@@ -1027,8 +1027,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const chatbotContactAction = document.getElementById('chatbot-contact-action');
+
   if (chatbotFab) chatbotFab.addEventListener('click', toggleChatbot);
   if (chatbotCloseBtn) chatbotCloseBtn.addEventListener('click', toggleChatbot);
+  if (chatbotContactAction) {
+    chatbotContactAction.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleChatbot();
+      const bookSec = document.getElementById('book');
+      if (bookSec) {
+        bookSec.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
 
   // Evitar que el scroll del mouse sobre la ventana del chatbot desplace la página principal
   if (chatbotWindow) {
