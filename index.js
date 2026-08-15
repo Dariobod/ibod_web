@@ -666,7 +666,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let data = {};
     if (typeof videoData === 'string') {
-      data = { url: videoData, title: 'Video de Portafolio', desc: 'Edición profesional de contenido audiovisual realizada por el equipo de iBod.', category: 'Trabajo' };
+      data = { url: videoData, title: 'Video de Portafolio', desc: 'Edición profesional de contenido audiovisual realizada por el equipo de iBod.', category: 'Trabajos' };
     } else {
       data = videoData || {};
     }
@@ -674,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const url = data.url || data.urlOriginal || '';
     const title = data.title || 'Sin Título';
     const desc = data.desc || 'Edición profesional de contenido audiovisual realizada por el equipo de iBod.';
-    const category = data.category || 'Trabajo';
+    const category = data.category || 'Trabajos';
 
     // 1. Actualizar Información de la tarjeta en la columna derecha
     if (tagEl) tagEl.textContent = category;
