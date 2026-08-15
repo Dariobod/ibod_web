@@ -1778,21 +1778,25 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 48px;
+  margin-top: 40px;
   width: 100%;
+  padding: 8px 0;
 }
 
 .contact-brand-logo {
-  height: 64px;
+  height: 96px;
+  max-width: 280px;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 0 16px rgba(2, 142, 224, 0.2));
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: auto;
+  filter: drop-shadow(0 4px 20px rgba(2, 142, 224, 0.25));
   transition: transform var(--transition-normal), filter var(--transition-normal);
 }
 
 .contact-brand-logo:hover {
-  transform: scale(1.04);
-  filter: drop-shadow(0 0 24px rgba(2, 142, 224, 0.4));
+  transform: scale(1.05);
+  filter: drop-shadow(0 6px 28px rgba(2, 142, 224, 0.45));
 }
 
 /* Contact Form Container */
