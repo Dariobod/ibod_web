@@ -177,7 +177,7 @@ body {
 .btn-outline {
   background-color: transparent;
   color: var(--text-primary);
-  border: 1.5px solid var(--primary);
+  border: 2.5px solid var(--primary);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -513,7 +513,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
   margin-bottom: 48px;
 }
 
