@@ -587,6 +587,66 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
+  // Parser seguro para cantidad de estrellas (admite "3/5", fechas de Google Sheets, enteros y strings)
+  function parseStars(val) {
+    if (val === undefined || val === null || val === '') return 5;
+    
+    if (typeof val === 'number') {
+      return Math.max(1, Math.min(5, Math.round(val)));
+    }
+    
+    const str = String(val).trim();
+    
+    // Formato "3/5", "4/5", "5/5"
+    const slashMatch = str.match(/^(\d+)\s*\/\s*(\d+)/);
+    if (slashMatch) {
+      const num = parseInt(slashMatch[1], 10);
+      return Math.max(1, Math.min(5, num));
+    }
+    
+    // Fallback para autoconversión de fecha en Google Sheets (ej: "2026-05-03T03:00:00.000Z" -> 3 estrellas)
+    if (str.includes('T') && str.includes('-')) {
+      try {
+        const d = new Date(str);
+        const day = d.getUTCDate();
+        if (day >= 1 && day <= 5) {
+          return day;
+        }
+      } catch (e) {}
+    }
+    
+    // Número como string ("5", "4", "3")
+    const num = parseInt(str, 10);
+    if (!isNaN(num)) {
+      return Math.max(1, Math.min(5, num));
+    }
+    
+    return 5;
+  }
+
+  // Generador de SVG de estrellas amarillas (llenas y con solo borde)
+  function renderStarRating(starsCount) {
+    const total = 5;
+    const filledCount = Math.max(1, Math.min(5, starsCount));
+    let starsHtml = '<div class="testimonial-stars" aria-label="' + filledCount + ' de 5 estrellas">';
+    for (let i = 1; i <= total; i++) {
+      if (i <= filledCount) {
+        starsHtml += `
+          <svg viewBox="0 0 24 24" class="star-icon star-filled">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>`;
+      } else {
+        starsHtml += `
+          <svg viewBox="0 0 24 24" class="star-icon star-empty">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>`;
+      }
+    }
+    starsHtml += '</div>';
+    return starsHtml;
+  }
+
+
   /* ==========================================================================
      7. MODAL DE REPRODUCTOR DE VIDEO (SPLIT-VIEW PLAYER & INFO)
      ========================================================================== */
@@ -599,6 +659,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalCard = videoModal ? videoModal.querySelector('.video-modal-card') : null;
     const tagEl = document.getElementById('modal-project-tag');
     const titleEl = document.getElementById('modal-project-title');
+    const starsEl = document.getElementById('modal-project-stars');
     const descEl = document.getElementById('modal-project-desc');
 
     if (!videoModal || !playerContainer) return;
@@ -619,6 +680,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tagEl) tagEl.textContent = category;
     if (titleEl) titleEl.textContent = title;
     if (descEl) descEl.textContent = desc;
+
+    if (starsEl) {
+      if (data.stars) {
+        starsEl.innerHTML = renderStarRating(data.stars);
+        starsEl.style.display = 'inline-flex';
+      } else {
+        starsEl.innerHTML = '';
+        starsEl.style.display = 'none';
+      }
+    }
 
     const setVerticalState = (isVertical) => {
       if (isVertical) {
@@ -695,8 +766,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerContainer = document.getElementById('modal-player-container');
     const modalContainer = videoModal ? videoModal.querySelector('.video-modal-container') : null;
     const modalCard = videoModal ? videoModal.querySelector('.video-modal-card') : null;
+    const starsEl = document.getElementById('modal-project-stars');
     if (videoModal) {
       videoModal.classList.remove('active');
+      if (starsEl) {
+        starsEl.innerHTML = '';
+        starsEl.style.display = 'none';
+      }
       if (playerContainer) {
         playerContainer.classList.remove('is-vertical');
         playerContainer.style.cssText = ''; // limpiar estilos inline
@@ -1134,65 +1210,6 @@ document.addEventListener('DOMContentLoaded', () => {
     testimonialsTrack.innerHTML = skeletonHtml;
   }
 
-  // Parser seguro para cantidad de estrellas (admite "3/5", fechas de Google Sheets, enteros y strings)
-  function parseStars(val) {
-    if (val === undefined || val === null || val === '') return 5;
-    
-    if (typeof val === 'number') {
-      return Math.max(1, Math.min(5, Math.round(val)));
-    }
-    
-    const str = String(val).trim();
-    
-    // Formato "3/5", "4/5", "5/5"
-    const slashMatch = str.match(/^(\d+)\s*\/\s*(\d+)/);
-    if (slashMatch) {
-      const num = parseInt(slashMatch[1], 10);
-      return Math.max(1, Math.min(5, num));
-    }
-    
-    // Fallback para autoconversión de fecha en Google Sheets (ej: "2026-05-03T03:00:00.000Z" -> 3 estrellas)
-    if (str.includes('T') && str.includes('-')) {
-      try {
-        const d = new Date(str);
-        const day = d.getUTCDate();
-        if (day >= 1 && day <= 5) {
-          return day;
-        }
-      } catch (e) {}
-    }
-    
-    // Número como string ("5", "4", "3")
-    const num = parseInt(str, 10);
-    if (!isNaN(num)) {
-      return Math.max(1, Math.min(5, num));
-    }
-    
-    return 5;
-  }
-
-  // Generador de SVG de estrellas amarillas (llenas y con solo borde)
-  function renderStarRating(starsCount) {
-    const total = 5;
-    const filledCount = Math.max(1, Math.min(5, starsCount));
-    let starsHtml = '<div class="testimonial-stars" aria-label="' + filledCount + ' de 5 estrellas">';
-    for (let i = 1; i <= total; i++) {
-      if (i <= filledCount) {
-        starsHtml += `
-          <svg viewBox="0 0 24 24" class="star-icon star-filled">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-          </svg>`;
-      } else {
-        starsHtml += `
-          <svg viewBox="0 0 24 24" class="star-icon star-empty">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-          </svg>`;
-      }
-    }
-    starsHtml += '</div>';
-    return starsHtml;
-  }
-
   // Cargar testimonios desde la API
   async function loadTestimonios() {
     if (!testimonialsTrack) return;
@@ -1268,7 +1285,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
 
-        // Al hacer clic, abrir modal vertical con audio y la descripción completa
+        // Al hacer clic, abrir modal vertical con audio, estrellas y la descripción completa
         card.addEventListener('click', (e) => {
           e.preventDefault();
           if (typeof openVideoModal === 'function') {
@@ -1277,6 +1294,7 @@ document.addEventListener('DOMContentLoaded', () => {
               title: cuenta,
               desc: descripcion || 'Testimonio de cliente de iBod.',
               category: 'Testimonio',
+              stars: stars,
               isVertical: true,
               provider: 'cloudinary'
             });
