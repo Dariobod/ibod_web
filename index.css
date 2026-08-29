@@ -1076,7 +1076,8 @@ body {
   transition: background-color var(--transition-fast);
 }
 
-.portfolio-card:hover .portfolio-thumb-overlay {
+.portfolio-card:hover .portfolio-thumb-overlay,
+.testimonial-video-card:hover .portfolio-thumb-overlay {
   background-color: rgba(7, 7, 9, 0.2);
 }
 
@@ -1114,7 +1115,8 @@ body {
   box-shadow: 0 4px 15px rgba(2, 142, 224, 0.4);
 }
 
-.portfolio-card:hover .project-play-btn {
+.portfolio-card:hover .project-play-btn,
+.testimonial-video-card:hover .project-play-btn {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
 }
