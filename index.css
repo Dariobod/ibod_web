@@ -2276,9 +2276,9 @@ body {
 
 .modal-header-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
   width: 100%;
   margin-bottom: 16px;
 }
@@ -2298,7 +2298,7 @@ body {
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
-  margin-left: auto;
+  margin-left: 0;
 }
 
 .modal-project-stars .star-icon {
