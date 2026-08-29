@@ -1103,6 +1103,64 @@ document.addEventListener('DOMContentLoaded', () => {
     chatbotWindow.addEventListener('touchmove', preventParentScroll, { passive: true });
   }
 
+  // Renderizar acordeón de FAQs en la página principal
+  function renderFaqAccordion(items) {
+    const container = document.getElementById('faq-accordion-container');
+    if (!container) return;
+
+    if (!items || items.length === 0) {
+      container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No hay preguntas frecuentes disponibles en este momento.</p>';
+      return;
+    }
+
+    container.innerHTML = items.map((item, index) => `
+      <div class="faq-item" data-index="${index}">
+        <button type="button" class="faq-trigger" aria-expanded="false">
+          <span class="faq-title">${item.question}</span>
+          <span class="faq-icon-indicator"></span>
+        </button>
+        <div class="faq-content">
+          <div class="faq-content-inner">
+            <p>${item.answer}</p>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    const faqItems = container.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+      const trigger = item.querySelector('.faq-trigger');
+      const content = item.querySelector('.faq-content');
+
+      if (!trigger || !content) return;
+
+      trigger.addEventListener('click', () => {
+        const isActive = item.classList.contains('active');
+
+        // Cerrar todos los demás items abiertos (comportamiento de acordeón exclusivo)
+        faqItems.forEach(otherItem => {
+          if (otherItem !== item) {
+            otherItem.classList.remove('active');
+            const otherTrigger = otherItem.querySelector('.faq-trigger');
+            const otherContent = otherItem.querySelector('.faq-content');
+            if (otherTrigger) otherTrigger.setAttribute('aria-expanded', 'false');
+            if (otherContent) otherContent.style.maxHeight = null;
+          }
+        });
+
+        if (!isActive) {
+          item.classList.add('active');
+          trigger.setAttribute('aria-expanded', 'true');
+          content.style.maxHeight = content.scrollHeight + 'px';
+        } else {
+          item.classList.remove('active');
+          trigger.setAttribute('aria-expanded', 'false');
+          content.style.maxHeight = null;
+        }
+      });
+    });
+  }
+
   // Renderizar chips de preguntas rápidas
   const renderChatChips = () => {
     if (!chatChipsContainer) return;
@@ -1122,6 +1180,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Cargar FAQs desde la API de Google Apps Script (tipo=faq)
   async function loadFaqFromApi() {
+    renderFaqAccordion(faqList); // Renderizado inicial con datos base
+
     try {
       const response = await fetch(FAQ_API_URL);
       const rawResponse = await response.json();
@@ -1143,11 +1203,18 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.log("Cargadas FAQs por defecto.");
     }
+    renderFaqAccordion(faqList); // Actualizado dinámico con datos frescos de la API
     renderChatChips();
   }
 
   // Iniciar la carga de FAQs
   loadFaqFromApi();
+
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.faq-item.active .faq-content').forEach(content => {
+      content.style.maxHeight = content.scrollHeight + 'px';
+    });
+  }, { passive: true });
 
   // Función para agregar burbujas al historial de chat
   const appendChatBubble = (text, sender = 'bot') => {
