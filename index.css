@@ -509,11 +509,11 @@ body {
 .hero-title-stacked {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  max-width: 1000px;
+  align-items: stretch;
+  width: 100%;
+  max-width: 780px;
   margin-bottom: 28px;
-  line-height: 1.08;
+  line-height: 1.05;
   text-shadow: 0 4px 28px rgba(0, 0, 0, 0.85);
 }
 
@@ -537,45 +537,58 @@ body {
 }
 
 .hero-line-1 {
+  align-self: flex-start;
+  text-align: left;
   font-family: var(--font-display);
   font-size: 4.2rem;
   font-weight: 800;
   color: #ffffff;
   letter-spacing: -0.03em;
+  line-height: 1;
   animation-delay: 0.1s;
 }
 
 .hero-line-2 {
+  align-self: flex-end;
+  text-align: right;
   font-family: var(--font-display);
   font-size: 3.5rem;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.95);
   letter-spacing: -0.02em;
-  margin-top: 4px;
+  line-height: 1;
+  margin-top: -10px;
   animation-delay: 0.28s;
 }
 
 .hero-line-3 {
+  align-self: flex-start;
+  text-align: left;
   font-family: var(--font-display);
-  font-size: 2.2rem;
+  font-size: 3.6rem;
   font-weight: 300;
   font-style: italic;
-  color: rgba(255, 255, 255, 0.75);
-  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.05em;
   text-transform: lowercase;
-  margin-top: 6px;
-  margin-bottom: 2px;
+  line-height: 1;
+  margin-top: 2px;
+  margin-left: 14px;
   animation-delay: 0.46s;
 }
 
 .hero-line-4 {
-  font-family: var(--font-display);
-  font-size: 4.8rem;
-  font-weight: 900;
+  align-self: flex-start;
+  text-align: left;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 5.2rem;
+  font-weight: 800;
   font-style: italic;
   color: var(--celeste);
-  letter-spacing: -0.02em;
-  text-shadow: 0 0 35px rgba(2, 142, 224, 0.5), 0 4px 20px rgba(0, 0, 0, 0.9);
+  letter-spacing: -0.01em;
+  line-height: 1;
+  margin-top: 2px;
+  text-shadow: 0 0 40px rgba(2, 142, 224, 0.6), 0 4px 24px rgba(0, 0, 0, 0.9);
   animation-delay: 0.64s;
 }
 
@@ -2671,10 +2684,11 @@ body {
     font-size: 3.5rem;
   }
 
+  .hero-title-stacked { max-width: 660px; }
   .hero-line-1 { font-size: 3.4rem; }
-  .hero-line-2 { font-size: 2.85rem; }
-  .hero-line-3 { font-size: 1.85rem; }
-  .hero-line-4 { font-size: 3.8rem; }
+  .hero-line-2 { font-size: 2.85rem; margin-top: -8px; }
+  .hero-line-3 { font-size: 2.9rem; margin-left: 10px; }
+  .hero-line-4 { font-size: 4.2rem; }
   
   .services-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -2769,10 +2783,11 @@ body {
     font-size: 2.8rem;
   }
 
-  .hero-line-1 { font-size: 2.5rem; }
-  .hero-line-2 { font-size: 2.15rem; }
-  .hero-line-3 { font-size: 1.45rem; }
-  .hero-line-4 { font-size: 2.85rem; }
+  .hero-title-stacked { max-width: 92%; }
+  .hero-line-1 { font-size: 2.6rem; }
+  .hero-line-2 { font-size: 2.15rem; margin-top: -6px; }
+  .hero-line-3 { font-size: 2.25rem; margin-left: 8px; }
+  .hero-line-4 { font-size: 3.2rem; }
   
   .navbar {
     top: 16px;
@@ -2867,10 +2882,11 @@ body {
     font-size: 2.3rem;
   }
 
+  .hero-title-stacked { max-width: 95%; }
   .hero-line-1 { font-size: 2.05rem; }
-  .hero-line-2 { font-size: 1.75rem; }
-  .hero-line-3 { font-size: 1.25rem; }
-  .hero-line-4 { font-size: 2.35rem; }
+  .hero-line-2 { font-size: 1.75rem; margin-top: -4px; }
+  .hero-line-3 { font-size: 1.85rem; margin-left: 6px; }
+  .hero-line-4 { font-size: 2.6rem; }
   
   .hero-subtitle {
     font-size: 1.05rem;
