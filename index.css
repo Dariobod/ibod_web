@@ -573,22 +573,22 @@ body {
   text-transform: lowercase;
   line-height: 1;
   margin-top: 2px;
-  margin-left: 14px;
+  margin-left: 65px;
   animation-delay: 0.46s;
 }
 
 .hero-line-4 {
-  align-self: flex-start;
-  text-align: left;
+  align-self: flex-end;
+  text-align: right;
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 5.2rem;
-  font-weight: 800;
+  font-weight: 600;
   font-style: italic;
   color: var(--celeste);
   letter-spacing: -0.01em;
   line-height: 1;
   margin-top: 2px;
-  text-shadow: 0 0 40px rgba(2, 142, 224, 0.6), 0 4px 24px rgba(0, 0, 0, 0.9);
+  text-shadow: 0 0 40px rgba(2, 142, 224, 0.55), 0 4px 24px rgba(0, 0, 0, 0.9);
   animation-delay: 0.64s;
 }
 
@@ -2687,7 +2687,7 @@ body {
   .hero-title-stacked { max-width: 660px; }
   .hero-line-1 { font-size: 3.4rem; }
   .hero-line-2 { font-size: 2.85rem; margin-top: -8px; }
-  .hero-line-3 { font-size: 2.9rem; margin-left: 10px; }
+  .hero-line-3 { font-size: 2.9rem; margin-left: 45px; }
   .hero-line-4 { font-size: 4.2rem; }
   
   .services-grid {
@@ -2786,7 +2786,7 @@ body {
   .hero-title-stacked { max-width: 92%; }
   .hero-line-1 { font-size: 2.6rem; }
   .hero-line-2 { font-size: 2.15rem; margin-top: -6px; }
-  .hero-line-3 { font-size: 2.25rem; margin-left: 8px; }
+  .hero-line-3 { font-size: 2.25rem; margin-left: 24px; }
   .hero-line-4 { font-size: 3.2rem; }
   
   .navbar {
@@ -2885,7 +2885,7 @@ body {
   .hero-title-stacked { max-width: 95%; }
   .hero-line-1 { font-size: 2.05rem; }
   .hero-line-2 { font-size: 1.75rem; margin-top: -4px; }
-  .hero-line-3 { font-size: 1.85rem; margin-left: 6px; }
+  .hero-line-3 { font-size: 1.85rem; margin-left: 14px; }
   .hero-line-4 { font-size: 2.6rem; }
   
   .hero-subtitle {
