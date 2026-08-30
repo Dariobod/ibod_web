@@ -160,13 +160,14 @@ document.addEventListener('DOMContentLoaded', () => {
     return (match && match[1].length === 11) ? match[1] : null;
   }
 
-  // Generador de poster/thumbnail para URLs de Cloudinary
-  function getCloudinaryPoster(url) {
+  // Generador de poster/thumbnail para URLs de Cloudinary con soporte de offset de frame/segundo
+  function getCloudinaryPoster(url, offset = '0') {
     if (!url || typeof url !== 'string') return '';
     if (!/cloudinary\.com/i.test(url)) return '';
     try {
+      const soParam = `so_${offset}`;
       return url
-        .replace(/\/video\/upload\/(?:[^\/]+\/)?/, '/video/upload/so_0,f_jpg,q_auto/')
+        .replace(/\/video\/upload\/(?:[^\/]+\/)?/, `/video/upload/${soParam},f_jpg,q_auto/`)
         .replace(/\.[a-z0-9]+$/i, '.jpg');
     } catch (e) {
       return '';
@@ -174,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Función para detectar la fuente del video (YouTube, Cloudinary o archivo de video directo)
-  function parseVideoSource(url) {
+  function parseVideoSource(url, isVertical = false) {
     if (!url) return { provider: 'unknown', url: '' };
 
     const ytId = getYouTubeId(url);
@@ -191,7 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const isDirectVideo = /\.(mp4|webm|mov|m4v|ogg)(\?.*)?$/i.test(url);
 
     if (isCloudinary || isDirectVideo || /^https?:\/\//i.test(url)) {
-      const poster = isCloudinary ? getCloudinaryPoster(url) : '';
+      // Para videos verticales en Trabajos, usar frame avanzado (so_1.5) para evitar el primer frame en negro
+      const offset = isVertical ? '1.5' : '0';
+      const poster = isCloudinary ? getCloudinaryPoster(url, offset) : '';
       return {
         provider: 'cloudinary',
         url: url,
@@ -290,13 +293,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const isMobile = isMobileScreen();
 
       if (v.provider === 'cloudinary') {
-        const posterUrl = v.thumbnail || getCloudinaryPoster(v.urlOriginal);
+        const posterOffset = isVertical ? '1.5' : '0';
+        const posterUrl = v.thumbnail || getCloudinaryPoster(v.urlOriginal, posterOffset);
         const posterAttr = posterUrl ? `poster="${posterUrl}"` : '';
         const autoplayAttr = isMobile ? '' : 'autoplay';
         const preloadAttr = isMobile ? 'preload="none"' : 'preload="auto"';
+        const videoSrc = isVertical ? `${v.urlOriginal}#t=1.5` : v.urlOriginal;
         mediaHtml = `
           <video 
-            src="${v.urlOriginal}" 
+            src="${videoSrc}" 
             ${posterAttr}
             class="portfolio-thumb-video" 
             ${autoplayAttr} 
@@ -467,8 +472,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const videos = rawData.map(item => {
         const link = (item.link || item.url || '').trim();
-        const parsed = parseVideoSource(link);
         const cat = (item.categoria || item.category || 'General').trim();
+        const isVertical = isVerticalVideo(link, cat);
+        const parsed = parseVideoSource(link, isVertical);
         return {
           title: item.titulo || item.title || 'Sin Título',
           desc: item.descripcion || item.desc || '',
