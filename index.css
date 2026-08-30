@@ -564,8 +564,8 @@ body {
 .hero-row-bottom {
   display: flex;
   align-items: baseline;
-  justify-content: flex-start;
-  gap: 20px;
+  justify-content: flex-end;
+  gap: 45px;
   width: 100%;
   margin-top: -8px;
 }
@@ -2692,7 +2692,7 @@ body {
   .hero-title-stacked { max-width: 700px; }
   .hero-line-1 { font-size: 3.6rem; }
   .hero-line-2 { font-size: 3rem; margin-top: -10px; }
-  .hero-row-bottom { gap: 16px; margin-top: -6px; }
+  .hero-row-bottom { gap: 36px; margin-top: -6px; }
   .hero-line-3 { font-size: 3rem; margin-left: 0; }
   .hero-line-4 { font-size: 4.6rem; }
   
@@ -2792,7 +2792,7 @@ body {
   .hero-title-stacked { max-width: 100%; }
   .hero-line-1 { font-size: 2.6rem; }
   .hero-line-2 { font-size: 2.2rem; margin-top: -6px; }
-  .hero-row-bottom { gap: 12px; margin-top: -4px; flex-wrap: wrap; }
+  .hero-row-bottom { gap: 24px; margin-top: -4px; flex-wrap: wrap; }
   .hero-line-3 { font-size: 2.2rem; margin-left: 0; }
   .hero-line-4 { font-size: 3.4rem; }
   
@@ -2892,7 +2892,7 @@ body {
   .hero-title-stacked { max-width: 100%; }
   .hero-line-1 { font-size: 2.1rem; }
   .hero-line-2 { font-size: 1.8rem; margin-top: -4px; }
-  .hero-row-bottom { gap: 8px; margin-top: -2px; }
+  .hero-row-bottom { gap: 16px; margin-top: -2px; }
   .hero-line-3 { font-size: 1.8rem; margin-left: 0; }
   .hero-line-4 { font-size: 2.7rem; }
   
