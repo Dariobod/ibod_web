@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  // Helper para detectar formato mobile
+  const isMobileScreen = () => window.innerWidth <= 768;
+
   /* ==========================================================================
      0. INICIALIZACIÓN DE LENIS (SCROLL SUAVE GLOBAL PARA RUEDA Y TÁCTIL)
      ========================================================================== */
@@ -284,20 +287,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let mediaHtml = '';
       let playBtnHtml = '';
+      const isMobile = isMobileScreen();
 
       if (v.provider === 'cloudinary') {
-        const posterAttr = v.thumbnail ? `poster="${v.thumbnail}"` : '';
+        const posterUrl = v.thumbnail || getCloudinaryPoster(v.urlOriginal);
+        const posterAttr = posterUrl ? `poster="${posterUrl}"` : '';
+        const autoplayAttr = isMobile ? '' : 'autoplay';
+        const preloadAttr = isMobile ? 'preload="none"' : 'preload="auto"';
         mediaHtml = `
           <video 
             src="${v.urlOriginal}" 
             ${posterAttr}
             class="portfolio-thumb-video" 
-            autoplay 
+            ${autoplayAttr} 
             muted 
             loop 
             playsinline 
             webkit-playsinline
-            preload="auto"
+            ${preloadAttr}
             aria-label="${v.title}">
           </video>`;
         playBtnHtml = `
@@ -307,21 +314,31 @@ document.addEventListener('DOMContentLoaded', () => {
             </svg>
           </button>`;
       } else {
-        mediaHtml = `
-          <iframe 
-            src="https://www.youtube-nocookie.com/embed/${v.ytId}?autoplay=1&mute=1&loop=1&playlist=${v.ytId}&controls=0&showinfo=0&rel=0&enablejsapi=1&playsinline=1&modestbranding=1&cc_load_policy=0&cc_lang_pref=none&iv_load_policy=3" 
-            title="${v.title}" 
-            class="portfolio-thumb-video" 
-            frameborder="0" 
-            allow="autoplay; encrypted-media; picture-in-picture" 
-            allowfullscreen>
-          </iframe>`;
+        if (isMobile) {
+          mediaHtml = `
+            <img 
+              src="https://img.youtube.com/vi/${v.ytId}/hqdefault.jpg" 
+              alt="${v.title}" 
+              class="portfolio-thumb-video" 
+              loading="lazy" 
+              style="object-fit: cover; width: 100%; height: 100%;">`;
+        } else {
+          mediaHtml = `
+            <iframe 
+              src="https://www.youtube-nocookie.com/embed/${v.ytId}?autoplay=1&mute=1&loop=1&playlist=${v.ytId}&controls=0&showinfo=0&rel=0&enablejsapi=1&playsinline=1&modestbranding=1&cc_load_policy=0&cc_lang_pref=none&iv_load_policy=3" 
+              title="${v.title}" 
+              class="portfolio-thumb-video" 
+              frameborder="0" 
+              allow="autoplay; encrypted-media; picture-in-picture" 
+              allowfullscreen>
+            </iframe>`;
+        }
         playBtnHtml = `
-          <a href="${v.urlOriginal}" target="_blank" rel="noopener noreferrer" class="project-play-btn" aria-label="Ver video en YouTube">
+          <button class="project-play-btn" data-video="${v.urlOriginal}" aria-label="Ver video">
             <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
               <path d="M8 5v14l11-7z"></path>
             </svg>
-          </a>`;
+          </button>`;
       }
       
       card.innerHTML = `
@@ -339,9 +356,9 @@ document.addEventListener('DOMContentLoaded', () => {
       
       container.appendChild(card);
 
-      // Si es un video HTML5 (Cloudinary / Directo), asegurar mute e inicialización por JS
+      // Autoplay silenciado solo en Desktop para máxima performance en Mobile
       const videoEl = card.querySelector('video');
-      if (videoEl) {
+      if (videoEl && !isMobile) {
         videoEl.muted = true;
         videoEl.defaultMuted = true;
         videoEl.playsInline = true;
@@ -1383,6 +1400,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const stars = parseStars(item.estrellas);
         const poster = getCloudinaryPoster(videoUrl);
 
+        const isMobile = isMobileScreen();
+        const autoplayAttr = isMobile ? '' : 'autoplay';
+        const preloadAttr = isMobile ? 'preload="none"' : 'preload="auto"';
+
         const card = document.createElement('div');
         card.className = 'testimonial-video-card reveal visible';
 
@@ -1392,12 +1413,12 @@ document.addEventListener('DOMContentLoaded', () => {
               src="${videoUrl}" 
               ${poster ? `poster="${poster}"` : ''} 
               class="testimonial-thumb-video" 
-              autoplay 
+              ${autoplayAttr} 
               muted 
               loop 
               playsinline 
               webkit-playsinline
-              preload="auto"
+              ${preloadAttr}
               aria-label="Testimonio de ${cuenta}">
             </video>
             <div class="portfolio-thumb-overlay"></div>
@@ -1419,9 +1440,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         testimonialsTrack.appendChild(card);
 
-        // Autoplay silenciado seguro para el video thumbnail
+        // Autoplay silenciado solo en Desktop para máxima performance en Mobile
         const videoEl = card.querySelector('video');
-        if (videoEl) {
+        if (videoEl && !isMobile) {
           videoEl.muted = true;
           videoEl.defaultMuted = true;
           videoEl.playsInline = true;
