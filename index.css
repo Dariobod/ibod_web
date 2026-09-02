@@ -2909,6 +2909,22 @@ body {
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 30px rgba(2, 142, 224, 0.3);
   }
 
+  /* Mostrar siempre el icono de play sobre las tarjetas de Testimonios en mobile */
+  .testimonial-video-card .project-play-btn {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1);
+    width: 48px;
+    height: 48px;
+    background-color: rgba(2, 142, 224, 0.92);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6), 0 0 16px rgba(2, 142, 224, 0.45);
+  }
+
+  .testimonial-video-card.is-active-card .project-play-btn {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 142, 224, 0.6);
+  }
+
   .carousel-nav-btn {
     width: 40px;
     height: 40px;
