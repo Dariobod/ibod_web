@@ -52,6 +52,42 @@ document.addEventListener('DOMContentLoaded', () => {
     revealObserver.observe(element);
   });
 
+  /* ==========================================================================
+     REPLAY ANIMACIÓN DEL TÍTULO HERO AL VOLVER A SUBIR (SCROLL UP)
+     ========================================================================== */
+  const heroTitle = document.querySelector('.hero-title-stacked');
+  const heroSection = document.querySelector('.hero-section');
+
+  if (heroTitle && heroSection) {
+    let hasScrolledDown = false;
+
+    const heroObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Si el usuario bajó y volvió a subir a la sección Hero
+          if (hasScrolledDown) {
+            heroTitle.classList.remove('animate-in');
+            // Forzar reflow para reiniciar la animación CSS
+            void heroTitle.offsetWidth;
+            heroTitle.classList.add('animate-in');
+            hasScrolledDown = false;
+          }
+        } else {
+          // Salió de la sección Hero hacia abajo
+          if (entry.boundingClientRect.top < 0) {
+            hasScrolledDown = true;
+            heroTitle.classList.remove('animate-in');
+          }
+        }
+      });
+    }, {
+      root: null,
+      threshold: 0.15
+    });
+
+    heroObserver.observe(heroSection);
+  }
+
 
   /* ==========================================================================
      2. MENÚ MÓVIL (TOGGLE OVERLAY)
