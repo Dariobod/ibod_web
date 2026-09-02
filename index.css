@@ -2909,20 +2909,26 @@ body {
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 30px rgba(2, 142, 224, 0.3);
   }
 
-  /* Mostrar siempre el icono de play sobre las tarjetas de Testimonios en mobile */
+  /* Icono de play semi-transparente sobre las tarjetas de Testimonios en mobile */
   .testimonial-video-card .project-play-btn {
-    opacity: 0.95;
+    opacity: 0.85;
     transform: translate(-50%, -50%) scale(1);
     width: 48px;
     height: 48px;
-    background-color: rgba(2, 142, 224, 0.92);
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6), 0 0 16px rgba(2, 142, 224, 0.45);
+    background-color: rgba(7, 7, 9, 0.4);
+    border: 1.5px solid rgba(255, 255, 255, 0.65);
+    color: #ffffff;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   }
 
   .testimonial-video-card.is-active-card .project-play-btn {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.08);
-    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.7), 0 0 20px rgba(2, 142, 224, 0.6);
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1.05);
+    background-color: rgba(2, 142, 224, 0.45);
+    border-color: rgba(2, 142, 224, 0.9);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6), 0 0 18px rgba(2, 142, 224, 0.4);
   }
 
   .carousel-nav-btn {
