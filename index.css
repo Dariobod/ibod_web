@@ -2876,6 +2876,11 @@ body {
     gap: 16px;
     text-align: center;
   }
+
+  .hero-ctas {
+    gap: 16px;
+    margin-bottom: 36px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -2903,6 +2908,8 @@ body {
   .hero-ctas {
     flex-direction: column;
     width: 100%;
+    gap: 12px;
+    margin-bottom: 28px;
   }
   
   .hero-ctas .btn {
