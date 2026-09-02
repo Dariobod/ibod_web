@@ -521,11 +521,8 @@ body {
   display: inline-block;
   opacity: 0;
   transform: translateX(-35px);
-  will-change: transform, opacity;
-}
-
-.hero-title-stacked.animate-in .hero-line {
   animation: heroSlideInFromLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
 }
 
 @keyframes heroSlideInFromLeft {
