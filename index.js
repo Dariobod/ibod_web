@@ -1484,21 +1484,95 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Configuración de controles y arrastre (drag-to-scroll) para el carrusel
+  // Configuración de controles, arrastre (drag-to-scroll) y efecto Cover Flow para el carrusel
   function setupTestimonialsCarousel() {
     if (!testimonialsTrack) return;
 
+    // Efecto Baraja de Cartas / Cover Flow en Mobile
+    const updateCardScales = () => {
+      const cards = testimonialsTrack.querySelectorAll('.testimonial-video-card');
+      if (!cards.length) return;
+
+      if (!isMobileScreen()) {
+        cards.forEach(card => {
+          card.style.transform = '';
+          card.style.opacity = '';
+          card.style.filter = '';
+          card.style.zIndex = '';
+          card.classList.remove('is-active-card');
+        });
+        return;
+      }
+
+      const trackRect = testimonialsTrack.getBoundingClientRect();
+      const trackCenter = trackRect.left + trackRect.width / 2;
+
+      let closestCard = null;
+      let minDistance = Infinity;
+
+      cards.forEach(card => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const distance = Math.abs(trackCenter - cardCenter);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestCard = card;
+        }
+
+        // Distancia normalizada basada en el ancho de la tarjeta
+        const maxDist = cardRect.width * 1.25;
+        const normDist = Math.min(distance / maxDist, 1);
+
+        // Interpolar escala: 1.05 (centro) a 0.82 (laterales)
+        const scale = 1.04 - (0.22 * normDist);
+        // Interpolar opacidad: 1.0 a 0.55
+        const opacity = 1 - (0.45 * normDist);
+        // Interpolar brillo: 1.0 a 0.75
+        const brightness = 1 - (0.25 * normDist);
+
+        card.style.transform = `scale(${scale.toFixed(3)})`;
+        card.style.opacity = opacity.toFixed(3);
+        card.style.filter = `brightness(${brightness.toFixed(3)})`;
+        card.style.zIndex = Math.round((1 - normDist) * 10);
+      });
+
+      cards.forEach(c => {
+        c.classList.toggle('is-active-card', c === closestCard);
+      });
+    };
+
+    // Escuchar scroll del track con requestAnimationFrame para 60fps fluidos
+    let ticking = false;
+    testimonialsTrack.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateCardScales();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    window.addEventListener('resize', updateCardScales);
+    setTimeout(updateCardScales, 80);
+    setTimeout(updateCardScales, 300);
+
     if (testimonialsPrev) {
       testimonialsPrev.addEventListener('click', () => {
-        const cardWidth = testimonialsTrack.querySelector('.testimonial-video-card')?.offsetWidth || 280;
-        testimonialsTrack.scrollBy({ left: -(cardWidth + 24), behavior: 'smooth' });
+        const card = testimonialsTrack.querySelector('.testimonial-video-card');
+        const cardWidth = card ? card.offsetWidth : 250;
+        const gap = isMobileScreen() ? 14 : 24;
+        testimonialsTrack.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
       });
     }
 
     if (testimonialsNext) {
       testimonialsNext.addEventListener('click', () => {
-        const cardWidth = testimonialsTrack.querySelector('.testimonial-video-card')?.offsetWidth || 280;
-        testimonialsTrack.scrollBy({ left: (cardWidth + 24), behavior: 'smooth' });
+        const card = testimonialsTrack.querySelector('.testimonial-video-card');
+        const cardWidth = card ? card.offsetWidth : 250;
+        const gap = isMobileScreen() ? 14 : 24;
+        testimonialsTrack.scrollBy({ left: (cardWidth + gap), behavior: 'smooth' });
       });
     }
 
