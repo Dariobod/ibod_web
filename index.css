@@ -988,6 +988,11 @@ body {
   border-radius: 100px;
   cursor: pointer;
   transition: all var(--transition-fast);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
 }
 
 .filter-btn:hover {

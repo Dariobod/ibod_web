@@ -253,12 +253,19 @@ document.addEventListener('DOMContentLoaded', () => {
       filtersContainer.appendChild(btn);
     });
 
+    // Botón / Enlace directo a la nueva sección de Sitios (a la derecha de Youtube)
+    const sitesLink = document.createElement('a');
+    sitesLink.href = 'https://ibod.com.ar/sites/';
+    sitesLink.className = 'filter-btn filter-btn-link';
+    sitesLink.textContent = 'Sitios';
+    filtersContainer.appendChild(sitesLink);
+
     setupFilterListeners();
   }
 
   // Escuchador dinámico para los botones de filtro
   function setupFilterListeners() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
+    const filterButtons = document.querySelectorAll('button.filter-btn');
     filterButtons.forEach(button => {
       button.addEventListener('click', () => {
         filterButtons.forEach(btn => btn.classList.remove('active'));
