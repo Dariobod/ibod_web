@@ -752,6 +752,7 @@ body {
 .service-card:nth-child(2) { z-index: 2; }
 .service-card:nth-child(3) { z-index: 3; }
 .service-card:nth-child(4) { z-index: 4; }
+.service-card:nth-child(5) { z-index: 5; }
 
 .service-card::after {
   content: '';
@@ -964,6 +965,128 @@ body {
 .service-slider-info {
   display: flex;
   flex-direction: column;
+}
+
+/* Web Showcase Mockup (5th Service Card - Diseño Web) */
+.web-mockup {
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  background-color: #070709;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-primary);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 25px rgba(2, 142, 224, 0.08);
+  position: relative;
+  transition: transform var(--transition-normal), border-color var(--transition-normal);
+}
+
+.service-card:hover .web-mockup {
+  border-color: var(--border-blue);
+  transform: translateY(-3px);
+}
+
+.web-mockup-header {
+  height: 38px;
+  background-color: #121218;
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 12px;
+}
+
+.web-mockup-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.web-mockup-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.web-mockup-dots span:nth-child(1) { background-color: #ff5f56; }
+.web-mockup-dots span:nth-child(2) { background-color: #ffbd2e; }
+.web-mockup-dots span:nth-child(3) { background-color: #27c93f; }
+
+.web-mockup-url {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  background: rgba(0, 0, 0, 0.4);
+  padding: 3px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  flex: 1;
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.web-mockup-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  text-align: center;
+  background: radial-gradient(circle at 50% 30%, rgba(2, 142, 224, 0.12), transparent 75%);
+  position: relative;
+}
+
+.web-mockup-badge {
+  display: inline-block;
+  background: #000;
+  color: var(--celeste);
+  border: 1px solid var(--border-celeste);
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 12px;
+}
+
+.web-mockup-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.web-mockup-sub {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  max-width: 320px;
+  line-height: 1.4;
+}
+
+.web-mockup-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.web-mockup-item {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px 12px;
+  border-radius: 8px;
 }
 
 /* Portfolio Section */
