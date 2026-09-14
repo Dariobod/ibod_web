@@ -3,10 +3,45 @@
    Complements ../index.css for the Sites landing page
    ========================================================================== */
 
-/* Hero Section Customization (Left-aligned as requested) */
+/* --------------------------------------------------------------------------
+   1. Navbar & Header Customization
+   -------------------------------------------------------------------------- */
+.nav-link-edicion {
+  margin-left: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 18px !important;
+  border-radius: 100px;
+  border: 1px solid var(--border-blue);
+  background: rgba(2, 142, 224, 0.08);
+  color: #ffffff !important;
+  font-weight: 500;
+  transition: all var(--transition-fast) !important;
+}
+
+.nav-link-edicion:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(2, 142, 224, 0.35);
+}
+
+.nav-link-edicion svg {
+  transition: transform var(--transition-fast);
+}
+
+.nav-link-edicion:hover svg {
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------------------
+   2. Hero Section Customization
+   -------------------------------------------------------------------------- */
 .sites-hero-section {
   position: relative;
-  min-height: 78vh;
+  min-height: 80vh;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -14,6 +49,35 @@
   padding-bottom: 80px;
   background-color: var(--bg-primary);
   overflow: hidden;
+}
+
+/* Eliminar el degrade negro inferior del hero */
+.sites-hero-section::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Video de fondo a máxima claridad y contraste */
+.sites-hero-section .hero-bg-video {
+  opacity: 1 !important;
+}
+
+/* Degrade sutil a la izquierda para contraste del título */
+.sites-hero-section .hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(7, 7, 9, 0.82) 0%,
+    rgba(7, 7, 9, 0.55) 35%,
+    rgba(7, 7, 9, 0.18) 60%,
+    transparent 85%
+  ) !important;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .sites-hero-section .hero-container {
@@ -25,17 +89,62 @@
   padding: 0 24px;
 }
 
+/* Titulo en 3 renglones todos alineados a la izquierda */
 .sites-hero-section .hero-title-stacked {
-  align-items: flex-start;
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start !important;
+  text-align: left !important;
+  width: 100%;
+  max-width: 880px;
+  margin-bottom: 28px;
+  line-height: 1.05;
 }
 
 .sites-hero-section .hero-line {
-  text-align: left;
+  display: block;
+  align-self: flex-start !important;
+  text-align: left !important;
+  margin-left: 0 !important;
+}
+
+.sites-hero-section .hero-line-1 {
+  align-self: flex-start !important;
+  text-align: left !important;
+  font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+  line-height: 1.05;
+  margin-left: 0 !important;
+}
+
+.sites-hero-section .hero-line-2 {
+  align-self: flex-start !important;
+  text-align: left !important;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  line-height: 1.05;
+  margin-top: 6px !important;
+  margin-left: 0 !important;
 }
 
 .sites-hero-section .hero-row-bottom {
-  justify-content: flex-start;
+  align-self: flex-start !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  margin-top: 6px !important;
+  margin-left: 0 !important;
+  gap: 16px !important;
+  width: auto !important;
+}
+
+.sites-hero-section .hero-line-3 {
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  line-height: 1;
+  margin-left: 0 !important;
+}
+
+.sites-hero-section .hero-line-4 {
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  line-height: 1;
+  margin-left: 0 !important;
 }
 
 .sites-hero-section .hero-subtitle {
@@ -49,7 +158,9 @@
   justify-content: flex-start;
 }
 
-/* Stacking Cards Stacking Order for 4 cards */
+/* --------------------------------------------------------------------------
+   3. Stacking Cards & Works Section
+   -------------------------------------------------------------------------- */
 .sites-works .service-card:nth-child(1) { z-index: 1; }
 .sites-works .service-card:nth-child(2) { z-index: 2; }
 .sites-works .service-card:nth-child(3) { z-index: 3; }
@@ -106,47 +217,17 @@
   transform: translate(3px, -3px);
 }
 
-/* Navbar Return to iBod Capsule Button */
-.nav-link-return {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 18px !important;
-  border-radius: 100px;
-  border: 1px solid var(--border-blue);
-  background: rgba(2, 142, 224, 0.08);
-  color: #ffffff !important;
-  transition: all var(--transition-fast) !important;
-}
-
-.nav-link-return:hover {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #ffffff !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(2, 142, 224, 0.35);
-}
-
-/* Header badge in Sites */
-.sites-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--celeste);
-  background: rgba(2, 142, 224, 0.12);
-  border: 1px solid var(--border-blue);
-  padding: 4px 10px;
-  border-radius: 6px;
-  margin-left: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-/* Mobile responsive adjustments */
+/* --------------------------------------------------------------------------
+   4. Mobile Responsive Adjustments
+   -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
+  .nav-link-edicion {
+    margin-left: 0;
+    margin-top: 10px;
+    width: 100%;
+    justify-content: center;
+  }
+
   .sites-hero-section {
     padding-top: 140px;
     padding-bottom: 50px;
@@ -161,7 +242,12 @@
     width: 100%;
   }
 
-  .sites-badge {
-    display: none;
+  .sites-hero-section .hero-overlay {
+    background: linear-gradient(
+      to bottom,
+      rgba(7, 7, 9, 0.85) 0%,
+      rgba(7, 7, 9, 0.6) 60%,
+      rgba(7, 7, 9, 0.3) 100%
+    ) !important;
   }
 }
