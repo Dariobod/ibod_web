@@ -85,7 +85,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       const targetId = this.getAttribute('href');
-      if (targetId === '#' || targetId === '') return;
+      if (targetId === '#' || targetId === '' || targetId === '#hero') {
+        e.preventDefault();
+        if (lenis) {
+          lenis.scrollTo(0, {
+            duration: 1.6,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+          });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        return;
+      }
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
         e.preventDefault();
