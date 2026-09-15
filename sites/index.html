@@ -40,7 +40,7 @@
   <!-- Core iBod Stylesheet -->
   <link rel="stylesheet" href="../index.css?v=2.9">
   <!-- Sites Specific Stylesheet -->
-  <link rel="stylesheet" href="sites.css?v=2.2">
+  <link rel="stylesheet" href="sites.css?v=2.3">
 </head>
 <body>
 
@@ -80,7 +80,7 @@
         <button class="menu-close" aria-label="Cerrar Menú">
           <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
             <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
       </div>
@@ -93,7 +93,7 @@
     </div>
   </div>
 
-  <!-- Sección Hero (Video de fondo & Titulo alineado a la izquierda) -->
+  <!-- Sección Hero (Video de fondo & Cuadro translúcido centrado) -->
   <section id="hero" class="hero-section sites-hero-section">
     <!-- Video de fondo de iBod Sites -->
     <video autoplay loop muted playsinline class="hero-bg-video">
@@ -102,19 +102,23 @@
     <div class="hero-overlay"></div>
     
     <div class="hero-container container">
-      <h1 class="hero-title hero-title-stacked">
-        <span class="hero-line hero-line-1">Diseño web</span>
-        <span class="hero-line hero-line-2">que hace crecer</span>
-        <div class="hero-row-bottom">
-          <span class="hero-line hero-line-3">tu</span>
-          <span class="hero-line hero-line-4">marca comercial.</span>
-        </div>
-      </h1>
+      <!-- Cuadro centrado con el estilo del menú -->
+      <div class="hero-card-box reveal">
+        <h1 class="hero-title hero-title-stacked">
+          <span class="hero-line hero-line-1">Diseño web</span>
+          <span class="hero-line hero-line-2">que hace crecer</span>
+          <div class="hero-row-bottom">
+            <span class="hero-line hero-line-3">tu</span>
+            <span class="hero-line hero-line-4">marca comercial.</span>
+          </div>
+        </h1>
+        
+        <p class="hero-subtitle">
+          Diseño e implementación de páginas web, portfolios y landing pages orientadas a potenciar tus canales de comunicación, hacer visible tu marca y convertir visitantes en clientes.
+        </p>
+      </div>
       
-      <p class="hero-subtitle reveal">
-        Diseño e implementación de páginas web, portfolios y landing pages orientadas a potenciar tus canales de comunicación, hacer visible tu marca y convertir visitantes en clientes.
-      </p>
-      
+      <!-- Botones centrados abajo del cuadrado -->
       <div class="hero-ctas reveal">
         <a href="#book" class="btn btn-primary">Consultanos</a>
         <a href="#work" class="btn btn-outline">Ver Trabajos</a>
