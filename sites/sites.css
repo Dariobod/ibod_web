@@ -15,7 +15,9 @@
    -------------------------------------------------------------------------- */
 .sites-hero-section {
   position: relative;
-  min-height: 85vh;
+  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -191,8 +193,10 @@
   }
   
   .sites-hero-section {
-    min-height: 65vh;
-    padding-bottom: 40px;
+    height: 100vh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-bottom: 50px;
   }
 }
 
