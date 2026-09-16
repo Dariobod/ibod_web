@@ -10,8 +10,31 @@
   margin-left: 14px;
 }
 
+/* Botón Consultanos en el menú a la derecha con más espacio */
+.nav-btn-consultanos {
+  margin-left: 20px;
+  padding: 10px 22px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: 100px;
+  background-color: var(--celeste) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(2, 142, 224, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.nav-btn-consultanos:hover {
+  background-color: var(--celeste-hover) !important;
+  box-shadow: 0 6px 22px rgba(2, 142, 224, 0.5);
+  transform: translateY(-1px);
+}
+
 /* --------------------------------------------------------------------------
-   2. Hero Section Customization (Test: Clear Video & Bottom CTAs)
+   2. Hero Section Customization (Full Screen Video & Action Buttons)
    -------------------------------------------------------------------------- */
 .sites-hero-section {
   position: relative;
@@ -64,11 +87,33 @@
 }
 
 .sites-hero-section .hero-ctas .btn {
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   font-size: 1.05rem;
   padding: 14px 32px;
+}
+
+.sites-hero-section .hero-ctas .btn-primary {
+  box-shadow: 0 10px 30px rgba(2, 142, 224, 0.35);
+}
+
+/* Botón Nuestros trabajos: Texto celeste y fondo transparente */
+.sites-hero-section .hero-ctas .btn-outline,
+.sites-hero-section .hero-ctas .btn-outline-celeste {
+  background-color: transparent !important;
+  color: var(--celeste) !important;
+  border: 2px solid var(--celeste) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+  transition: all var(--transition-fast);
+}
+
+.sites-hero-section .hero-ctas .btn-outline:hover,
+.sites-hero-section .hero-ctas .btn-outline-celeste:hover {
+  background-color: rgba(2, 142, 224, 0.15) !important;
+  border-color: var(--celeste-hover) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(2, 142, 224, 0.35);
 }
 
 /* --------------------------------------------------------------------------
@@ -178,6 +223,10 @@
 
 /* Responsividad de la sección Intro */
 @media (max-width: 900px) {
+  .nav-btn-consultanos {
+    display: none !important;
+  }
+
   .intro-container {
     grid-template-columns: 1fr;
     gap: 36px;
@@ -270,11 +319,6 @@
   .sites-hero-section {
     padding-top: 130px;
     padding-bottom: 50px;
-  }
-
-  .hero-card-box {
-    padding: 32px 20px;
-    border-radius: 20px;
   }
   
   .sites-hero-section .hero-ctas {
