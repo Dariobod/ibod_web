@@ -314,11 +314,187 @@
 }
 
 /* --------------------------------------------------------------------------
-   4. Mobile Responsive Adjustments
+   5. Sección Servicios (Moderno, Minimalista y Dinámico)
+   -------------------------------------------------------------------------- */
+.sites-services-section {
+  background-color: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+  padding-top: 110px;
+  padding-bottom: 110px;
+  border-top: 1px solid var(--border-primary);
+}
+
+/* Sutil resplandor ambiental de fondo */
+.sites-services-section::before {
+  content: '';
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 750px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(2, 142, 224, 0.07) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sites-services-section .container {
+  position: relative;
+  z-index: 1;
+}
+
+.sites-services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.sites-service-card {
+  background: linear-gradient(145deg, rgba(18, 18, 26, 0.7) 0%, rgba(10, 10, 15, 0.85) 100%);
+  border: 1px solid var(--border-primary);
+  border-radius: 22px;
+  padding: 42px 36px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.sites-service-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(2, 142, 224, 0.4) 0%, transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.sites-service-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(2, 142, 224, 0.35);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65), 0 0 35px rgba(2, 142, 224, 0.1);
+}
+
+.sites-service-card:hover::after {
+  opacity: 1;
+}
+
+.service-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.service-icon-wrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  background: rgba(2, 142, 224, 0.08);
+  border: 1px solid rgba(2, 142, 224, 0.22);
+  color: var(--celeste);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.35s ease;
+}
+
+.sites-service-card:hover .service-icon-wrapper {
+  background: var(--celeste);
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(2, 142, 224, 0.45);
+  transform: scale(1.06);
+}
+
+.service-chip {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 5px 13px;
+  border-radius: 100px;
+  border: 1px solid var(--border-primary);
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.sites-service-card:hover .service-chip {
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.service-title {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+.service-desc {
+  color: var(--text-secondary);
+  font-size: 0.98rem;
+  line-height: 1.7;
+  margin-bottom: 28px;
+  font-weight: 400;
+}
+
+.service-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.service-tags span {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.25s ease;
+}
+
+.sites-service-card:hover .service-tags span {
+  color: var(--text-secondary);
+  border-color: rgba(2, 142, 224, 0.25);
+  background: rgba(2, 142, 224, 0.05);
+}
+
+/* --------------------------------------------------------------------------
+   6. Mobile Responsive Adjustments
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
   .nav-link-edicion {
     margin-left: 0;
+  }
+
+  .sites-services-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .sites-service-card {
+    padding: 30px 22px;
   }
 
   .sites-hero-section {
