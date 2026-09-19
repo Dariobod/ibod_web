@@ -80,16 +80,22 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ==========================================================================
-     3. NAVEGACIÓN SUAVE CON LENIS EN CLICS DE ENLACES
+     3. NAVEGACIÓN SUAVE CON LENIS EN CLICS DE ENLACES (TÍTULO BIEN ARRIBA)
      ========================================================================== */
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       const targetId = this.getAttribute('href');
+      
+      // Cerrar menú móvil si está abierto
+      if (typeof closeMobileMenu === 'function') {
+        closeMobileMenu();
+      }
+
       if (targetId === '#' || targetId === '' || targetId === '#hero') {
         e.preventDefault();
         if (lenis) {
           lenis.scrollTo(0, {
-            duration: 1.6,
+            duration: 1.4,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
           });
         } else {
@@ -97,21 +103,56 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return;
       }
+      
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
         e.preventDefault();
+
+        // Offset ajustado idéntico a iBod para que el título quede bien arriba
+        let scrollOffset = 30;
+        if (targetId === '#book') {
+          scrollOffset = -10;
+        }
+
         if (lenis) {
           lenis.scrollTo(targetElement, {
-            offset: -100,
+            offset: scrollOffset,
             duration: 1.5,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
           });
         } else {
-          targetElement.scrollIntoView({ behavior: 'smooth' });
+          const navbarOffset = -scrollOffset;
+          const startPosition = window.scrollY || window.pageYOffset;
+          const targetPosition = targetElement.getBoundingClientRect().top + startPosition - navbarOffset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
         }
       }
     });
   });
+
+  /* ==========================================================================
+     4. OCULTAR/MOSTRAR NAVBAR AL HACER SCROLL SUTILMENTE
+     ========================================================================== */
+  const navbar = document.querySelector('.navbar');
+  let lastScrollY = window.scrollY || window.pageYOffset;
+
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY || window.pageYOffset;
+    const isMobileMenuOpen = mobileMenu && mobileMenu.classList.contains('active');
+    
+    if (currentScrollY > lastScrollY && currentScrollY > 120 && !isMobileMenuOpen) {
+      // Deslizando hacia abajo: Ocultar sutilmente
+      navbar.classList.add('nav-hidden');
+    } else if (currentScrollY < lastScrollY) {
+      // Deslizando hacia arriba: Mostrar sutilmente
+      navbar.classList.remove('nav-hidden');
+    }
+    
+    lastScrollY = currentScrollY;
+  }, { passive: true });
 
   /* ==========================================================================
      4. EFECTO DE ESCALADO Y APILAMIENTO EN TARJETAS DE TRABAJOS (STACKING CARDS)

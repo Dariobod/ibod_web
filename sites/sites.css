@@ -39,6 +39,25 @@
 }
 
 /* --------------------------------------------------------------------------
+   Tags de Sección (Sin aspecto de botón, tipografía sutil, estirada y premium)
+   -------------------------------------------------------------------------- */
+.section-tag {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  color: var(--celeste) !important;
+  font-family: var(--font-display) !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.28em !important;
+  margin-bottom: 16px !important;
+  display: inline-block !important;
+}
+
+/* --------------------------------------------------------------------------
    2. Hero Section Customization (Full Screen Video & Action Buttons)
    -------------------------------------------------------------------------- */
 .sites-hero-section {
@@ -314,34 +333,28 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. Sección Servicios (Moderno, Minimalista y Dinámico)
+   5. Sección Servicios (Fondo Gris Claro, Estilo Moderno Premium)
    -------------------------------------------------------------------------- */
 .sites-services-section {
-  background-color: var(--bg-primary);
+  background-color: #f2f4f7;
   position: relative;
   overflow: hidden;
   padding-top: 110px;
   padding-bottom: 110px;
-  border-top: 1px solid var(--border-primary);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-/* Sutil resplandor ambiental de fondo */
 .sites-services-section::before {
-  content: '';
-  position: absolute;
-  top: 25%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 750px;
-  height: 480px;
-  background: radial-gradient(circle, rgba(2, 142, 224, 0.07) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+  display: none !important;
 }
 
-.sites-services-section .container {
-  position: relative;
-  z-index: 1;
+.sites-services-section .section-title {
+  color: #0a0a0e;
+}
+
+.sites-services-section .section-subtitle {
+  color: #4b5563;
 }
 
 .sites-services-grid {
@@ -352,42 +365,26 @@
 }
 
 .sites-service-card {
-  background: linear-gradient(145deg, rgba(18, 18, 26, 0.7) 0%, rgba(10, 10, 15, 0.85) 100%);
-  border: 1px solid var(--border-primary);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 22px;
   padding: 42px 36px;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
 }
 
 .sites-service-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 22px;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(2, 142, 224, 0.4) 0%, transparent 60%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
+  display: none !important;
 }
 
 .sites-service-card:hover {
   transform: translateY(-5px);
   border-color: rgba(2, 142, 224, 0.35);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65), 0 0 35px rgba(2, 142, 224, 0.1);
-}
-
-.sites-service-card:hover::after {
-  opacity: 1;
+  box-shadow: 0 20px 45px rgba(2, 142, 224, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
 .service-card-top {
@@ -423,31 +420,32 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.03);
+  color: #4b5563;
+  background: rgba(0, 0, 0, 0.04);
   padding: 5px 13px;
   border-radius: 100px;
-  border: 1px solid var(--border-primary);
-  transition: color 0.3s ease, border-color 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
 }
 
 .sites-service-card:hover .service-chip {
-  color: var(--text-primary);
-  border-color: rgba(255, 255, 255, 0.14);
+  color: var(--celeste);
+  border-color: rgba(2, 142, 224, 0.3);
+  background: rgba(2, 142, 224, 0.06);
 }
 
 .service-title {
   font-family: var(--font-display);
   font-size: 1.55rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #0f1117;
   margin-bottom: 14px;
   letter-spacing: -0.015em;
   line-height: 1.25;
 }
 
 .service-desc {
-  color: var(--text-secondary);
+  color: #4b5563;
   font-size: 0.98rem;
   line-height: 1.7;
   margin-bottom: 28px;
@@ -460,24 +458,96 @@
   gap: 8px;
   margin-top: auto;
   padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .service-tags span {
   font-size: 0.78rem;
   font-weight: 500;
-  color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.02);
+  color: #4b5563;
+  background: rgba(0, 0, 0, 0.03);
   padding: 5px 12px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   transition: all 0.25s ease;
 }
 
 .sites-service-card:hover .service-tags span {
-  color: var(--text-secondary);
+  color: var(--celeste);
   border-color: rgba(2, 142, 224, 0.25);
-  background: rgba(2, 142, 224, 0.05);
+  background: rgba(2, 142, 224, 0.06);
+}
+
+/* --------------------------------------------------------------------------
+   7. Footer Section (Fondo Gris Claro Premium, acorde a Servicios)
+   -------------------------------------------------------------------------- */
+.footer {
+  background-color: #f2f4f7 !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  padding: 85px 0 40px !important;
+}
+
+.footer-brand-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.footer-brand-container .brand-logo-icon {
+  height: 42px;
+  width: auto;
+  display: block;
+}
+
+.footer-brand-container .footer-logo-text {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0a0a0e;
+  letter-spacing: -0.02em;
+}
+
+.footer .footer-desc {
+  color: #4b5563 !important;
+  line-height: 1.65;
+}
+
+.footer .footer-col-title {
+  color: #0a0a0e !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  font-size: 0.88rem !important;
+}
+
+.footer .footer-links a {
+  color: #4b5563 !important;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.footer .footer-links a:hover {
+  color: var(--celeste) !important;
+}
+
+.footer .social-icons a {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: #4b5563 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.footer .social-icons a:hover {
+  background-color: rgba(2, 142, 224, 0.08) !important;
+  border-color: var(--celeste) !important;
+  color: var(--celeste) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(2, 142, 224, 0.2);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: #6b7280 !important;
 }
 
 /* --------------------------------------------------------------------------
