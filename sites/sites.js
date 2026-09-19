@@ -155,6 +155,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { passive: true });
 
   /* ==========================================================================
+     5. CLICK EN EL VIDEO DEL HERO -> ENVIAR AL FORMULARIO DE CONTACTO
+     ========================================================================== */
+  const heroSection = document.getElementById('hero');
+  if (heroSection) {
+    heroSection.addEventListener('click', (e) => {
+      // Si el clic ocurrió sobre el navbar o sus hijos, ignorar
+      if (e.target.closest('.navbar') || e.target.closest('.mobile-menu-overlay')) {
+        return;
+      }
+      const contactSection = document.querySelector('#book');
+      if (contactSection) {
+        if (lenis) {
+          lenis.scrollTo(contactSection, {
+            offset: -10,
+            duration: 1.5,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+          });
+        } else {
+          contactSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  }
+
+  /* ==========================================================================
      4. EFECTO DE ESCALADO Y APILAMIENTO EN TARJETAS DE TRABAJOS (STACKING CARDS)
      ========================================================================== */
   const serviceCards = Array.from(document.querySelectorAll('.service-card'));

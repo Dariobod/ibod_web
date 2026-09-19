@@ -52,13 +52,13 @@
   font-size: 0.78rem !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.28em !important;
-  margin-bottom: 16px !important;
+  letter-spacing: 0.42em !important;
+  margin-bottom: 18px !important;
   display: inline-block !important;
 }
 
 /* --------------------------------------------------------------------------
-   2. Hero Section Customization (Full Screen Video & Action Buttons)
+   2. Hero Section Customization (Full Screen Video & Clickable to Contact)
    -------------------------------------------------------------------------- */
 .sites-hero-section {
   position: relative;
@@ -72,6 +72,7 @@
   padding-bottom: 70px;
   background-color: var(--bg-primary);
   overflow: hidden;
+  cursor: pointer;
 }
 
 /* Eliminar el degrade negro inferior del hero */
