@@ -160,8 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return (match && match[1].length === 11) ? match[1] : null;
   }
 
-  // Generador de poster/thumbnail para URLs de Cloudinary con soporte de offset de frame/segundo
-  function getCloudinaryPoster(url, offset = '0') {
+  // Generador de poster/thumbnail para URLs de Cloudinary con soporte de offset de frame/segundo (2.5s por defecto para evitar frame en negro)
+  function getCloudinaryPoster(url, offset = '2.5') {
     if (!url || typeof url !== 'string') return '';
     if (!/cloudinary\.com/i.test(url)) return '';
     try {
@@ -192,8 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const isDirectVideo = /\.(mp4|webm|mov|m4v|ogg)(\?.*)?$/i.test(url);
 
     if (isCloudinary || isDirectVideo || /^https?:\/\//i.test(url)) {
-      // Para videos verticales en Trabajos, usar frame avanzado (so_1.5) para evitar el primer frame en negro
-      const offset = isVertical ? '1.5' : '0';
+      // Usar frame avanzado (so_2.5) para evitar el primer frame en negro y mostrar segundo o tercer frame
+      const offset = '2.5';
       const poster = isCloudinary ? getCloudinaryPoster(url, offset) : '';
       return {
         provider: 'cloudinary',
@@ -277,21 +277,101 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Utilidades de Cache Local (localStorage) con revalidación en segundo plano (SWR)
+  const CACHE_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 Horas
+  function getCachedData(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (Date.now() - parsed.timestamp < CACHE_EXPIRY_MS && Array.isArray(parsed.data) && parsed.data.length > 0) {
+        return parsed.data;
+      }
+    } catch (e) {
+      console.warn('Error leyendo cache:', e);
+    }
+    return null;
+  }
+
+  function setCachedData(key, data) {
+    try {
+      if (Array.isArray(data) && data.length > 0) {
+        localStorage.setItem(key, JSON.stringify({
+          timestamp: Date.now(),
+          data: data
+        }));
+      }
+    } catch (e) {
+      console.warn('Error guardando cache:', e);
+    }
+  }
+
+  // Manejador de previsualización al pasar el mouse (Hover Video Preview)
+  const HOVER_PREVIEW_DURATION_MS = 3800; // Reproduce ~3.8 segundos y luego regresa suavemente a la imagen
+
+  function setupCardHoverPreview(card) {
+    const video = card.querySelector('video.portfolio-thumb-video, video.testimonial-thumb-video');
+    if (!video) return;
+
+    let hoverTimeout = null;
+
+    const stopPreview = () => {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = null;
+      }
+      video.classList.remove('is-preview-playing');
+      try {
+        video.pause();
+        video.currentTime = 0;
+      } catch (e) {}
+    };
+
+    const startPreview = () => {
+      const dataSrc = video.getAttribute('data-src');
+      if (dataSrc && !video.src) {
+        video.src = dataSrc;
+      }
+
+      video.muted = true;
+      video.defaultMuted = true;
+      video.playsInline = true;
+
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            video.classList.add('is-preview-playing');
+            if (hoverTimeout) clearTimeout(hoverTimeout);
+            hoverTimeout = setTimeout(() => {
+              stopPreview();
+            }, HOVER_PREVIEW_DURATION_MS);
+          })
+          .catch(() => {});
+      }
+    };
+
+    card.addEventListener('mouseenter', () => {
+      if (!isMobileScreen()) {
+        startPreview();
+      }
+    });
+
+    card.addEventListener('mouseleave', () => {
+      stopPreview();
+    });
+  }
+
   // Función para renderizar las tarjetas (Cards) en el DOM (YouTube y Cloudinary/Video directo)
   function renderGrid(data, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
     container.innerHTML = '';
-    
-    if (!data || data.length === 0) {
-      container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px;">No se encontraron trabajos.</p>';
-      return;
-    }
 
-    data.forEach(v => {
-      const isVertical = isVerticalVideo(v.urlOriginal, v.category);
+    data.forEach((v) => {
       const card = document.createElement('div');
+      const isVertical = isVerticalVideo(v.urlOriginal, v.category);
       card.className = `portfolio-card reveal visible ${isVertical ? 'portfolio-card-vertical' : ''}`;
       card.setAttribute('data-category', v.category);
 
@@ -300,23 +380,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const isMobile = isMobileScreen();
 
       if (v.provider === 'cloudinary') {
-        const posterOffset = isVertical ? '1.5' : '0';
-        const posterUrl = v.thumbnail || getCloudinaryPoster(v.urlOriginal, posterOffset);
-        const posterAttr = posterUrl ? `poster="${posterUrl}"` : '';
-        const autoplayAttr = isMobile ? '' : 'autoplay';
-        const preloadAttr = isMobile ? 'preload="none"' : 'preload="auto"';
+        const posterUrl = v.thumbnail || getCloudinaryPoster(v.urlOriginal, '2.5');
         const videoSrc = isVertical ? `${v.urlOriginal}#t=1.5` : v.urlOriginal;
+        // Imagen fija de alta velocidad al cargar la página + video oculto que despierta en hover
         mediaHtml = `
+          ${posterUrl ? `<img src="${posterUrl}" alt="${v.title}" class="portfolio-thumb-img" loading="lazy">` : ''}
           <video 
-            src="${videoSrc}" 
-            ${posterAttr}
+            data-src="${videoSrc}" 
             class="portfolio-thumb-video" 
-            ${autoplayAttr} 
             muted 
             loop 
             playsinline 
             webkit-playsinline
-            ${preloadAttr}
+            preload="none"
             aria-label="${v.title}">
           </video>`;
         playBtnHtml = `
@@ -333,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
               alt="${v.title}" 
               class="portfolio-thumb-video" 
               loading="lazy" 
-              style="object-fit: cover; width: 100%; height: 100%;">`;
+              style="object-fit: cover; width: 100%; height: 100%; opacity: 1;">`;
         } else {
           mediaHtml = `
             <iframe 
@@ -342,7 +418,8 @@ document.addEventListener('DOMContentLoaded', () => {
               class="portfolio-thumb-video" 
               frameborder="0" 
               allow="autoplay; encrypted-media; picture-in-picture" 
-              allowfullscreen>
+              allowfullscreen
+              style="opacity: 1;">
             </iframe>`;
         }
         playBtnHtml = `
@@ -368,19 +445,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
       container.appendChild(card);
 
-      // Autoplay silenciado solo en Desktop para máxima performance en Mobile
-      const videoEl = card.querySelector('video');
-      if (videoEl && !isMobile) {
-        videoEl.muted = true;
-        videoEl.defaultMuted = true;
-        videoEl.playsInline = true;
-        const playPromise = videoEl.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(err => {
-            console.log('Autoplay silencioso diferido:', err);
-          });
-        }
-      }
+      // Activar comportamiento de reproducción en Hover
+      setupCardHoverPreview(card);
 
       card.style.cursor = 'pointer';
 
@@ -454,60 +520,83 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Función principal para cargar los trabajos (videos) desde Google Apps Script
+  // Función principal para procesar y renderizar trabajos
+  function applyTrabajosData(rawData) {
+    if (!Array.isArray(rawData) || rawData.length === 0) {
+      renderGrid([], 'portfolio-grid');
+      return;
+    }
+
+    const videos = rawData.map(item => {
+      const link = (item.link || item.url || '').trim();
+      const cat = (item.categoria || item.category || 'General').trim();
+      const isVertical = isVerticalVideo(link, cat);
+      const parsed = parseVideoSource(link, isVertical);
+      return {
+        title: item.titulo || item.title || 'Sin Título',
+        desc: item.descripcion || item.desc || '',
+        category: cat,
+        urlOriginal: link,
+        provider: parsed.provider,
+        ytId: parsed.ytId || null,
+        thumbnail: parsed.thumbnail || ''
+      };
+    }).filter(v => v.provider !== 'unknown');
+
+    if (videos.length > 0) {
+      allTrabajos = videos;
+      // Obtener categorías únicas dinámicamente desde los datos de la planilla
+      const uniqueCategories = [...new Set(videos.map(v => v.category))];
+      renderFilterButtons(uniqueCategories);
+      renderGrid(allTrabajos, 'portfolio-grid');
+      if (uniqueCategories.length > 0) {
+        filterCardsByCategory(uniqueCategories[0]);
+      }
+    } else {
+      renderGrid([], 'portfolio-grid');
+    }
+  }
+
+  // Función principal para cargar los trabajos (videos) con estrategia Cache-First (instantáneo)
   async function loadVideos() {
     const container = document.getElementById('portfolio-grid');
     if (!container) return;
 
-    // Mostrar estado de carga grisado con efecto Shimmer mientras se espera la API
-    renderSkeletons();
+    // 1. Intentar cargar instantáneamente desde Cache Local
+    const cachedVideos = getCachedData('ibod_cache_trabajos');
+    let hasRenderedCache = false;
+
+    if (cachedVideos && cachedVideos.length > 0) {
+      applyTrabajosData(cachedVideos);
+      hasRenderedCache = true;
+    } else {
+      // Solo mostrar esqueletos grisados si no hay nada en cache
+      renderSkeletons();
+    }
 
     if (!API_URL || API_URL.includes('URL_DE_TU_NUEVO_APP_SCRIPT_AQUI')) {
-      console.log("API_URL no configurada aún en index.js. Mostrando trabajos por defecto.");
       return;
     }
 
+    // 2. Revalidar en segundo plano contra Google Apps Script
     try {
       const response = await fetch(API_URL);
       const rawResponse = await response.json();
-      const rawData = rawResponse.data || rawResponse; 
+      const rawData = rawResponse.data || rawResponse;
 
-      if (!Array.isArray(rawData) || rawData.length === 0) {
-        renderGrid([], 'portfolio-grid');
-        return;
-      }
-
-      const videos = rawData.map(item => {
-        const link = (item.link || item.url || '').trim();
-        const cat = (item.categoria || item.category || 'General').trim();
-        const isVertical = isVerticalVideo(link, cat);
-        const parsed = parseVideoSource(link, isVertical);
-        return {
-          title: item.titulo || item.title || 'Sin Título',
-          desc: item.descripcion || item.desc || '',
-          category: cat,
-          urlOriginal: link,
-          provider: parsed.provider,
-          ytId: parsed.ytId || null,
-          thumbnail: parsed.thumbnail || ''
-        };
-      }).filter(v => v.provider !== 'unknown');
-
-      if (videos.length > 0) {
-        allTrabajos = videos;
-        // Obtener categorías únicas dinámicamente desde los datos de la planilla
-        const uniqueCategories = [...new Set(videos.map(v => v.category))];
-        renderFilterButtons(uniqueCategories);
-        renderGrid(allTrabajos, 'portfolio-grid');
-        if (uniqueCategories.length > 0) {
-          filterCardsByCategory(uniqueCategories[0]);
-        }
-      } else {
+      if (Array.isArray(rawData) && rawData.length > 0) {
+        // Guardar la nueva versión en Cache
+        setCachedData('ibod_cache_trabajos', rawData);
+        // Si no teníamos cache previo o los datos son frescos, aplicar
+        applyTrabajosData(rawData);
+      } else if (!hasRenderedCache) {
         renderGrid([], 'portfolio-grid');
       }
     } catch (error) {
       console.error("Error al cargar trabajos desde API:", error);
-      renderGrid([], 'portfolio-grid');
+      if (!hasRenderedCache) {
+        renderGrid([], 'portfolio-grid');
+      }
     }
   }
 
@@ -1208,10 +1297,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // Cargar FAQs desde la API de Google Apps Script (tipo=faq)
+  // Cargar FAQs desde la API de Google Apps Script (tipo=faq) con Cache-First
   async function loadFaqFromApi() {
-    renderFaqAccordion(faqList); // Renderizado inicial con datos base
+    // 1. Intentar cargar desde cache local
+    const cachedFaq = getCachedData('ibod_cache_faqs');
+    if (cachedFaq && cachedFaq.length > 0) {
+      faqList = cachedFaq;
+    }
+    renderFaqAccordion(faqList); // Renderizado instantáneo
+    renderChatChips();
 
+    // 2. Revalidar en segundo plano
     try {
       const response = await fetch(FAQ_API_URL);
       const rawResponse = await response.json();
@@ -1228,13 +1324,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (apiFaqs.length > 0) {
           faqList = apiFaqs;
+          setCachedData('ibod_cache_faqs', apiFaqs);
+          renderFaqAccordion(faqList); // Actualizado dinámico con datos frescos de la API
+          renderChatChips();
         }
       }
     } catch (error) {
-      console.log("Cargadas FAQs por defecto.");
+      console.log("Cargadas FAQs por defecto / cache.");
     }
-    renderFaqAccordion(faqList); // Actualizado dinámico con datos frescos de la API
-    renderChatChips();
   }
 
   // Iniciar la carga de FAQs
@@ -1386,108 +1483,118 @@ document.addEventListener('DOMContentLoaded', () => {
     testimonialsTrack.innerHTML = skeletonHtml;
   }
 
-  // Cargar testimonios desde la API
+  // Función para procesar y renderizar testimonios
+  function applyTestimoniosData(items) {
+    if (!testimonialsTrack) return;
+
+    if (!Array.isArray(items) || items.length === 0) {
+      testimonialsTrack.innerHTML = '<p style="color: var(--text-muted); padding: 40px; width: 100%; text-align: center;">No hay testimonios disponibles en este momento.</p>';
+      return;
+    }
+
+    testimonialsTrack.innerHTML = '';
+
+    items.forEach(item => {
+      const cuenta = item.cuenta || 'Cliente iBod';
+      const videoUrl = (item.video || '').trim();
+      if (!videoUrl) return;
+
+      const descripcion = (item.descripcion || item.desc || '').trim();
+      const stars = parseStars(item.estrellas);
+      const poster = getCloudinaryPoster(videoUrl, '2.5');
+
+      const card = document.createElement('div');
+      card.className = 'testimonial-video-card reveal visible';
+
+      // Imagen fija al cargar + video oculto que despierta en hover
+      card.innerHTML = `
+        <div class="testimonial-video-thumb">
+          ${poster ? `<img src="${poster}" alt="Testimonio de ${cuenta}" class="testimonial-thumb-img" loading="lazy">` : ''}
+          <video 
+            data-src="${videoUrl}" 
+            class="testimonial-thumb-video" 
+            muted 
+            loop 
+            playsinline 
+            webkit-playsinline
+            preload="none"
+            aria-label="Testimonio de ${cuenta}">
+          </video>
+          <div class="portfolio-thumb-overlay"></div>
+          <span class="project-tag">Testimonio</span>
+          <button class="project-play-btn" data-video="${videoUrl}" aria-label="Ver testimonio de ${cuenta}">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+              <path d="M8 5v14l11-7z"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="testimonial-video-info">
+          <div class="testimonial-header-row">
+            <h4 class="testimonial-account-name">${cuenta}</h4>
+            ${renderStarRating(stars)}
+          </div>
+          ${descripcion ? `<p class="testimonial-card-desc" title="${descripcion}">${descripcion}</p>` : ''}
+        </div>
+      `;
+
+      testimonialsTrack.appendChild(card);
+
+      // Activar comportamiento de reproducción en Hover
+      setupCardHoverPreview(card);
+
+      // Al hacer clic, abrir modal vertical con audio, estrellas y la descripción completa
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (typeof openVideoModal === 'function') {
+          openVideoModal({
+            url: videoUrl,
+            title: cuenta,
+            desc: descripcion || 'Testimonio de cliente de iBod.',
+            category: 'Testimonio',
+            stars: stars,
+            isVertical: true,
+            provider: 'cloudinary'
+          });
+        }
+      });
+    });
+
+    // Inicializar navegación y gestos de desplazamiento del carrusel
+    setupTestimonialsCarousel();
+  }
+
+  // Cargar testimonios desde la API con estrategia Cache-First (instantáneo)
   async function loadTestimonios() {
     if (!testimonialsTrack) return;
 
-    renderTestimonialSkeletons();
+    // 1. Intentar cargar instantáneamente desde Cache Local
+    const cachedTestimonios = getCachedData('ibod_cache_testimonios');
+    let hasRenderedCache = false;
 
+    if (cachedTestimonios && cachedTestimonios.length > 0) {
+      applyTestimoniosData(cachedTestimonios);
+      hasRenderedCache = true;
+    } else {
+      renderTestimonialSkeletons();
+    }
+
+    // 2. Revalidar en segundo plano contra Google Apps Script
     try {
       const response = await fetch(TESTIMONIOS_API_URL);
       const rawResponse = await response.json();
       const items = rawResponse.data || rawResponse;
 
-      if (!Array.isArray(items) || items.length === 0) {
+      if (Array.isArray(items) && items.length > 0) {
+        setCachedData('ibod_cache_testimonios', items);
+        applyTestimoniosData(items);
+      } else if (!hasRenderedCache) {
         testimonialsTrack.innerHTML = '<p style="color: var(--text-muted); padding: 40px; width: 100%; text-align: center;">No hay testimonios disponibles en este momento.</p>';
-        return;
       }
-
-      testimonialsTrack.innerHTML = '';
-
-      items.forEach(item => {
-        const cuenta = item.cuenta || 'Cliente iBod';
-        const videoUrl = (item.video || '').trim();
-        if (!videoUrl) return;
-
-        const descripcion = (item.descripcion || item.desc || '').trim();
-        const stars = parseStars(item.estrellas);
-        const poster = getCloudinaryPoster(videoUrl);
-
-        const isMobile = isMobileScreen();
-        const autoplayAttr = isMobile ? '' : 'autoplay';
-        const preloadAttr = isMobile ? 'preload="none"' : 'preload="auto"';
-
-        const card = document.createElement('div');
-        card.className = 'testimonial-video-card reveal visible';
-
-        card.innerHTML = `
-          <div class="testimonial-video-thumb">
-            <video 
-              src="${videoUrl}" 
-              ${poster ? `poster="${poster}"` : ''} 
-              class="testimonial-thumb-video" 
-              ${autoplayAttr} 
-              muted 
-              loop 
-              playsinline 
-              webkit-playsinline
-              ${preloadAttr}
-              aria-label="Testimonio de ${cuenta}">
-            </video>
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="project-tag">Testimonio</span>
-            <button class="project-play-btn" data-video="${videoUrl}" aria-label="Ver testimonio de ${cuenta}">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                <path d="M8 5v14l11-7z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="testimonial-video-info">
-            <div class="testimonial-header-row">
-              <h4 class="testimonial-account-name">${cuenta}</h4>
-              ${renderStarRating(stars)}
-            </div>
-            ${descripcion ? `<p class="testimonial-card-desc" title="${descripcion}">${descripcion}</p>` : ''}
-          </div>
-        `;
-
-        testimonialsTrack.appendChild(card);
-
-        // Autoplay silenciado solo en Desktop para máxima performance en Mobile
-        const videoEl = card.querySelector('video');
-        if (videoEl && !isMobile) {
-          videoEl.muted = true;
-          videoEl.defaultMuted = true;
-          videoEl.playsInline = true;
-          const playPromise = videoEl.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(e => console.log('Autoplay testimonial diferido:', e));
-          }
-        }
-
-        // Al hacer clic, abrir modal vertical con audio, estrellas y la descripción completa
-        card.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (typeof openVideoModal === 'function') {
-            openVideoModal({
-              url: videoUrl,
-              title: cuenta,
-              desc: descripcion || 'Testimonio de cliente de iBod.',
-              category: 'Testimonio',
-              stars: stars,
-              isVertical: true,
-              provider: 'cloudinary'
-            });
-          }
-        });
-      });
-
-      // Inicializar navegación y gestos de desplazamiento del carrusel
-      setupTestimonialsCarousel();
-
     } catch (error) {
       console.error('Error al cargar testimonios:', error);
-      testimonialsTrack.innerHTML = '<p style="color: var(--text-muted); padding: 40px; width: 100%; text-align: center;">No se pudieron cargar los testimonios.</p>';
+      if (!hasRenderedCache) {
+        testimonialsTrack.innerHTML = '<p style="color: var(--text-muted); padding: 40px; width: 100%; text-align: center;">No se pudieron cargar los testimonios.</p>';
+      }
     }
   }
 
