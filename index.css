@@ -393,12 +393,14 @@ body {
 /* Hero Section */
 .hero-section {
   position: relative;
-  min-height: 70vh; /* Ajustado para dar un espacio equilibrado */
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding-top: 180px; /* Reducido de 240px para subir el contenido de la home */
-  padding-bottom: 60px; /* Pequeño espacio de separación antes de servicios */
+  padding-top: 100px;
+  padding-bottom: 40px;
   background-color: var(--bg-primary);
 }
 
@@ -450,6 +452,7 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  width: 100%;
 }
 
 .badge-pulsing {
@@ -512,7 +515,7 @@ body {
   align-items: stretch;
   width: 100%;
   max-width: 820px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   line-height: 1.02;
   text-shadow: 0 4px 28px rgba(0, 0, 0, 0.85);
 }
@@ -599,18 +602,19 @@ body {
 
 .hero-subtitle {
   color: var(--text-secondary);
-  font-size: 1.25rem;
-  max-width: 650px;
-  margin-bottom: 40px;
-  line-height: 1.5;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7); /* Añadido para asegurar lectura sobre video claro */
+  font-size: 1.15rem;
+  max-width: 760px;
+  margin-bottom: 48px; /* Espacio para bajar los botones */
+  line-height: 1.55;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
 }
 
 .hero-ctas {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 64px;
+  flex-wrap: wrap;
+  gap: 28px;
   margin-bottom: 48px;
 }
 
@@ -1741,6 +1745,10 @@ body {
   width: 100%;
 }
 
+.testimonials-track.is-not-overflowing {
+  justify-content: center;
+}
+
 /* Carrusel Navigation Arrows */
 .carousel-nav-btn {
   position: absolute;
@@ -1761,6 +1769,10 @@ body {
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   transition: all var(--transition-fast);
+}
+
+.carousel-nav-btn.is-hidden {
+  display: none !important;
 }
 
 .carousel-nav-btn.prev {
@@ -2870,8 +2882,9 @@ body {
 
 @media (max-width: 768px) {
   .hero-section {
-    min-height: 55vh;
-    padding-top: 140px; /* Reducido de 170px */
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-top: 100px;
     padding-bottom: 40px;
   }
   

@@ -1656,6 +1656,20 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
 
+    // Función para ocultar flechas si todas las tarjetas entran en pantalla
+    const checkNavArrowsVisibility = () => {
+      if (!testimonialsTrack) return;
+      const isOverflowing = testimonialsTrack.scrollWidth > testimonialsTrack.clientWidth + 5;
+      
+      if (testimonialsPrev) {
+        testimonialsPrev.classList.toggle('is-hidden', !isOverflowing);
+      }
+      if (testimonialsNext) {
+        testimonialsNext.classList.toggle('is-hidden', !isOverflowing);
+      }
+      testimonialsTrack.classList.toggle('is-not-overflowing', !isOverflowing && !isMobileScreen());
+    };
+
     // Escuchar scroll del track con requestAnimationFrame para 60fps fluidos
     let ticking = false;
     testimonialsTrack.addEventListener('scroll', () => {
@@ -1668,9 +1682,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }, { passive: true });
 
-    window.addEventListener('resize', updateCardScales);
-    setTimeout(updateCardScales, 80);
-    setTimeout(updateCardScales, 300);
+    window.addEventListener('resize', () => {
+      updateCardScales();
+      checkNavArrowsVisibility();
+    });
+    setTimeout(() => {
+      updateCardScales();
+      checkNavArrowsVisibility();
+    }, 80);
+    setTimeout(() => {
+      updateCardScales();
+      checkNavArrowsVisibility();
+    }, 300);
+    setTimeout(() => {
+      checkNavArrowsVisibility();
+    }, 800);
 
     if (testimonialsPrev) {
       testimonialsPrev.addEventListener('click', () => {
