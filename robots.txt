@@ -3,7 +3,7 @@
 User-agent: *
 Allow: /
 
-# Directives for AI Generative Search Crawlers (GEO - Generative Engine Optimization)
+# Directives for AI Generative Search Crawlers (GEO & Web MCP)
 User-agent: GPTBot
 Allow: /
 
@@ -16,8 +16,17 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 
+User-agent: Claude-Web
+Allow: /
+
 User-agent: Google-Extended
 Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# LLMs & AI Agent Context File
+# https://ibod.com.ar/llms.txt
 
 # Sitemap Location
 Sitemap: https://ibod.com.ar/sitemap.xml

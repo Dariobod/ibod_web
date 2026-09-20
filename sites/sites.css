@@ -334,16 +334,16 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. Sección Servicios (Fondo Gris Claro, Estilo Moderno Premium)
+   5. Sección Servicios (Fondo Gris Más Oscuro Elegante)
    -------------------------------------------------------------------------- */
 .sites-services-section {
-  background-color: #f2f4f7;
+  background-color: #dde2e8;
   position: relative;
   overflow: hidden;
   padding-top: 110px;
   padding-bottom: 110px;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .sites-services-section::before {
@@ -480,12 +480,16 @@
 }
 
 /* --------------------------------------------------------------------------
-   7. Footer Section (Fondo Gris Claro Premium, acorde a Servicios)
+   7. Footer Section (Fondo Gris Más Oscuro y Barra Inferior Negra Sólida)
    -------------------------------------------------------------------------- */
 .footer {
-  background-color: #f2f4f7 !important;
+  background-color: #dde2e8 !important;
   border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
-  padding: 85px 0 40px !important;
+  padding: 85px 0 0 !important;
+}
+
+.footer-container {
+  margin-bottom: 56px !important;
 }
 
 .footer-brand-container {
@@ -546,9 +550,25 @@
   box-shadow: 0 6px 16px rgba(2, 142, 224, 0.2);
 }
 
-.footer-bottom {
-  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
-  color: #6b7280 !important;
+/* Barra inferior del footer con fondo negro sólido */
+.footer-bottom-bar {
+  background-color: #000000 !important;
+  width: 100%;
+  padding: 24px 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.footer-bottom-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  color: #9ca3af !important;
+}
+
+.footer-bottom-inner p {
+  margin: 0;
+  color: #9ca3af !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -580,5 +600,11 @@
   
   .sites-hero-section .hero-ctas .btn {
     width: 100%;
+  }
+
+  .footer-bottom-inner {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
   }
 }

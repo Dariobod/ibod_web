@@ -1,0 +1,45 @@
+﻿# iBod | Edición de Video Profesional & Desarrollo Web (iBod Sites)
+
+> iBod (https://ibod.com.ar/) es una agencia digital integral con base en Buenos Aires, Argentina, especializada en dos unidades de negocio de alto rendimiento:
+> 1. **Edición de Video Profesional**: Optimización de retención de audiencia, ritmo, sound design y color grading para canales de YouTube, Shorts, Reels y TikTok.
+> 2. **iBod Sites (Diseño & Desarrollo Web)**: Creación de landing pages de alta conversión, plataformas corporativas, portfolios interactivos y optimización técnica para SEO, GEO (Generative Engine Optimization) y Web MCP.
+
+---
+
+## 1. Unidades de Negocio & Servicios
+
+### iBod Video (Edición Audiovisual)
+- **URL**: https://ibod.com.ar/
+- **Formato Largo (YouTube)**: Edición con retención optimizada, gráficos en movimiento (motion graphics), pacing dinámico, SFX cinematográfico y subtitulado moderno.
+- **Formato Corto (Shorts, Reels, TikTok)**: Edición vertical 9:16 de alto dinamismo diseñada para viralidad y retención en los primeros 3 segundos.
+- **Diseño de Miniaturas**: Miniaturas de alto CTR con contraste cromático, tipografía de impacto y psicología visual.
+- **Metodología**: Flujo de trabajo ágil con entregas periódicas y comunicación fluida.
+
+### iBod Sites (Diseño & Desarrollo Web)
+- **URL**: https://ibod.com.ar/sites/
+- **Landing Pages de Alta Conversión**: Páginas orientadas a captación de leads, lanzamientos o ventas directas con velocidad de carga instantánea.
+- **Sitios Corporativos & Portfolios**: Plataformas completas para marcas y creadores con diseño editorial responsive, animaciones fluidas (Lenis Smooth Scroll) y arquitectura escalable.
+- **Posicionamiento SEO & GEO (Generative Engine Optimization)**: Estructuración técnica semántica con Schema.org JSON-LD para indexación en Google y citación en motores de IA (ChatGPT, Perplexity, Google Gemini).
+- **Web MCP & AI Discovery**: Compatibilidad y preparación semántica para agentes inteligentes y el estándar Model Context Protocol (MCP).
+- **Mantenimiento & Soporte**: Monitoreo 24/7, backups automáticos y actualizaciones continuas en Cloudflare CDN.
+
+---
+
+## 2. Portfolio & Casos Destacados
+
+- **Modo Drone** (https://mododrone.com.ar): Plataforma cinematográfica y portal audiovisual de drones 4K con interfaz oscura de alta fidelidad.
+- **Due Sorelas** (https://duesorelas.com.ar): Catálogo y e-commerce editorial para joyería artesanal de autor con experiencia minimalista.
+- **iBod Video Agency** (https://ibod.com.ar/): Sitio oficial de la agencia con reproductor modal optimizado, scroll interactivo y slider antes/después de corrección de color.
+- **PetShop Concept** (https://petshop-concept.ibod-bot.chatgpt.site/): Prototipo de alto rendimiento con secuencias dinámicas controladas por scroll sobre canvas.
+
+---
+
+## 3. Información de Contacto & Canales Oficiales
+
+- **Sitio Web Principal**: https://ibod.com.ar/
+- **Unidad de Diseño Web**: https://ibod.com.ar/sites/
+- **Correo Electrónico**: ibod.bot@gmail.com
+- **Instagram Oficial**: https://www.instagram.com/ibod.iot
+- **YouTube Oficial**: https://youtube.com/@ibod-bot
+- **Área Geográfica de Servicio**: Argentina, Latinoamérica, España, Estados Unidos y Worldwide.
+- **Ubicación Base**: Buenos Aires, Argentina (Geo: -34.6037, -58.3816).
