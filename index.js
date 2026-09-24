@@ -160,8 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return (match && match[1].length === 11) ? match[1] : null;
   }
 
-  // Generador de poster/thumbnail para URLs de Cloudinary con soporte de offset de frame/segundo (2.5s por defecto para evitar frame en negro)
-  function getCloudinaryPoster(url, offset = '2.5') {
+  // Generador de poster/thumbnail para URLs de Cloudinary con soporte de offset de frame/segundo (4.0s por defecto para evitar frame en negro u ojos cerrados)
+  function getCloudinaryPoster(url, offset = '4.0') {
     if (!url || typeof url !== 'string') return '';
     if (!/cloudinary\.com/i.test(url)) return '';
     try {
@@ -1483,6 +1483,22 @@ document.addEventListener('DOMContentLoaded', () => {
     testimonialsTrack.innerHTML = skeletonHtml;
   }
 
+  // Configuración de fotogramas óptimos para testimonios (evita ojos cerrados o gestos a medio hablar)
+  const TESTIMONIAL_FRAME_OFFSETS = {
+    'claudia': '4.0',
+    'nitza': '2.5',
+    'christian': '3.0'
+  };
+
+  function getTestimonialOffset(videoUrl) {
+    if (!videoUrl) return '4.0';
+    const lower = videoUrl.toLowerCase();
+    for (const [name, offset] of Object.entries(TESTIMONIAL_FRAME_OFFSETS)) {
+      if (lower.includes(name)) return offset;
+    }
+    return '4.0';
+  }
+
   // Función para procesar y renderizar testimonios
   function applyTestimoniosData(items) {
     if (!testimonialsTrack) return;
@@ -1501,7 +1517,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const descripcion = (item.descripcion || item.desc || '').trim();
       const stars = parseStars(item.estrellas);
-      const poster = getCloudinaryPoster(videoUrl, '2.5');
+      const offset = getTestimonialOffset(videoUrl);
+      const poster = getCloudinaryPoster(videoUrl, offset);
 
       const card = document.createElement('div');
       card.className = 'testimonial-video-card reveal visible';
@@ -1567,8 +1584,11 @@ document.addEventListener('DOMContentLoaded', () => {
   async function loadTestimonios() {
     if (!testimonialsTrack) return;
 
-    // 1. Intentar cargar instantáneamente desde Cache Local
-    const cachedTestimonios = getCachedData('ibod_cache_testimonios');
+    // 1. Limpiar cache vieja e intentar cargar instantáneamente desde Cache Local v3
+    try {
+      localStorage.removeItem('ibod_cache_testimonios');
+    } catch (e) {}
+    const cachedTestimonios = getCachedData('ibod_cache_testimonios_v3');
     let hasRenderedCache = false;
 
     if (cachedTestimonios && cachedTestimonios.length > 0) {
@@ -1585,7 +1605,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const items = rawResponse.data || rawResponse;
 
       if (Array.isArray(items) && items.length > 0) {
-        setCachedData('ibod_cache_testimonios', items);
+        setCachedData('ibod_cache_testimonios_v3', items);
         applyTestimoniosData(items);
       } else if (!hasRenderedCache) {
         testimonialsTrack.innerHTML = '<p style="color: var(--text-muted); padding: 40px; width: 100%; text-align: center;">No hay testimonios disponibles en este momento.</p>';

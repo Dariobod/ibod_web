@@ -399,9 +399,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 100px;
-  padding-bottom: 40px;
+  padding-top: 175px; /* Más espacio con respecto a la barra de menú flotante */
+  padding-bottom: 60px;
   background-color: var(--bg-primary);
+  overflow: hidden;
 }
 
 .hero-bg-video {
@@ -413,36 +414,17 @@ body {
   object-fit: cover;
   object-position: center center; /* Centrado perfecto idéntico a Webflow */
   z-index: 0;
-  opacity: 0.8; /* Aumentado a 0.8 para máxima claridad */
+  opacity: 1 !important; /* Brillo y claridad original para probar sin oscurecer */
 }
 
+/* Degrade a negro eliminado para probar el video de fondo limpio */
 .hero-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(7, 7, 9, 0.15) 0%,
-    rgba(7, 7, 9, 0.35) 50%,
-    rgba(7, 7, 9, 0.8) 75%,
-    var(--bg-primary) 100%
-  );
-  z-index: 1;
-  pointer-events: none;
+  display: none !important;
 }
 
 .hero-section::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 160px;
-  background: linear-gradient(to bottom, rgba(7, 7, 9, 0) 0%, var(--bg-primary) 100%);
-  z-index: 1;
-  pointer-events: none;
+  display: none !important;
+  content: none !important;
 }
 
 .hero-container {
@@ -604,8 +586,11 @@ body {
   color: var(--text-secondary);
   font-size: 1.15rem;
   max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 48px; /* Espacio para bajar los botones */
   line-height: 1.55;
+  text-align: center;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
 }
 
@@ -615,25 +600,8 @@ body {
   align-items: center;
   flex-wrap: wrap;
   gap: 28px;
-  margin-bottom: 48px;
-}
-
-.hero-stats {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   margin-bottom: 0;
-}
-
-.stats-text {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  text-align: center;
-}
-
-.stats-text strong {
-  color: var(--text-primary);
+  width: 100%;
 }
 
 /* Video Showcase Container */
@@ -1612,6 +1580,128 @@ body {
   font-weight: 500;
 }
 
+/* ==========================================================================
+   Sección Editorial / Intro (Franja clara y minimalista estilo /sites)
+   ========================================================================== */
+.sites-intro-section,
+.home-intro-section {
+  background-color: #f2f4f7;
+  color: #0f1117;
+  padding: 100px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 5;
+}
+
+.intro-container {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.intro-left-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.intro-eyebrow {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--primary);
+  margin-bottom: 16px;
+}
+
+.intro-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #0a0a0e;
+  margin-bottom: 20px;
+}
+
+.intro-title-accent {
+  color: var(--primary);
+}
+
+.intro-subtitle {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: #4b5563;
+  font-weight: 500;
+  max-width: 520px;
+}
+
+.intro-right-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.intro-description {
+  font-size: clamp(1.05rem, 1.3vw, 1.2rem);
+  line-height: 1.75;
+  color: #374151;
+  max-width: 520px;
+  font-weight: 400;
+}
+
+.intro-meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.intro-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 18px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e293b;
+  letter-spacing: 0.01em;
+  transition: all var(--transition-fast);
+}
+
+.intro-meta-pill:hover {
+  background: rgba(2, 142, 224, 0.1);
+  border-color: rgba(2, 142, 224, 0.3);
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .sites-intro-section,
+  .home-intro-section {
+    padding: 70px 0;
+  }
+  .intro-container {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .intro-right-col {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .intro-meta-tags {
+    justify-content: flex-start;
+  }
+}
+
 /* Testimonials Section & Reels Carousel */
 .testimonials-carousel-wrapper {
   position: relative;
@@ -2215,34 +2305,56 @@ body {
   line-height: 1.6;
 }
 
-/* Footer Section */
+/* Footer Section (Fondo Claro idéntico a /sites) */
 .footer {
-  background-color: #040406;
-  border-top: 1px solid var(--border-primary);
-  padding: 80px 0 40px;
+  background-color: #dde2e8;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 85px 0 0;
 }
 
 .footer-container {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr;
   gap: 64px;
-  margin-bottom: 64px;
+  margin-bottom: 56px;
+}
+
+.footer-brand-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.footer-brand-container .brand-logo-icon {
+  height: 42px;
+  width: auto;
+  display: block;
+}
+
+.footer-brand-container .footer-logo-text {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0a0a0e;
+  letter-spacing: -0.02em;
 }
 
 .footer-desc {
-  color: var(--text-secondary);
+  color: #4b5563;
   font-size: 0.95rem;
   margin-top: 16px;
-  max-width: 320px;
+  max-width: 340px;
+  line-height: 1.65;
 }
 
 .footer-col-title {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: 0.88rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-primary);
+  letter-spacing: 0.12em;
+  color: #0a0a0e;
   margin-bottom: 20px;
 }
 
@@ -2253,9 +2365,10 @@ body {
 }
 
 .footer-links a {
-  color: var(--text-secondary);
+  color: #4b5563;
   text-decoration: none;
   font-size: 0.95rem;
+  font-weight: 500;
   transition: color var(--transition-fast);
 }
 
@@ -2269,34 +2382,47 @@ body {
 }
 
 .social-icons a {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border-primary);
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-secondary);
+  color: #4b5563;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   transition: all var(--transition-fast);
   text-decoration: none;
 }
 
 .social-icons a:hover {
-  background-color: var(--primary-glow);
+  background-color: rgba(2, 142, 224, 0.08);
   border-color: var(--primary);
   color: var(--primary);
   transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(2, 142, 224, 0.2);
 }
 
-.footer-bottom {
-  border-top: 1px solid var(--border-primary);
-  padding-top: 32px;
+/* Barra inferior del footer con fondo negro sólido */
+.footer-bottom-bar {
+  background-color: #000000;
+  width: 100%;
+  padding: 24px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-bottom-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  font-size: 0.88rem;
+  color: #9ca3af;
+}
+
+.footer-bottom-inner p {
+  margin: 0;
+  color: #9ca3af;
 }
 
 /* ==========================================================================
@@ -2884,8 +3010,8 @@ body {
   .hero-section {
     min-height: 100vh;
     min-height: 100dvh;
-    padding-top: 100px;
-    padding-bottom: 40px;
+    padding-top: 145px;
+    padding-bottom: 50px;
   }
   
   .section-padding {
@@ -2982,15 +3108,16 @@ body {
     gap: 40px;
   }
   
-  .footer-bottom {
+  .footer-bottom,
+  .footer-bottom-inner {
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     text-align: center;
   }
 
   .hero-ctas {
     gap: 16px;
-    margin-bottom: 36px;
+    margin-bottom: 0;
   }
 
   /* Testimonios Cover Flow / Baraja de Cartas en Mobile */
