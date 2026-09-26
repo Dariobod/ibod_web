@@ -1110,13 +1110,13 @@ document.addEventListener('DOMContentLoaded', () => {
   let faqList = [
     {
       question: "¿Cuál es el tiempo de entrega de un video?",
-      answer: "Para videos cortos (Shorts/Reels/TikTok), la entrega promedio es de 48 a 72 horas. Para videos de YouTube largos (de 10 a 20 minutos), la entrega del primer corte suele tardar entre 4 a 5 días hábiles.",
+      answer: "Para videos cortos (Shorts/Reels/TikTok), la entrega promedio es de 48 a 72 horas. Para videos de YouTube largos (de 10 a 20 minutos), la entrega del primer corte suele tardar entre 4 a 5 días hábiles, garantizando que el pacing y la retención estén perfectamente pulidos.",
       keywords: ["tiempo", "tardan", "entrega", "demora", "plazo", "dias", "horas"]
     },
     {
       question: "¿Cómo funcionan las revisiones?",
-      answer: "Utilizamos enlaces interactivos de Frame.io donde puedes hacer comentarios y marcas exactamente en el segundo del video donde deseas un ajuste. Las revisiones menores se resuelven en menos de 24 horas.",
-      keywords: ["revision", "revisiones", "cambio", "cambios", "frame.io", "ajuste"]
+      answer: "Si al ver tu video te gustaría realizarle algún cambio, nos avisas por mensaje y nos encargamos de corregirlo y subirlo nuevamente a la carpeta compartida de Google Drive.",
+      keywords: ["revision", "revisiones", "cambio", "cambios", "drive", "google drive", "ajuste", "correccion", "correcciones"]
     },
     {
       question: "¿Pueden adaptarse a mi estilo de edición?",
@@ -1125,8 +1125,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       question: "¿Qué necesito para empezar a trabajar?",
-      answer: "Sólo necesitas agendar una breve llamada o enviarnos un mensaje con los objetivos de tu canal. Posteriormente subirás el metraje bruto a nuestra carpeta compartida.",
-      keywords: ["empezar", "comenzar", "requisitos", "inicio", "contratar"]
+      answer: "Sólo necesitas enviarnos un mensaje para coordinar los objetivos de tu cuenta/marca. Posteriormente te daremos acceso a la carpeta compartida de Google Drive donde podrás subir el contenido necesario para editar.",
+      keywords: ["empezar", "comenzar", "requisitos", "inicio", "contratar", "mensaje", "drive", "cuenta", "marca"]
     }
   ];
 
@@ -1300,7 +1300,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Cargar FAQs desde la API de Google Apps Script (tipo=faq) con Cache-First
   async function loadFaqFromApi() {
     // 1. Intentar cargar desde cache local
-    const cachedFaq = getCachedData('ibod_cache_faqs');
+    const cachedFaq = getCachedData('ibod_cache_faqs_v2');
     if (cachedFaq && cachedFaq.length > 0) {
       faqList = cachedFaq;
     }
@@ -1324,7 +1324,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (apiFaqs.length > 0) {
           faqList = apiFaqs;
-          setCachedData('ibod_cache_faqs', apiFaqs);
+          setCachedData('ibod_cache_faqs_v2', apiFaqs);
           renderFaqAccordion(faqList); // Actualizado dinámico con datos frescos de la API
           renderChatChips();
         }
