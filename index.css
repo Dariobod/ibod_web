@@ -417,9 +417,22 @@ body {
   opacity: 1 !important; /* Brillo y claridad original para probar sin oscurecer */
 }
 
-/* Degrade a negro eliminado para probar el video de fondo limpio */
+/* Sutil degrade lateral desde la izquierda para dar excelente legibilidad a los textos */
 .hero-overlay {
-  display: none !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(6, 7, 10, 0.78) 0%,
+    rgba(6, 7, 10, 0.55) 35%,
+    rgba(6, 7, 10, 0.2) 65%,
+    rgba(6, 7, 10, 0) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
 }
 
 .hero-section::after {
