@@ -82,55 +82,62 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ==========================================================================
      3. NAVEGACIÓN SUAVE CON LENIS EN CLICS DE ENLACES (TÍTULO BIEN ARRIBA)
      ========================================================================== */
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      const targetId = this.getAttribute('href');
-      
-      // Cerrar menú móvil si está abierto
-      if (typeof closeMobileMenu === 'function') {
-        closeMobileMenu();
+  document.addEventListener('click', (e) => {
+    const anchor = e.target.closest('a[href^="#"]');
+    if (!anchor) return;
+    const targetId = anchor.getAttribute('href');
+    if (!targetId) return;
+
+    // Si es un click en una tarjeta lateral del carrusel, permitir que el handler de la card la centre
+    const parentCard = anchor.closest('.sites-service-card');
+    if (parentCard && !parentCard.classList.contains('active')) {
+      return;
+    }
+
+    // Cerrar menú móvil si está abierto
+    if (typeof closeMobileMenu === 'function') {
+      closeMobileMenu();
+    }
+
+    if (targetId === '#' || targetId === '' || targetId === '#hero') {
+      e.preventDefault();
+      if (lenis) {
+        lenis.scrollTo(0, {
+          duration: 1.4,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+        });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return;
+    }
+    
+    const targetElement = document.querySelector(targetId);
+    if (targetElement) {
+      e.preventDefault();
+
+      // Offset ajustado idéntico a iBod para que el título quede bien arriba
+      let scrollOffset = 30;
+      if (targetId === '#book') {
+        scrollOffset = -10;
       }
 
-      if (targetId === '#' || targetId === '' || targetId === '#hero') {
-        e.preventDefault();
-        if (lenis) {
-          lenis.scrollTo(0, {
-            duration: 1.4,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-          });
-        } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        return;
+      if (lenis) {
+        lenis.scrollTo(targetElement, {
+          offset: scrollOffset,
+          duration: 1.5,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+        });
+      } else {
+        const navbarOffset = -scrollOffset;
+        const startPosition = window.scrollY || window.pageYOffset;
+        const targetPosition = targetElement.getBoundingClientRect().top + startPosition - navbarOffset;
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
       }
-      
-      const targetElement = document.querySelector(targetId);
-      if (targetElement) {
-        e.preventDefault();
-
-        // Offset ajustado idéntico a iBod para que el título quede bien arriba
-        let scrollOffset = 30;
-        if (targetId === '#book') {
-          scrollOffset = -10;
-        }
-
-        if (lenis) {
-          lenis.scrollTo(targetElement, {
-            offset: scrollOffset,
-            duration: 1.5,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-          });
-        } else {
-          const navbarOffset = -scrollOffset;
-          const startPosition = window.scrollY || window.pageYOffset;
-          const targetPosition = targetElement.getBoundingClientRect().top + startPosition - navbarOffset;
-          window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-          });
-        }
-      }
-    });
+    }
   });
 
   /* ==========================================================================
@@ -468,8 +475,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Clic en cualquier tarjeta lateral para llevarla al centro
       allCards.forEach((card, idx) => {
-        card.addEventListener('click', () => {
+        card.addEventListener('click', (e) => {
           if (currentTrackIndex !== idx) {
+            e.preventDefault();
             currentTrackIndex = idx;
             updateServiceCarousel(true);
             startAutoSlide();

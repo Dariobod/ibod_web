@@ -510,7 +510,7 @@
 .sites-service-card {
   width: 350px;
   max-width: calc(100vw - 56px);
-  min-height: 250px;
+  min-height: 260px;
   background: #ffffff;
   border: 1.5px solid rgba(0, 0, 0, 0.07);
   border-radius: 20px;
@@ -619,31 +619,54 @@
   font-weight: 400;
 }
 
-.service-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+.service-card-action {
   margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
 }
 
-.service-tags span {
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: #4b5563;
-  background: rgba(0, 0, 0, 0.03);
-  padding: 3px 9px;
-  border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  transition: all 0.25s ease;
+.btn-service-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #090e1a;
+  background: rgba(2, 142, 224, 0.08);
+  border: 1.5px solid rgba(2, 142, 224, 0.28);
+  padding: 7px 18px;
+  border-radius: 100px;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.sites-service-card.active .service-tags span,
-.sites-service-card:hover .service-tags span {
+.btn-service-action svg {
   color: var(--celeste);
-  border-color: rgba(2, 142, 224, 0.25);
-  background: rgba(2, 142, 224, 0.06);
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.sites-service-card.active .btn-service-action,
+.btn-service-action:hover {
+  background: var(--celeste);
+  border-color: var(--celeste);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(2, 142, 224, 0.35);
+}
+
+.sites-service-card.active .btn-service-action svg,
+.btn-service-action:hover svg {
+  color: #ffffff;
+}
+
+.btn-service-action:hover svg {
+  transform: translateX(3px);
+}
+
+.btn-service-action.btn-service-external:hover svg {
+  transform: translate(2px, -2px);
 }
 
 /* Botones de Navegación */
