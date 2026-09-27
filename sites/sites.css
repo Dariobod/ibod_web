@@ -603,12 +603,12 @@
 
 .service-title {
   font-family: var(--font-display);
-  font-size: 1.22rem;
+  font-size: 1.45rem;
   font-weight: 700;
-  color: #0f1117;
-  margin-bottom: 8px;
-  letter-spacing: -0.015em;
-  line-height: 1.22;
+  color: var(--celeste);
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .service-desc {
