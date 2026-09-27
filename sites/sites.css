@@ -471,20 +471,19 @@
 .sites-services-carousel-wrapper {
   position: relative;
   width: 100%;
-  margin-top: 45px;
+  max-width: 1180px;
+  margin: 40px auto 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Viewport con overflow hidden y máscara suave de desvanecimiento lateral */
+/* Viewport con overflow hidden */
 .sites-services-carousel-viewport {
   width: 100%;
   overflow: hidden;
-  padding: 35px 0 45px 0;
+  padding: 25px 0 35px 0;
   position: relative;
-  mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
   cursor: grab;
   user-select: none;
 }
@@ -497,34 +496,31 @@
 .sites-services-carousel-track {
   display: flex;
   align-items: stretch;
-  gap: 32px;
+  gap: 24px;
   width: max-content;
   will-change: transform;
-  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Cards con efecto de escala / profundidad 3D */
+/* Cards más compactas con efecto de escala / profundidad 3D */
 .sites-service-card {
-  width: 440px;
-  max-width: calc(100vw - 52px);
-  min-height: 390px;
+  width: 335px;
+  max-width: calc(100vw - 56px);
+  min-height: 350px;
   background: #ffffff;
   border: 1.5px solid rgba(0, 0, 0, 0.07);
-  border-radius: 26px;
-  padding: 42px 36px;
+  border-radius: 22px;
+  padding: 32px 26px;
   display: flex;
   flex-direction: column;
   position: relative;
   flex-shrink: 0;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-  transform: scale(0.91);
-  opacity: 0.52;
-  filter: blur(0.3px);
-  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.5s ease,
-              filter 0.5s ease,
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+  transform: scale(0.92);
+  opacity: 0.65;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.45s ease,
               border-color 0.4s ease,
-              box-shadow 0.5s ease;
+              box-shadow 0.45s ease;
   cursor: pointer;
 }
 
@@ -532,25 +528,25 @@
   display: none !important;
 }
 
-/* Card Activa (Destacada, en foco, tamaño completo y brillo) */
+/* Card Activa (Centro, destacada, escala superior y glow) */
 .sites-service-card.active {
-  transform: scale(1.02);
+  transform: scale(1.04);
   opacity: 1;
-  filter: blur(0);
-  border-color: rgba(2, 142, 224, 0.35);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.09), 0 0 35px rgba(2, 142, 224, 0.12);
+  border-color: rgba(2, 142, 224, 0.38);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 0 30px rgba(2, 142, 224, 0.12);
   cursor: default;
+  z-index: 2;
 }
 
 .sites-service-card.active:hover {
-  transform: scale(1.03) translateY(-4px);
-  border-color: rgba(2, 142, 224, 0.5);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.12), 0 0 45px rgba(2, 142, 224, 0.18);
+  transform: scale(1.05) translateY(-3px);
+  border-color: rgba(2, 142, 224, 0.55);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.11), 0 0 40px rgba(2, 142, 224, 0.18);
 }
 
 .sites-service-card:not(.active):hover {
-  opacity: 0.82;
-  transform: scale(0.94);
+  opacity: 0.88;
+  transform: scale(0.95);
   border-color: rgba(2, 142, 224, 0.22);
 }
 
@@ -558,13 +554,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .service-icon-wrapper {
-  width: 50px;
-  height: 50px;
-  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   background: rgba(2, 142, 224, 0.08);
   border: 1px solid rgba(2, 142, 224, 0.22);
   color: var(--celeste);
@@ -578,19 +574,19 @@
 .sites-service-card:hover .service-icon-wrapper {
   background: var(--celeste);
   color: #ffffff;
-  box-shadow: 0 6px 20px rgba(2, 142, 224, 0.45);
-  transform: scale(1.06);
+  box-shadow: 0 6px 18px rgba(2, 142, 224, 0.45);
+  transform: scale(1.05);
 }
 
 .service-chip {
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #4b5563;
   background: rgba(0, 0, 0, 0.04);
-  padding: 5px 13px;
+  padding: 4px 11px;
   border-radius: 100px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
@@ -605,38 +601,38 @@
 
 .service-title {
   font-family: var(--font-display);
-  font-size: 1.55rem;
+  font-size: 1.38rem;
   font-weight: 700;
   color: #0f1117;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   letter-spacing: -0.015em;
   line-height: 1.25;
 }
 
 .service-desc {
   color: #4b5563;
-  font-size: 0.98rem;
-  line-height: 1.7;
-  margin-bottom: 28px;
+  font-size: 0.91rem;
+  line-height: 1.62;
+  margin-bottom: 22px;
   font-weight: 400;
 }
 
 .service-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 7px;
   margin-top: auto;
-  padding-top: 20px;
+  padding-top: 16px;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .service-tags span {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 500;
   color: #4b5563;
   background: rgba(0, 0, 0, 0.03);
-  padding: 5px 12px;
-  border-radius: 8px;
+  padding: 4px 10px;
+  border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   transition: all 0.25s ease;
 }
@@ -648,15 +644,15 @@
   background: rgba(2, 142, 224, 0.06);
 }
 
-/* Botones de Navegación (Prev / Next) Minimalistas y Flotantes */
+/* Botones de Navegación */
 .services-nav-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -666,16 +662,16 @@
   justify-content: center;
   z-index: 10;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .services-nav-btn.prev {
-  left: 6px;
+  left: -22px;
 }
 
 .services-nav-btn.next {
-  right: 6px;
+  right: -22px;
 }
 
 .services-nav-btn:hover {
@@ -683,25 +679,25 @@
   border-color: var(--celeste);
   color: #ffffff;
   transform: translateY(-50%) scale(1.08);
-  box-shadow: 0 10px 28px rgba(2, 142, 224, 0.4);
+  box-shadow: 0 8px 24px rgba(2, 142, 224, 0.4);
 }
 
 .services-nav-btn:active {
   transform: translateY(-50%) scale(0.95);
 }
 
-/* Indicadores / Dots de Paginación */
+/* Indicadores / Dots */
 .services-carousel-dots {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 9px;
   margin-top: 15px;
 }
 
 .services-dot {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 100px;
   background: rgba(0, 0, 0, 0.16);
   border: none;
@@ -716,23 +712,25 @@
 }
 
 .services-dot.active {
-  width: 34px;
+  width: 30px;
   background: var(--celeste);
   box-shadow: 0 2px 10px rgba(2, 142, 224, 0.45);
 }
 
-/* Responsive adjustments */
-@media (max-width: 900px) {
-  .sites-services-carousel-viewport {
-    mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
-    padding: 20px 0 35px 0;
+@media (max-width: 1220px) {
+  .services-nav-btn.prev {
+    left: 4px;
   }
+  .services-nav-btn.next {
+    right: 4px;
+  }
+}
 
+@media (max-width: 900px) {
   .sites-service-card {
-    width: 360px;
-    padding: 34px 28px;
-    border-radius: 22px;
+    width: 300px;
+    padding: 28px 22px;
+    border-radius: 20px;
   }
   
   .services-nav-btn {
@@ -742,18 +740,18 @@
 
 @media (max-width: 480px) {
   .sites-service-card {
-    width: 295px;
-    padding: 30px 22px;
-    min-height: 380px;
+    width: 275px;
+    padding: 26px 20px;
+    min-height: 340px;
   }
 
   .service-title {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
   }
 
   .service-desc {
-    font-size: 0.92rem;
-    margin-bottom: 20px;
+    font-size: 0.88rem;
+    margin-bottom: 18px;
   }
 }
 

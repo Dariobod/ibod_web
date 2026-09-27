@@ -285,163 +285,212 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ==========================================================================
-     6. CARRUSEL AUTOMÁTICO DE SERVICIOS (MODERNO & MINIMALISTA CON EFECTO 3D)
+     6. CARRUSEL AUTOMÁTICO DE SERVICIOS (3 CARDS VISIBLES EN DESKTOP)
      ========================================================================== */
   const servicesTrack = document.getElementById('services-carousel-track');
   const servicesViewport = document.getElementById('services-carousel-viewport');
-  const servicesCards = Array.from(document.querySelectorAll('.sites-services-carousel-track .sites-service-card'));
   const servicesPrevBtn = document.getElementById('services-carousel-prev');
   const servicesNextBtn = document.getElementById('services-carousel-next');
   const servicesDots = Array.from(document.querySelectorAll('.services-dot'));
 
-  if (servicesTrack && servicesViewport && servicesCards.length > 0) {
-    let currentServiceIndex = 0;
-    const totalServices = servicesCards.length;
-    let autoSlideInterval = null;
-    const AUTO_SLIDE_DELAY = 4000; // 4 segundos entre transiciones
+  if (servicesTrack && servicesViewport) {
+    const originalCards = Array.from(servicesTrack.querySelectorAll('.sites-service-card'));
+    const totalOriginal = originalCards.length;
 
-    const updateServiceCarousel = (animate = true) => {
-      if (currentServiceIndex < 0) currentServiceIndex = totalServices - 1;
-      if (currentServiceIndex >= totalServices) currentServiceIndex = 0;
+    if (totalOriginal > 0) {
+      // Clonar cards para carrusel infinito continuo (2 antes y 2 después)
+      const clonesBefore = [
+        originalCards[totalOriginal - 2].cloneNode(true),
+        originalCards[totalOriginal - 1].cloneNode(true)
+      ];
+      const clonesAfter = [
+        originalCards[0].cloneNode(true),
+        originalCards[1].cloneNode(true)
+      ];
 
-      const activeCard = servicesCards[currentServiceIndex];
-      if (!activeCard) return;
+      clonesBefore.forEach(c => {
+        c.classList.add('is-clone');
+        servicesTrack.insertBefore(c, servicesTrack.firstChild);
+      });
 
-      // Calcular la posición exacta para centrar la tarjeta activa en el viewport
-      const cardCenter = activeCard.offsetLeft + activeCard.offsetWidth / 2;
-      const viewportCenter = servicesViewport.offsetWidth / 2;
-      const targetTranslate = viewportCenter - cardCenter;
+      clonesAfter.forEach(c => {
+        c.classList.add('is-clone');
+        servicesTrack.appendChild(c);
+      });
 
-      if (animate) {
-        servicesTrack.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)';
-      } else {
-        servicesTrack.style.transition = 'none';
-      }
+      const allCards = Array.from(servicesTrack.querySelectorAll('.sites-service-card'));
+      const offsetCount = clonesBefore.length; // 2
+      let currentTrackIndex = offsetCount; // Inicia en Card 0 original (track index 2)
+      let autoSlideInterval = null;
+      const AUTO_SLIDE_DELAY = 3800; // 3.8s
+      let isTransitioning = false;
 
-      servicesTrack.style.transform = `translateX(${targetTranslate}px)`;
+      const getRealIndex = (trackIdx) => {
+        let idx = (trackIdx - offsetCount) % totalOriginal;
+        if (idx < 0) idx += totalOriginal;
+        return idx;
+      };
 
-      // Actualizar clases activas en las tarjetas (efecto de escala y brillo)
-      servicesCards.forEach((card, idx) => {
-        if (idx === currentServiceIndex) {
-          card.classList.add('active');
+      const updateServiceCarousel = (animate = true) => {
+        const activeCard = allCards[currentTrackIndex];
+        if (!activeCard) return;
+
+        // Centrar exactamente la tarjeta activa en el medio del viewport
+        const cardCenter = activeCard.offsetLeft + activeCard.offsetWidth / 2;
+        const viewportCenter = servicesViewport.offsetWidth / 2;
+        const targetTranslate = viewportCenter - cardCenter;
+
+        if (animate) {
+          isTransitioning = true;
+          servicesTrack.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)';
         } else {
-          card.classList.remove('active');
+          isTransitioning = false;
+          servicesTrack.style.transition = 'none';
+        }
+
+        servicesTrack.style.transform = `translateX(${targetTranslate}px)`;
+
+        // Actualizar escala / estado activo de las tarjetas
+        allCards.forEach((card, idx) => {
+          if (idx === currentTrackIndex) {
+            card.classList.add('active');
+          } else {
+            card.classList.remove('active');
+          }
+        });
+
+        // Actualizar indicadores (dots)
+        const realIdx = getRealIndex(currentTrackIndex);
+        servicesDots.forEach((dot, idx) => {
+          if (idx === realIdx) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      };
+
+      // Manejar salto silencioso infinito al terminar la transición
+      servicesTrack.addEventListener('transitionend', () => {
+        isTransitioning = false;
+        // Si llegamos a los clones del final
+        if (currentTrackIndex >= offsetCount + totalOriginal) {
+          currentTrackIndex = currentTrackIndex - totalOriginal;
+          updateServiceCarousel(false);
+        }
+        // Si llegamos a los clones del principio
+        else if (currentTrackIndex < offsetCount) {
+          currentTrackIndex = currentTrackIndex + totalOriginal;
+          updateServiceCarousel(false);
         }
       });
 
-      // Actualizar indicadores (dots)
-      servicesDots.forEach((dot, idx) => {
-        if (idx === currentServiceIndex) {
-          dot.classList.add('active');
-        } else {
-          dot.classList.remove('active');
-        }
-      });
-    };
-
-    const nextServiceSlide = () => {
-      currentServiceIndex = (currentServiceIndex + 1) % totalServices;
-      updateServiceCarousel(true);
-    };
-
-    const prevServiceSlide = () => {
-      currentServiceIndex = (currentServiceIndex - 1 + totalServices) % totalServices;
-      updateServiceCarousel(true);
-    };
-
-    const startAutoSlide = () => {
-      stopAutoSlide();
-      autoSlideInterval = setInterval(nextServiceSlide, AUTO_SLIDE_DELAY);
-    };
-
-    const stopAutoSlide = () => {
-      if (autoSlideInterval) {
-        clearInterval(autoSlideInterval);
-        autoSlideInterval = null;
-      }
-    };
-
-    // Botones de navegación
-    if (servicesPrevBtn) {
-      servicesPrevBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        prevServiceSlide();
-        startAutoSlide();
-      });
-    }
-
-    if (servicesNextBtn) {
-      servicesNextBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        nextServiceSlide();
-        startAutoSlide();
-      });
-    }
-
-    // Clic en dots
-    servicesDots.forEach((dot, idx) => {
-      dot.addEventListener('click', (e) => {
-        e.preventDefault();
-        currentServiceIndex = idx;
+      const nextServiceSlide = () => {
+        if (isTransitioning) return;
+        currentTrackIndex++;
         updateServiceCarousel(true);
-        startAutoSlide();
-      });
-    });
+      };
 
-    // Clic en tarjetas laterales no activas para llevarlas al centro
-    servicesCards.forEach((card, idx) => {
-      card.addEventListener('click', () => {
-        if (currentServiceIndex !== idx) {
-          currentServiceIndex = idx;
+      const prevServiceSlide = () => {
+        if (isTransitioning) return;
+        currentTrackIndex--;
+        updateServiceCarousel(true);
+      };
+
+      const startAutoSlide = () => {
+        stopAutoSlide();
+        autoSlideInterval = setInterval(nextServiceSlide, AUTO_SLIDE_DELAY);
+      };
+
+      const stopAutoSlide = () => {
+        if (autoSlideInterval) {
+          clearInterval(autoSlideInterval);
+          autoSlideInterval = null;
+        }
+      };
+
+      // Botones de navegación
+      if (servicesPrevBtn) {
+        servicesPrevBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          prevServiceSlide();
+          startAutoSlide();
+        });
+      }
+
+      if (servicesNextBtn) {
+        servicesNextBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          nextServiceSlide();
+          startAutoSlide();
+        });
+      }
+
+      // Clic en dots
+      servicesDots.forEach((dot, idx) => {
+        dot.addEventListener('click', (e) => {
+          e.preventDefault();
+          currentTrackIndex = idx + offsetCount;
           updateServiceCarousel(true);
           startAutoSlide();
-        }
+        });
       });
-    });
 
-    // Pausar auto-deslizamiento al pasar el cursor o interactuar
-    const carouselWrapper = document.querySelector('.sites-services-carousel-wrapper');
-    if (carouselWrapper) {
-      carouselWrapper.addEventListener('mouseenter', stopAutoSlide);
-      carouselWrapper.addEventListener('mouseleave', startAutoSlide);
-    }
+      // Clic en cualquier tarjeta lateral para llevarla al centro
+      allCards.forEach((card, idx) => {
+        card.addEventListener('click', () => {
+          if (currentTrackIndex !== idx) {
+            currentTrackIndex = idx;
+            updateServiceCarousel(true);
+            startAutoSlide();
+          }
+        });
+      });
 
-    // Soporte táctil / Swipe para móviles
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    servicesViewport.addEventListener('touchstart', (e) => {
-      stopAutoSlide();
-      touchStartX = e.touches[0].clientX;
-      touchEndX = touchStartX;
-    }, { passive: true });
-
-    servicesViewport.addEventListener('touchmove', (e) => {
-      touchEndX = e.touches[0].clientX;
-    }, { passive: true });
-
-    servicesViewport.addEventListener('touchend', () => {
-      const diffX = touchStartX - touchEndX;
-      if (Math.abs(diffX) > 40) {
-        if (diffX > 0) {
-          nextServiceSlide();
-        } else {
-          prevServiceSlide();
-        }
+      // Pausar al pasar el mouse por encima
+      const carouselWrapper = document.querySelector('.sites-services-carousel-wrapper');
+      if (carouselWrapper) {
+        carouselWrapper.addEventListener('mouseenter', stopAutoSlide);
+        carouselWrapper.addEventListener('mouseleave', startAutoSlide);
       }
-      startAutoSlide();
-    });
 
-    // Recalcular en redimensionamiento de ventana
-    window.addEventListener('resize', () => {
-      updateServiceCarousel(false);
-    }, { passive: true });
+      // Soporte táctil / Swipe
+      let touchStartX = 0;
+      let touchEndX = 0;
 
-    // Inicializar carrusel
-    setTimeout(() => {
-      updateServiceCarousel(false);
-      startAutoSlide();
-    }, 150);
+      servicesViewport.addEventListener('touchstart', (e) => {
+        stopAutoSlide();
+        touchStartX = e.touches[0].clientX;
+        touchEndX = touchStartX;
+      }, { passive: true });
+
+      servicesViewport.addEventListener('touchmove', (e) => {
+        touchEndX = e.touches[0].clientX;
+      }, { passive: true });
+
+      servicesViewport.addEventListener('touchend', () => {
+        const diffX = touchStartX - touchEndX;
+        if (Math.abs(diffX) > 35) {
+          if (diffX > 0) {
+            nextServiceSlide();
+          } else {
+            prevServiceSlide();
+          }
+        }
+        startAutoSlide();
+      });
+
+      // Redimensionamiento de ventana
+      window.addEventListener('resize', () => {
+        updateServiceCarousel(false);
+      }, { passive: true });
+
+      // Inicializar centrado y auto-play
+      setTimeout(() => {
+        updateServiceCarousel(false);
+        startAutoSlide();
+      }, 100);
+    }
   }
 
 });
