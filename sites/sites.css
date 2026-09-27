@@ -449,8 +449,8 @@
   background-color: #dde2e8;
   position: relative;
   overflow: hidden;
-  padding-top: 110px;
-  padding-bottom: 110px;
+  padding-top: 75px;
+  padding-bottom: 75px;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -471,20 +471,20 @@
 .sites-services-carousel-wrapper {
   position: relative;
   width: 100%;
-  max-width: 1160px;
-  margin: 40px auto 0 auto;
+  max-width: 1190px;
+  margin: 32px auto 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 /* Viewport exacto para 3 cards con overflow hidden estricto */
 .sites-services-carousel-viewport {
   width: 100%;
-  max-width: 1008px;
+  max-width: 1090px;
   overflow: hidden;
-  padding: 24px 0 32px 0;
+  padding: 16px 0 22px 0;
   position: relative;
   cursor: grab;
   user-select: none;
@@ -498,25 +498,25 @@
 .sites-services-carousel-track {
   display: flex;
   align-items: stretch;
-  gap: 24px;
+  gap: 20px;
   width: max-content;
   will-change: transform;
 }
 
-/* Cards más compactas con efecto de escala / profundidad 3D */
+/* Cards más anchas que altas (Formato Horizontal Elegante) */
 .sites-service-card {
-  width: 320px;
+  width: 350px;
   max-width: calc(100vw - 56px);
-  min-height: 345px;
+  min-height: 250px;
   background: #ffffff;
   border: 1.5px solid rgba(0, 0, 0, 0.07);
-  border-radius: 22px;
-  padding: 30px 24px;
+  border-radius: 20px;
+  padding: 22px 24px 20px 24px;
   display: flex;
   flex-direction: column;
   position: relative;
   flex-shrink: 0;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
   transform: scale(0.92);
   opacity: 0.65;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
@@ -535,7 +535,7 @@
   transform: scale(1.04);
   opacity: 1;
   border-color: rgba(2, 142, 224, 0.38);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 0 30px rgba(2, 142, 224, 0.12);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.08), 0 0 28px rgba(2, 142, 224, 0.12);
   cursor: default;
   z-index: 2;
 }
@@ -543,7 +543,7 @@
 .sites-service-card.active:hover {
   transform: scale(1.05) translateY(-3px);
   border-color: rgba(2, 142, 224, 0.55);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.11), 0 0 40px rgba(2, 142, 224, 0.18);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.11), 0 0 35px rgba(2, 142, 224, 0.18);
 }
 
 .sites-service-card:not(.active):hover {
@@ -556,13 +556,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .service-icon-wrapper {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   background: rgba(2, 142, 224, 0.08);
   border: 1px solid rgba(2, 142, 224, 0.22);
   color: var(--celeste);
@@ -576,19 +576,19 @@
 .sites-service-card:hover .service-icon-wrapper {
   background: var(--celeste);
   color: #ffffff;
-  box-shadow: 0 6px 18px rgba(2, 142, 224, 0.45);
+  box-shadow: 0 4px 14px rgba(2, 142, 224, 0.4);
   transform: scale(1.05);
 }
 
 .service-chip {
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #4b5563;
   background: rgba(0, 0, 0, 0.04);
-  padding: 4px 11px;
+  padding: 3px 10px;
   border-radius: 100px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
@@ -603,37 +603,37 @@
 
 .service-title {
   font-family: var(--font-display);
-  font-size: 1.35rem;
+  font-size: 1.22rem;
   font-weight: 700;
   color: #0f1117;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   letter-spacing: -0.015em;
-  line-height: 1.25;
+  line-height: 1.22;
 }
 
 .service-desc {
   color: #4b5563;
-  font-size: 0.90rem;
-  line-height: 1.62;
-  margin-bottom: 20px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 12px;
   font-weight: 400;
 }
 
 .service-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 6px;
   margin-top: auto;
-  padding-top: 16px;
+  padding-top: 12px;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .service-tags span {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 500;
   color: #4b5563;
   background: rgba(0, 0, 0, 0.03);
-  padding: 4px 10px;
+  padding: 3px 9px;
   border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   transition: all 0.25s ease;
@@ -646,13 +646,13 @@
   background: rgba(2, 142, 224, 0.06);
 }
 
-/* Botones de Navegación (Ubicados fuera del viewport) */
+/* Botones de Navegación */
 .services-nav-btn {
   position: static;
   transform: none;
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(0, 0, 0, 0.09);
@@ -664,7 +664,7 @@
   justify-content: center;
   z-index: 10;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -673,7 +673,7 @@
   border-color: var(--celeste);
   color: #ffffff;
   transform: scale(1.08);
-  box-shadow: 0 8px 24px rgba(2, 142, 224, 0.4);
+  box-shadow: 0 6px 20px rgba(2, 142, 224, 0.4);
 }
 
 .services-nav-btn:active {
@@ -685,13 +685,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  margin-top: 15px;
+  gap: 8px;
+  margin-top: 10px;
 }
 
 .services-dot {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 100px;
   background: rgba(0, 0, 0, 0.16);
   border: none;
@@ -706,35 +706,40 @@
 }
 
 .services-dot.active {
-  width: 30px;
+  width: 28px;
   background: var(--celeste);
-  box-shadow: 0 2px 10px rgba(2, 142, 224, 0.45);
+  box-shadow: 0 2px 8px rgba(2, 142, 224, 0.45);
 }
 
 @media (max-width: 1140px) and (min-width: 769px) {
   .sites-services-carousel-viewport {
-    max-width: 820px;
+    max-width: 860px;
   }
   .sites-service-card {
-    width: 260px;
-    padding: 26px 20px;
+    width: 275px;
+    padding: 20px 18px;
   }
 }
 
 @media (max-width: 768px) {
+  .sites-services-section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
   .sites-services-carousel-wrapper {
     gap: 0;
   }
 
   .sites-services-carousel-viewport {
-    max-width: 320px;
-    padding: 20px 0 28px 0;
+    max-width: 340px;
+    padding: 16px 0 22px 0;
   }
 
   .sites-service-card {
-    width: 320px;
-    padding: 28px 22px;
-    border-radius: 20px;
+    width: 340px;
+    padding: 22px 20px;
+    border-radius: 18px;
   }
   
   .services-nav-btn {
@@ -744,22 +749,22 @@
 
 @media (max-width: 380px) {
   .sites-services-carousel-viewport {
-    max-width: 280px;
+    max-width: 290px;
   }
 
   .sites-service-card {
-    width: 280px;
-    padding: 24px 18px;
-    min-height: 330px;
+    width: 290px;
+    padding: 20px 16px;
+    min-height: 240px;
   }
 
   .service-title {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
 
   .service-desc {
-    font-size: 0.86rem;
-    margin-bottom: 16px;
+    font-size: 0.82rem;
+    margin-bottom: 10px;
   }
 }
 
