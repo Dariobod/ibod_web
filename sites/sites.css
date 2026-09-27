@@ -605,7 +605,7 @@
   font-family: var(--font-display);
   font-size: 1.50rem;
   font-weight: 800;
-  color: #0070eb;
+  color: #f25410;
   margin-bottom: 10px;
   letter-spacing: -0.025em;
   line-height: 1.2;
@@ -614,8 +614,8 @@
 
 .sites-service-card.active .service-title,
 .sites-service-card:hover .service-title {
-  color: #005ec4;
-  text-shadow: 0 1px 15px rgba(0, 112, 235, 0.18);
+  color: #e04500;
+  text-shadow: 0 1px 18px rgba(242, 84, 16, 0.22);
 }
 
 .service-desc {
