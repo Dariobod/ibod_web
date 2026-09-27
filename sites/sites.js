@@ -340,22 +340,52 @@ document.addEventListener('DOMContentLoaded', () => {
         const viewportCenter = servicesViewport.offsetWidth / 2;
         const targetTranslate = viewportCenter - cardCenter;
 
+        const transitionValue = animate 
+          ? 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)' 
+          : 'none';
+        const cardTransitionValue = animate 
+          ? 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, box-shadow 0.5s ease, border-color 0.4s ease' 
+          : 'none';
+
         if (animate) {
           isTransitioning = true;
-          servicesTrack.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)';
         } else {
           isTransitioning = false;
-          servicesTrack.style.transition = 'none';
         }
 
+        servicesTrack.style.transition = transitionValue;
         servicesTrack.style.transform = `translateX(${targetTranslate}px)`;
 
-        // Actualizar escala / estado activo de las tarjetas
+        // Actualizar trayectoria circular 3D y escala de las tarjetas
         allCards.forEach((card, idx) => {
-          if (idx === currentTrackIndex) {
+          const offset = idx - currentTrackIndex;
+          card.style.transition = cardTransitionValue;
+
+          if (offset === 0) {
+            // Centro de la trayectoria circular: posición frontal y destacada
             card.classList.add('active');
-          } else {
+            card.style.transform = 'perspective(1100px) rotateY(0deg) translateZ(0px) translateY(0px) scale(1.04)';
+            card.style.opacity = '1';
+            card.style.zIndex = '5';
+          } else if (offset === -1) {
+            // Tarjeta izquierda curvada en la trayectoria semicircular
             card.classList.remove('active');
+            card.style.transform = 'perspective(1100px) rotateY(15deg) translateZ(-45px) translateY(10px) scale(0.91)';
+            card.style.opacity = '0.65';
+            card.style.zIndex = '3';
+          } else if (offset === 1) {
+            // Tarjeta derecha curvada en la trayectoria semicircular
+            card.classList.remove('active');
+            card.style.transform = 'perspective(1100px) rotateY(-15deg) translateZ(-45px) translateY(10px) scale(0.91)';
+            card.style.opacity = '0.65';
+            card.style.zIndex = '3';
+          } else {
+            // Tarjetas lejanas fuera del arco visible (profundidad en el círculo)
+            card.classList.remove('active');
+            const rotY = offset < 0 ? 28 : -28;
+            card.style.transform = `perspective(1100px) rotateY(${rotY}deg) translateZ(-110px) translateY(24px) scale(0.80)`;
+            card.style.opacity = '0';
+            card.style.zIndex = '1';
           }
         });
 
