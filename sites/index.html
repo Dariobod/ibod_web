@@ -467,93 +467,114 @@
         <p class="section-subtitle">Soluciones integrales de diseño, posicionamiento inteligente y soporte continuo para potenciar tu presencia digital.</p>
       </div>
 
-      <div class="sites-services-grid">
-        <!-- Servicio 1: Landing Pages -->
-        <div class="sites-service-card reveal">
-          <div class="service-card-top">
-            <div class="service-icon-wrapper">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-              </svg>
+      <!-- Carrusel de Servicios Premium & Minimalista -->
+      <div class="sites-services-carousel-wrapper reveal">
+        <button class="services-nav-btn prev" id="services-carousel-prev" aria-label="Servicio anterior">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+
+        <div class="sites-services-carousel-viewport" id="services-carousel-viewport">
+          <div class="sites-services-carousel-track" id="services-carousel-track">
+            <!-- Servicio 1: Landing Pages -->
+            <div class="sites-service-card active" data-index="0">
+              <div class="service-card-top">
+                <div class="service-icon-wrapper">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                  </svg>
+                </div>
+                <span class="service-chip">Conversión & Leads</span>
+              </div>
+              <h3 class="service-title">Landing Pages</h3>
+              <p class="service-desc">
+                Páginas enfocadas en conversión directa: captación de clientes potenciales, venta de productos o lanzamientos. Diseñadas con copy estratégico, velocidad de carga instantánea y llamados a la acción de alto impacto.
+              </p>
+              <div class="service-tags">
+                <span>Alta conversión</span>
+                <span>Ultra livianas</span>
+              </div>
             </div>
-            <span class="service-chip">Conversión & Leads</span>
-          </div>
-          <h3 class="service-title">Landing Pages</h3>
-          <p class="service-desc">
-            Páginas enfocadas en conversión directa: captación de clientes potenciales, venta de productos o lanzamientos. Diseñadas con copy estratégico, velocidad de carga instantánea y llamados a la acción de alto impacto.
-          </p>
-          <div class="service-tags">
-            <span>Alta conversión</span>
-            <span>Ultra livianas</span>
+
+            <!-- Servicio 2: Sitios Corporativos -->
+            <div class="sites-service-card" data-index="1">
+              <div class="service-card-top">
+                <div class="service-icon-wrapper">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                  </svg>
+                </div>
+                <span class="service-chip">Identidad & Marca</span>
+              </div>
+              <h3 class="service-title">Sitios Corporativos</h3>
+              <p class="service-desc">
+                Plataformas web completas para marcas, agencias y empresas que buscan transmitir solidez y autoridad. Arquitectura multi-página, diseño a medida y navegación orientada a generar oportunidades de negocio.
+              </p>
+              <div class="service-tags">
+                <span>Identidad de marca</span>
+                <span>Arquitectura escalable</span>
+                <span>Multi-dispositivo</span>
+              </div>
+            </div>
+
+            <!-- Servicio 3: Posicionamiento SEO y GEO para IA -->
+            <div class="sites-service-card" data-index="2">
+              <div class="service-card-top">
+                <div class="service-icon-wrapper">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                  </svg>
+                </div>
+                <span class="service-chip">Visibilidad & Motores IA</span>
+              </div>
+              <h3 class="service-title">Posicionamiento SEO & GEO para IA</h3>
+              <p class="service-desc">
+                Optimización técnica para buscadores tradicionales (Google) y estructuración semántica GEO (Generative Engine Optimization) para que modelos de IA (ChatGPT, Gemini, Perplexity) comprendan, citen y recomienden tu negocio.
+              </p>
+              <div class="service-tags">
+                <span>Google Search</span>
+                <span>Optimización GEO (IA)</span>
+                <span>Datos semánticos</span>
+              </div>
+            </div>
+
+            <!-- Servicio 4: Mantenimiento Técnico y Soporte Continuo -->
+            <div class="sites-service-card" data-index="3">
+              <div class="service-card-top">
+                <div class="service-icon-wrapper">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                </div>
+                <span class="service-chip">Seguridad & Uptime</span>
+              </div>
+              <h3 class="service-title">Mantenimiento Técnico & Soporte</h3>
+              <p class="service-desc">
+                Acompañamiento integral para garantizar el rendimiento de tu web: monitoreo continuo, actualizaciones de seguridad, copias de respaldo periódicas y asistencia rápida para cambios o mejoras evolutivas.
+              </p>
+              <div class="service-tags">
+                <span>Monitoreo continuo</span>
+                <span>Backups automáticos</span>
+                <span>Soporte evolutivo</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Servicio 2: Sitios Corporativos -->
-        <div class="sites-service-card reveal">
-          <div class="service-card-top">
-            <div class="service-icon-wrapper">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                <line x1="8" y1="21" x2="16" y2="21"></line>
-                <line x1="12" y1="17" x2="12" y2="21"></line>
-              </svg>
-            </div>
-            <span class="service-chip">Identidad & Marca</span>
-          </div>
-          <h3 class="service-title">Sitios Corporativos</h3>
-          <p class="service-desc">
-            Plataformas web completas para marcas, agencias y empresas que buscan transmitir solidez y autoridad. Arquitectura multi-página, diseño a medida y navegación orientada a generar oportunidades de negocio.
-          </p>
-          <div class="service-tags">
-            <span>Identidad de marca</span>
-            <span>Arquitectura escalable</span>
-            <span>Multi-dispositivo</span>
-          </div>
-        </div>
+        <button class="services-nav-btn next" id="services-carousel-next" aria-label="Siguiente servicio">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.2" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
 
-        <!-- Servicio 3: Posicionamiento SEO y GEO para IA -->
-        <div class="sites-service-card reveal">
-          <div class="service-card-top">
-            <div class="service-icon-wrapper">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="2" y1="12" x2="22" y2="12"></line>
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-              </svg>
-            </div>
-            <span class="service-chip">Visibilidad & Motores IA</span>
-          </div>
-          <h3 class="service-title">Posicionamiento SEO & GEO para IA</h3>
-          <p class="service-desc">
-            Optimización técnica para buscadores tradicionales (Google) y estructuración semántica GEO (Generative Engine Optimization) para que modelos de IA (ChatGPT, Gemini, Perplexity) comprendan, citen y recomienden tu negocio.
-          </p>
-          <div class="service-tags">
-            <span>Google Search</span>
-            <span>Optimización GEO (IA)</span>
-            <span>Datos semánticos</span>
-          </div>
-        </div>
-
-        <!-- Servicio 4: Mantenimiento Técnico y Soporte Continuo -->
-        <div class="sites-service-card reveal">
-          <div class="service-card-top">
-            <div class="service-icon-wrapper">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              </svg>
-            </div>
-            <span class="service-chip">Seguridad & Uptime</span>
-          </div>
-          <h3 class="service-title">Mantenimiento Técnico & Soporte</h3>
-          <p class="service-desc">
-            Acompañamiento integral para garantizar el rendimiento de tu web: monitoreo continuo, actualizaciones de seguridad, copias de respaldo periódicas y asistencia rápida para cambios o mejoras evolutivas.
-          </p>
-          <div class="service-tags">
-            <span>Monitoreo continuo</span>
-            <span>Backups automáticos</span>
-            <span>Soporte evolutivo</span>
-          </div>
-        </div>
+      <!-- Indicadores de paginación (Dots) -->
+      <div class="services-carousel-dots" id="services-carousel-dots">
+        <button class="services-dot active" data-slide="0" aria-label="Ir al servicio 1"></button>
+        <button class="services-dot" data-slide="1" aria-label="Ir al servicio 2"></button>
+        <button class="services-dot" data-slide="2" aria-label="Ir al servicio 3"></button>
+        <button class="services-dot" data-slide="3" aria-label="Ir al servicio 4"></button>
       </div>
     </div>
   </section>

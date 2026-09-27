@@ -467,34 +467,91 @@
   color: #4b5563;
 }
 
-.sites-services-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 32px;
-  margin-top: 48px;
+/* Contenedor del Carrusel */
+.sites-services-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Viewport con overflow hidden y máscara suave de desvanecimiento lateral */
+.sites-services-carousel-viewport {
+  width: 100%;
+  overflow: hidden;
+  padding: 35px 0 45px 0;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  cursor: grab;
+  user-select: none;
+}
+
+.sites-services-carousel-viewport:active {
+  cursor: grabbing;
+}
+
+/* Track horizontal */
+.sites-services-carousel-track {
+  display: flex;
+  align-items: stretch;
+  gap: 32px;
+  width: max-content;
+  will-change: transform;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Cards con efecto de escala / profundidad 3D */
 .sites-service-card {
+  width: 440px;
+  max-width: calc(100vw - 52px);
+  min-height: 390px;
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 22px;
+  border: 1.5px solid rgba(0, 0, 0, 0.07);
+  border-radius: 26px;
   padding: 42px 36px;
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
+  flex-shrink: 0;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+  transform: scale(0.91);
+  opacity: 0.52;
+  filter: blur(0.3px);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.5s ease,
+              filter 0.5s ease,
+              border-color 0.4s ease,
+              box-shadow 0.5s ease;
+  cursor: pointer;
 }
 
 .sites-service-card::after {
   display: none !important;
 }
 
-.sites-service-card:hover {
-  transform: translateY(-5px);
+/* Card Activa (Destacada, en foco, tamaño completo y brillo) */
+.sites-service-card.active {
+  transform: scale(1.02);
+  opacity: 1;
+  filter: blur(0);
   border-color: rgba(2, 142, 224, 0.35);
-  box-shadow: 0 20px 45px rgba(2, 142, 224, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.09), 0 0 35px rgba(2, 142, 224, 0.12);
+  cursor: default;
+}
+
+.sites-service-card.active:hover {
+  transform: scale(1.03) translateY(-4px);
+  border-color: rgba(2, 142, 224, 0.5);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.12), 0 0 45px rgba(2, 142, 224, 0.18);
+}
+
+.sites-service-card:not(.active):hover {
+  opacity: 0.82;
+  transform: scale(0.94);
+  border-color: rgba(2, 142, 224, 0.22);
 }
 
 .service-card-top {
@@ -517,6 +574,7 @@
   transition: all 0.35s ease;
 }
 
+.sites-service-card.active .service-icon-wrapper,
 .sites-service-card:hover .service-icon-wrapper {
   background: var(--celeste);
   color: #ffffff;
@@ -538,6 +596,7 @@
   transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
 }
 
+.sites-service-card.active .service-chip,
 .sites-service-card:hover .service-chip {
   color: var(--celeste);
   border-color: rgba(2, 142, 224, 0.3);
@@ -582,10 +641,120 @@
   transition: all 0.25s ease;
 }
 
+.sites-service-card.active .service-tags span,
 .sites-service-card:hover .service-tags span {
   color: var(--celeste);
   border-color: rgba(2, 142, 224, 0.25);
   background: rgba(2, 142, 224, 0.06);
+}
+
+/* Botones de Navegación (Prev / Next) Minimalistas y Flotantes */
+.services-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #0f1117;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.services-nav-btn.prev {
+  left: 6px;
+}
+
+.services-nav-btn.next {
+  right: 6px;
+}
+
+.services-nav-btn:hover {
+  background: var(--celeste);
+  border-color: var(--celeste);
+  color: #ffffff;
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 10px 28px rgba(2, 142, 224, 0.4);
+}
+
+.services-nav-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+/* Indicadores / Dots de Paginación */
+.services-carousel-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.services-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.16);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.services-dot:hover {
+  background: rgba(2, 142, 224, 0.5);
+  transform: scale(1.2);
+}
+
+.services-dot.active {
+  width: 34px;
+  background: var(--celeste);
+  box-shadow: 0 2px 10px rgba(2, 142, 224, 0.45);
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .sites-services-carousel-viewport {
+    mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+    padding: 20px 0 35px 0;
+  }
+
+  .sites-service-card {
+    width: 360px;
+    padding: 34px 28px;
+    border-radius: 22px;
+  }
+  
+  .services-nav-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .sites-service-card {
+    width: 295px;
+    padding: 30px 22px;
+    min-height: 380px;
+  }
+
+  .service-title {
+    font-size: 1.35rem;
+  }
+
+  .service-desc {
+    font-size: 0.92rem;
+    margin-bottom: 20px;
+  }
 }
 
 /* --------------------------------------------------------------------------

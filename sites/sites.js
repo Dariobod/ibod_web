@@ -284,4 +284,164 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ==========================================================================
+     6. CARRUSEL AUTOMÁTICO DE SERVICIOS (MODERNO & MINIMALISTA CON EFECTO 3D)
+     ========================================================================== */
+  const servicesTrack = document.getElementById('services-carousel-track');
+  const servicesViewport = document.getElementById('services-carousel-viewport');
+  const servicesCards = Array.from(document.querySelectorAll('.sites-services-carousel-track .sites-service-card'));
+  const servicesPrevBtn = document.getElementById('services-carousel-prev');
+  const servicesNextBtn = document.getElementById('services-carousel-next');
+  const servicesDots = Array.from(document.querySelectorAll('.services-dot'));
+
+  if (servicesTrack && servicesViewport && servicesCards.length > 0) {
+    let currentServiceIndex = 0;
+    const totalServices = servicesCards.length;
+    let autoSlideInterval = null;
+    const AUTO_SLIDE_DELAY = 4000; // 4 segundos entre transiciones
+
+    const updateServiceCarousel = (animate = true) => {
+      if (currentServiceIndex < 0) currentServiceIndex = totalServices - 1;
+      if (currentServiceIndex >= totalServices) currentServiceIndex = 0;
+
+      const activeCard = servicesCards[currentServiceIndex];
+      if (!activeCard) return;
+
+      // Calcular la posición exacta para centrar la tarjeta activa en el viewport
+      const cardCenter = activeCard.offsetLeft + activeCard.offsetWidth / 2;
+      const viewportCenter = servicesViewport.offsetWidth / 2;
+      const targetTranslate = viewportCenter - cardCenter;
+
+      if (animate) {
+        servicesTrack.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)';
+      } else {
+        servicesTrack.style.transition = 'none';
+      }
+
+      servicesTrack.style.transform = `translateX(${targetTranslate}px)`;
+
+      // Actualizar clases activas en las tarjetas (efecto de escala y brillo)
+      servicesCards.forEach((card, idx) => {
+        if (idx === currentServiceIndex) {
+          card.classList.add('active');
+        } else {
+          card.classList.remove('active');
+        }
+      });
+
+      // Actualizar indicadores (dots)
+      servicesDots.forEach((dot, idx) => {
+        if (idx === currentServiceIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    };
+
+    const nextServiceSlide = () => {
+      currentServiceIndex = (currentServiceIndex + 1) % totalServices;
+      updateServiceCarousel(true);
+    };
+
+    const prevServiceSlide = () => {
+      currentServiceIndex = (currentServiceIndex - 1 + totalServices) % totalServices;
+      updateServiceCarousel(true);
+    };
+
+    const startAutoSlide = () => {
+      stopAutoSlide();
+      autoSlideInterval = setInterval(nextServiceSlide, AUTO_SLIDE_DELAY);
+    };
+
+    const stopAutoSlide = () => {
+      if (autoSlideInterval) {
+        clearInterval(autoSlideInterval);
+        autoSlideInterval = null;
+      }
+    };
+
+    // Botones de navegación
+    if (servicesPrevBtn) {
+      servicesPrevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        prevServiceSlide();
+        startAutoSlide();
+      });
+    }
+
+    if (servicesNextBtn) {
+      servicesNextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        nextServiceSlide();
+        startAutoSlide();
+      });
+    }
+
+    // Clic en dots
+    servicesDots.forEach((dot, idx) => {
+      dot.addEventListener('click', (e) => {
+        e.preventDefault();
+        currentServiceIndex = idx;
+        updateServiceCarousel(true);
+        startAutoSlide();
+      });
+    });
+
+    // Clic en tarjetas laterales no activas para llevarlas al centro
+    servicesCards.forEach((card, idx) => {
+      card.addEventListener('click', () => {
+        if (currentServiceIndex !== idx) {
+          currentServiceIndex = idx;
+          updateServiceCarousel(true);
+          startAutoSlide();
+        }
+      });
+    });
+
+    // Pausar auto-deslizamiento al pasar el cursor o interactuar
+    const carouselWrapper = document.querySelector('.sites-services-carousel-wrapper');
+    if (carouselWrapper) {
+      carouselWrapper.addEventListener('mouseenter', stopAutoSlide);
+      carouselWrapper.addEventListener('mouseleave', startAutoSlide);
+    }
+
+    // Soporte táctil / Swipe para móviles
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    servicesViewport.addEventListener('touchstart', (e) => {
+      stopAutoSlide();
+      touchStartX = e.touches[0].clientX;
+      touchEndX = touchStartX;
+    }, { passive: true });
+
+    servicesViewport.addEventListener('touchmove', (e) => {
+      touchEndX = e.touches[0].clientX;
+    }, { passive: true });
+
+    servicesViewport.addEventListener('touchend', () => {
+      const diffX = touchStartX - touchEndX;
+      if (Math.abs(diffX) > 40) {
+        if (diffX > 0) {
+          nextServiceSlide();
+        } else {
+          prevServiceSlide();
+        }
+      }
+      startAutoSlide();
+    });
+
+    // Recalcular en redimensionamiento de ventana
+    window.addEventListener('resize', () => {
+      updateServiceCarousel(false);
+    }, { passive: true });
+
+    // Inicializar carrusel
+    setTimeout(() => {
+      updateServiceCarousel(false);
+      startAutoSlide();
+    }, 150);
+  }
+
 });
