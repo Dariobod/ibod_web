@@ -145,10 +145,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   /* ==========================================================================
-     4. FILTROS DE PORTAFOLIO E INTEGRACIÓN CON GOOGLE APPS SCRIPT API
+     4. CARRUSEL DE PORTAFOLIO Y CARGA PROGRESIVA DE VIDEOS (LAZY BUFFER)
      ========================================================================== */
-  // URL de tu Web App de Google Apps Script. 
   const API_URL = "https://script.google.com/macros/s/AKfycbyCvC_0rZkvu0mUtKRiaWlQvdnkXLmNCMMnVOg9Db9Gfx6ApcadwkSNA4KyXeWEVNVs8Q/exec?tipo=trabajos";
+
+  const portfolioTrack = document.getElementById('portfolio-track');
+  const portfolioPrev = document.getElementById('portfolio-prev');
+  const portfolioNext = document.getElementById('portfolio-next');
 
   let allTrabajos = [];
 
@@ -160,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return (match && match[1].length === 11) ? match[1] : null;
   }
 
-  // Generador de poster/thumbnail para URLs de Cloudinary con soporte de offset de frame/segundo (4.0s por defecto para evitar frame en negro u ojos cerrados)
+  // Generador de poster/thumbnail para URLs de Cloudinary con soporte de offset de frame
   function getCloudinaryPoster(url, offset = '4.0') {
     if (!url || typeof url !== 'string') return '';
     if (!/cloudinary\.com/i.test(url)) return '';
@@ -174,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Función para detectar la fuente del video (YouTube, Cloudinary o archivo de video directo)
+  // Función para detectar la fuente del video (YouTube, Cloudinary o archivo directo)
   function parseVideoSource(url, isVertical = false) {
     if (!url) return { provider: 'unknown', url: '' };
 
@@ -184,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         provider: 'youtube',
         ytId: ytId,
         url: url,
-        thumbnail: `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`
+        thumbnail: `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`
       };
     }
 
@@ -192,7 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const isDirectVideo = /\.(mp4|webm|mov|m4v|ogg)(\?.*)?$/i.test(url);
 
     if (isCloudinary || isDirectVideo || /^https?:\/\//i.test(url)) {
-      // Usar frame avanzado (so_2.5) para evitar el primer frame en negro y mostrar segundo o tercer frame
       const offset = '2.5';
       const poster = isCloudinary ? getCloudinaryPoster(url, offset) : '';
       return {
@@ -205,36 +207,13 @@ document.addEventListener('DOMContentLoaded', () => {
     return { provider: 'unknown', url: url };
   }
 
-  // Regla de formato: Formato vertical (9:16) si la categoría contiene "Reel" o "Short", o si la URL indica formato vertical / reel.
+  // Regla de formato: Formato vertical (9:16) si la categoría contiene "Reel" o "Short"
   function isVerticalVideo(url, category) {
     if (!category) category = '';
     const catTrimmed = category.trim().toLowerCase();
     const urlLower = (url || '').toLowerCase();
     const isShortOrReelUrl = /\/shorts\//i.test(urlLower) || /reel/i.test(urlLower) || /vertical/i.test(urlLower);
     return catTrimmed.startsWith('reel-') || catTrimmed.includes('reel') || catTrimmed.includes('short') || isShortOrReelUrl;
-  }
-
-  // Función para aplicar filtro a las tarjetas por categoría
-  function filterCardsByCategory(filterValue) {
-    if (!filterValue) return;
-    const currentCards = document.querySelectorAll('.portfolio-card');
-    currentCards.forEach(card => {
-      const category = card.getAttribute('data-category') || '';
-
-      if (category.toLowerCase() === filterValue.toLowerCase()) {
-        card.style.display = 'flex';
-        setTimeout(() => {
-          card.style.opacity = '1';
-          card.style.transform = 'scale(1)';
-        }, 50);
-      } else {
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-          card.style.display = 'none';
-        }, 300);
-      }
-    });
   }
 
   // Renderizado dinámico de botones de filtro por categoría
@@ -253,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
       filtersContainer.appendChild(btn);
     });
 
-    // Botón / Enlace directo a la nueva sección de Sitios (a la derecha de Youtube)
+    // Enlace directo a la sección de Sitios Web
     const sitesLink = document.createElement('a');
     sitesLink.href = 'https://ibod.com.ar/sites/';
     sitesLink.className = 'filter-btn filter-btn-link';
@@ -277,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Utilidades de Cache Local (localStorage) con revalidación en segundo plano (SWR)
+  // Utilidades de Cache Local (localStorage)
   const CACHE_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 Horas
   function getCachedData(key) {
     try {
@@ -307,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Manejador de previsualización al pasar el mouse (Hover Video Preview)
-  const HOVER_PREVIEW_DURATION_MS = 3800; // Reproduce ~3.8 segundos y luego regresa suavemente a la imagen
+  const HOVER_PREVIEW_DURATION_MS = 3800;
 
   function setupCardHoverPreview(card) {
     const video = card.querySelector('video.portfolio-thumb-video, video.testimonial-thumb-video');
@@ -362,93 +341,143 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Función para renderizar las tarjetas (Cards) en el DOM (YouTube y Cloudinary/Video directo)
-  function renderGrid(data, containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
+  // Activación individual de medios de tarjeta (Lazy Media Loader)
+  function loadCardMedia(card) {
+    if (!card || card.dataset.mediaLoaded === 'true') return;
+    card.dataset.mediaLoaded = 'true';
 
-    container.innerHTML = '';
+    const provider = card.getAttribute('data-provider');
+    const mediaSlot = card.querySelector('.portfolio-media-slot');
+    if (!mediaSlot) return;
 
-    data.forEach((v) => {
+    if (provider === 'cloudinary') {
+      const videoSrc = card.getAttribute('data-video-src');
+      const title = card.getAttribute('data-title') || 'Video de Portafolio';
+      mediaSlot.innerHTML = `
+        <video 
+          data-src="${videoSrc}" 
+          class="portfolio-thumb-video" 
+          muted 
+          loop 
+          playsinline 
+          webkit-playsinline
+          preload="none"
+          aria-label="${title}">
+        </video>
+      `;
+      setupCardHoverPreview(card);
+    } else if (provider === 'youtube') {
+      if (!isMobileScreen()) {
+        const ytId = card.getAttribute('data-ytid');
+        const title = card.getAttribute('data-title') || 'Video de Portafolio';
+        mediaSlot.innerHTML = `
+          <iframe 
+            src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&showinfo=0&rel=0&enablejsapi=1&playsinline=1&modestbranding=1&cc_load_policy=0&cc_lang_pref=none&iv_load_policy=3" 
+            title="${title}" 
+            class="portfolio-thumb-video" 
+            frameborder="0" 
+            allow="autoplay; encrypted-media; picture-in-picture" 
+            allowfullscreen
+            style="opacity: 1;">
+          </iframe>
+        `;
+        const iframe = mediaSlot.querySelector('iframe');
+        if (iframe) {
+          const disableCaptions = () => {
+            try {
+              if (iframe.contentWindow) {
+                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unloadModule', args: ['captions'] }), '*');
+                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setOption', args: ['captions', 'track', {}] }), '*');
+                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setOption', args: ['cc', 'track', {}] }), '*');
+              }
+            } catch (e) {}
+          };
+          iframe.addEventListener('load', () => {
+            disableCaptions();
+            setTimeout(disableCaptions, 400);
+            setTimeout(disableCaptions, 1200);
+            setTimeout(disableCaptions, 2500);
+          });
+        }
+      }
+    }
+  }
+
+  // Carga Progresiva por Ventana Deslizante (3 visibles iniciales + 1 de buffer; 2 más al desplazarse)
+  function updatePortfolioProgressiveLoading() {
+    if (!portfolioTrack) return;
+    const cards = portfolioTrack.querySelectorAll('.portfolio-card');
+    if (!cards.length) return;
+
+    const firstCard = cards[0];
+    const cardWidth = (firstCard ? firstCard.offsetWidth : 320) + (isMobileScreen() ? 16 : 24);
+    const scrollLeft = portfolioTrack.scrollLeft || 0;
+    const currentIndex = Math.max(0, Math.floor(scrollLeft / cardWidth));
+
+    // Desktop: 3 visibles; Tablet: 2 visibles; Mobile: 1 visible
+    const visibleCount = window.innerWidth > 1024 ? 3 : (window.innerWidth > 768 ? 2 : 1);
+    // 1 de buffer al inicio; al desplazarse pre-cargar 2 tarjetas adicionales hacia adelante
+    const bufferAhead = scrollLeft > 10 ? 2 : 1;
+    const maxIndexToLoad = Math.min(cards.length - 1, currentIndex + visibleCount + bufferAhead);
+
+    for (let i = 0; i <= maxIndexToLoad; i++) {
+      loadCardMedia(cards[i]);
+    }
+  }
+
+  // Renderizar las tarjetas dentro del carrusel según la categoría activa
+  function renderPortfolioCarousel(category) {
+    if (!portfolioTrack) return;
+    portfolioTrack.innerHTML = '';
+
+    const activeVideos = allTrabajos.filter(v => {
+      if (!category) return true;
+      return v.category.toLowerCase() === category.toLowerCase();
+    });
+
+    if (activeVideos.length === 0) {
+      portfolioTrack.innerHTML = '<p style="color: var(--text-muted); padding: 40px; width: 100%; text-align: center;">No hay trabajos disponibles en esta categoría.</p>';
+      checkPortfolioNavArrows();
+      return;
+    }
+
+    activeVideos.forEach((v, index) => {
       const card = document.createElement('div');
       const isVertical = isVerticalVideo(v.urlOriginal, v.category);
       card.className = `portfolio-card reveal visible ${isVertical ? 'portfolio-card-vertical' : ''}`;
       card.setAttribute('data-category', v.category);
+      card.setAttribute('data-index', index);
+      card.setAttribute('data-provider', v.provider);
+      card.setAttribute('data-title', v.title);
+      if (v.ytId) card.setAttribute('data-ytid', v.ytId);
 
-      let mediaHtml = '';
-      let playBtnHtml = '';
-      const isMobile = isMobileScreen();
+      const videoSrc = isVertical ? `${v.urlOriginal}#t=1.5` : v.urlOriginal;
+      card.setAttribute('data-video-src', videoSrc);
 
+      let posterUrl = '';
       if (v.provider === 'cloudinary') {
-        const posterUrl = v.thumbnail || getCloudinaryPoster(v.urlOriginal, '2.5');
-        const videoSrc = isVertical ? `${v.urlOriginal}#t=1.5` : v.urlOriginal;
-        // Imagen fija de alta velocidad al cargar la página + video oculto que despierta en hover
-        mediaHtml = `
-          ${posterUrl ? `<img src="${posterUrl}" alt="${v.title}" class="portfolio-thumb-img" loading="lazy">` : ''}
-          <video 
-            data-src="${videoSrc}" 
-            class="portfolio-thumb-video" 
-            muted 
-            loop 
-            playsinline 
-            webkit-playsinline
-            preload="none"
-            aria-label="${v.title}">
-          </video>`;
-        playBtnHtml = `
-          <button class="project-play-btn" data-video="${v.urlOriginal}" aria-label="Ver video">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-              <path d="M8 5v14l11-7z"></path>
-            </svg>
-          </button>`;
+        posterUrl = v.thumbnail || getCloudinaryPoster(v.urlOriginal, '2.5');
       } else {
-        if (isMobile) {
-          mediaHtml = `
-            <img 
-              src="https://img.youtube.com/vi/${v.ytId}/hqdefault.jpg" 
-              alt="${v.title}" 
-              class="portfolio-thumb-video" 
-              loading="lazy" 
-              style="object-fit: cover; width: 100%; height: 100%; opacity: 1;">`;
-        } else {
-          mediaHtml = `
-            <iframe 
-              src="https://www.youtube-nocookie.com/embed/${v.ytId}?autoplay=1&mute=1&loop=1&playlist=${v.ytId}&controls=0&showinfo=0&rel=0&enablejsapi=1&playsinline=1&modestbranding=1&cc_load_policy=0&cc_lang_pref=none&iv_load_policy=3" 
-              title="${v.title}" 
-              class="portfolio-thumb-video" 
-              frameborder="0" 
-              allow="autoplay; encrypted-media; picture-in-picture" 
-              allowfullscreen
-              style="opacity: 1;">
-            </iframe>`;
-        }
-        playBtnHtml = `
-          <button class="project-play-btn" data-video="${v.urlOriginal}" aria-label="Ver video">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-              <path d="M8 5v14l11-7z"></path>
-            </svg>
-          </button>`;
+        posterUrl = `https://img.youtube.com/vi/${v.ytId}/hqdefault.jpg`;
       }
-      
+
       card.innerHTML = `
         <div class="portfolio-thumbnail">
-          ${mediaHtml}
+          ${posterUrl ? `<img src="${posterUrl}" alt="${v.title}" class="portfolio-thumb-img" loading="lazy">` : ''}
+          <div class="portfolio-media-slot"></div>
           <div class="portfolio-thumb-overlay"></div>
           <span class="project-tag">${v.category}</span>
-          ${playBtnHtml}
+          <button class="project-play-btn" data-video="${v.urlOriginal}" aria-label="Ver video">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+              <path d="M8 5v14l11-7z"></path>
+            </svg>
+          </button>
         </div>
         <div class="portfolio-info">
           <h4 class="project-creator">${v.title}</h4>
           <p class="project-desc">${v.desc}</p>
         </div>
       `;
-      
-      container.appendChild(card);
-
-      // Activar comportamiento de reproducción en Hover
-      setupCardHoverPreview(card);
-
-      card.style.cursor = 'pointer';
 
       card.addEventListener('click', (e) => {
         e.preventDefault();
@@ -465,31 +494,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      const iframe = card.querySelector('iframe');
-      if (iframe) {
-        const disableCaptions = () => {
-          try {
-            if (iframe.contentWindow) {
-              iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unloadModule', args: ['captions'] }), '*');
-              iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setOption', args: ['captions', 'track', {}] }), '*');
-              iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'setOption', args: ['cc', 'track', {}] }), '*');
-            }
-          } catch (e) {}
-        };
-
-        iframe.addEventListener('load', () => {
-          disableCaptions();
-          setTimeout(disableCaptions, 400);
-          setTimeout(disableCaptions, 1200);
-          setTimeout(disableCaptions, 2500);
-        });
-      }
+      portfolioTrack.appendChild(card);
     });
+
+    // Resetear posición de scroll al inicio
+    portfolioTrack.scrollLeft = 0;
+
+    // Ejecutar carga inicial progresiva (3 visibles + 1 buffer)
+    updatePortfolioProgressiveLoading();
+    checkPortfolioNavArrows();
   }
 
-  // Renderizar esqueletos de carga grisados (Skeleton Loading)
+  // Filtrar tarjetas por categoría
+  function filterCardsByCategory(filterValue) {
+    if (!filterValue) return;
+    renderPortfolioCarousel(filterValue);
+  }
+
+  // Renderizar esqueletos de carga grisados
   function renderSkeletons() {
-    const container = document.getElementById('portfolio-grid');
+    const container = document.getElementById('portfolio-track');
     const filtersContainer = document.getElementById('portfolio-filters');
 
     if (filtersContainer) {
@@ -502,7 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (container) {
       let skeletonHtml = '';
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 4; i++) {
         skeletonHtml += `
           <div class="skeleton-card">
             <div class="skeleton skeleton-thumb">
@@ -520,10 +544,103 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Comprobar visibilidad de flechas del carrusel de trabajos
+  function checkPortfolioNavArrows() {
+    if (!portfolioTrack) return;
+    const isOverflowing = portfolioTrack.scrollWidth > portfolioTrack.clientWidth + 5;
+    if (portfolioPrev) portfolioPrev.classList.toggle('is-hidden', !isOverflowing);
+    if (portfolioNext) portfolioNext.classList.toggle('is-hidden', !isOverflowing);
+  }
+
+  // Configuración de eventos, flechas y gestos táctiles / drag para el carrusel de trabajos
+  function setupPortfolioCarousel() {
+    if (!portfolioTrack) return;
+
+    let ticking = false;
+    portfolioTrack.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updatePortfolioProgressiveLoading();
+          checkPortfolioNavArrows();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    window.addEventListener('resize', () => {
+      updatePortfolioProgressiveLoading();
+      checkPortfolioNavArrows();
+    });
+
+    if (portfolioPrev) {
+      portfolioPrev.addEventListener('click', () => {
+        const card = portfolioTrack.querySelector('.portfolio-card');
+        const cardWidth = card ? card.offsetWidth : 320;
+        const gap = isMobileScreen() ? 16 : 24;
+        portfolioTrack.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
+      });
+    }
+
+    if (portfolioNext) {
+      portfolioNext.addEventListener('click', () => {
+        const card = portfolioTrack.querySelector('.portfolio-card');
+        const cardWidth = card ? card.offsetWidth : 320;
+        const gap = isMobileScreen() ? 16 : 24;
+        portfolioTrack.scrollBy({ left: (cardWidth + gap), behavior: 'smooth' });
+      });
+    }
+
+    // Arrastre con mouse (Drag-to-scroll)
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    let hasMoved = false;
+
+    portfolioTrack.addEventListener('mousedown', (e) => {
+      isDown = true;
+      hasMoved = false;
+      portfolioTrack.classList.add('is-dragging');
+      startX = e.pageX - portfolioTrack.offsetLeft;
+      scrollLeft = portfolioTrack.scrollLeft;
+    });
+
+    portfolioTrack.addEventListener('mouseleave', () => {
+      isDown = false;
+      portfolioTrack.classList.remove('is-dragging');
+    });
+
+    portfolioTrack.addEventListener('mouseup', () => {
+      isDown = false;
+      portfolioTrack.classList.remove('is-dragging');
+    });
+
+    portfolioTrack.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - portfolioTrack.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      if (Math.abs(walk) > 5) {
+        hasMoved = true;
+      }
+      portfolioTrack.scrollLeft = scrollLeft - walk;
+    });
+
+    portfolioTrack.addEventListener('click', (e) => {
+      if (hasMoved) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+  }
+
+  // Inicializar listeners del carrusel de trabajos
+  setupPortfolioCarousel();
+
   // Función principal para procesar y renderizar trabajos
   function applyTrabajosData(rawData) {
     if (!Array.isArray(rawData) || rawData.length === 0) {
-      renderGrid([], 'portfolio-grid');
+      if (portfolioTrack) portfolioTrack.innerHTML = '<p style="color: var(--text-muted); padding: 40px; width: 100%; text-align: center;">No se encontraron trabajos.</p>';
       return;
     }
 
@@ -545,22 +662,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (videos.length > 0) {
       allTrabajos = videos;
-      // Obtener categorías únicas dinámicamente desde los datos de la planilla
       const uniqueCategories = [...new Set(videos.map(v => v.category))];
       renderFilterButtons(uniqueCategories);
-      renderGrid(allTrabajos, 'portfolio-grid');
       if (uniqueCategories.length > 0) {
-        filterCardsByCategory(uniqueCategories[0]);
+        renderPortfolioCarousel(uniqueCategories[0]);
+      } else {
+        renderPortfolioCarousel(null);
       }
     } else {
-      renderGrid([], 'portfolio-grid');
+      if (portfolioTrack) portfolioTrack.innerHTML = '<p style="color: var(--text-muted); padding: 40px; width: 100%; text-align: center;">No hay videos disponibles.</p>';
     }
   }
 
   // Función principal para cargar los trabajos (videos) con estrategia Cache-First (instantáneo)
   async function loadVideos() {
-    const container = document.getElementById('portfolio-grid');
-    if (!container) return;
+    if (!portfolioTrack) return;
 
     // 1. Intentar cargar instantáneamente desde Cache Local
     const cachedVideos = getCachedData('ibod_cache_trabajos');
@@ -570,7 +686,6 @@ document.addEventListener('DOMContentLoaded', () => {
       applyTrabajosData(cachedVideos);
       hasRenderedCache = true;
     } else {
-      // Solo mostrar esqueletos grisados si no hay nada en cache
       renderSkeletons();
     }
 
@@ -585,17 +700,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const rawData = rawResponse.data || rawResponse;
 
       if (Array.isArray(rawData) && rawData.length > 0) {
-        // Guardar la nueva versión en Cache
         setCachedData('ibod_cache_trabajos', rawData);
-        // Si no teníamos cache previo o los datos son frescos, aplicar
         applyTrabajosData(rawData);
       } else if (!hasRenderedCache) {
-        renderGrid([], 'portfolio-grid');
+        if (portfolioTrack) portfolioTrack.innerHTML = '<p style="color: var(--text-muted); padding: 40px; width: 100%; text-align: center;">No se encontraron trabajos.</p>';
       }
     } catch (error) {
       console.error("Error al cargar trabajos desde API:", error);
       if (!hasRenderedCache) {
-        renderGrid([], 'portfolio-grid');
+        if (portfolioTrack) portfolioTrack.innerHTML = '<p style="color: var(--text-muted); padding: 40px; width: 100%; text-align: center;">Error al cargar los trabajos.</p>';
       }
     }
   }

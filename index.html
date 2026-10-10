@@ -319,109 +319,19 @@
         <a href="https://ibod.com.ar/sites/" class="filter-btn filter-btn-link">Sitios</a>
       </div>
       
-      <!-- Grid de Proyectos -->
-      <div class="portfolio-grid" id="portfolio-grid">
-        <!-- Proyecto 1: Largo -->
-        <div class="portfolio-card reveal" data-category="long">
-          <div class="portfolio-thumbnail" style="background: linear-gradient(135deg, #0e1e38, #050b14);">
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="project-tag">Vlog de Finanzas</span>
-            <button class="project-play-btn" data-video="ibod_video_slider_principal.webm">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                <path d="M8 5v14l11-7z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="portfolio-info">
-            <h4 class="project-creator">Daniel Hart</h4>
-            <p class="project-desc">Pacing de alta retención para contenido de finanzas personales.</p>
-          </div>
+      <!-- Carrusel de Proyectos -->
+      <div class="portfolio-carousel-wrapper reveal">
+        <button class="carousel-nav-btn prev" id="portfolio-prev" aria-label="Trabajo anterior">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        
+        <div class="portfolio-track" id="portfolio-track">
+          <!-- Las tarjetas de video se cargarán dinámicamente desde la API / Cache -->
         </div>
         
-        <!-- Proyecto 2: Corto -->
-        <div class="portfolio-card reveal" data-category="short">
-          <div class="portfolio-thumbnail" style="background: linear-gradient(135deg, #1f1235, #0a0514);">
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="project-tag">TikTok / Reels</span>
-            <button class="project-play-btn" data-video="ibod_video_slider_principal.webm">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                <path d="M8 5v14l11-7z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="portfolio-info">
-            <h4 class="project-creator">Marcus Reid</h4>
-            <p class="project-desc">Edición de formato corto con subtítulos animados y transiciones zoom.</p>
-          </div>
-        </div>
-        
-        <!-- Proyecto 3: Largo -->
-        <div class="portfolio-card reveal" data-category="long">
-          <div class="portfolio-thumbnail" style="background: linear-gradient(135deg, #0f2e22, #05140f);">
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="project-tag">Tecnología</span>
-            <button class="project-play-btn" data-video="ibod_video_slider_principal.webm">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                <path d="M8 5v14l11-7z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="portfolio-info">
-            <h4 class="project-creator">Brandon Cole</h4>
-            <p class="project-desc">Narrativa y b-roll cinematográfico enfocado en análisis tecnológico.</p>
-          </div>
-        </div>
-        
-        <!-- Proyecto 4: Corto -->
-        <div class="portfolio-card reveal" data-category="short">
-          <div class="portfolio-thumbnail" style="background: linear-gradient(135deg, #3c1a1a, #140505);">
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="project-tag">YouTube Shorts</span>
-            <button class="project-play-btn" data-video="ibod_video_slider_principal.webm">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                <path d="M8 5v14l11-7z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="portfolio-info">
-            <h4 class="project-creator">Ethan Miller</h4>
-            <p class="project-desc">Edición de gancho rápido de 3 segundos para shorts de crecimiento personal.</p>
-          </div>
-        </div>
-        
-        <!-- Proyecto 5: Largo -->
-        <div class="portfolio-card reveal" data-category="long">
-          <div class="portfolio-thumbnail" style="background: linear-gradient(135deg, #382c0f, #140f05);">
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="project-tag">Documental</span>
-            <button class="project-play-btn" data-video="ibod_video_slider_principal.webm">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                <path d="M8 5v14l11-7z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="portfolio-info">
-            <h4 class="project-creator">Joshua Miles</h4>
-            <p class="project-desc">Minidocumental cinematográfico con diseño de sonido inmersivo.</p>
-          </div>
-        </div>
-        
-        <!-- Proyecto 6: Corto -->
-        <div class="portfolio-card reveal" data-category="short">
-          <div class="portfolio-thumbnail" style="background: linear-gradient(135deg, #132b35, #051014);">
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="project-tag">Instagram Reels</span>
-            <button class="project-play-btn" data-video="ibod_video_slider_principal.webm">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                <path d="M8 5v14l11-7z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="portfolio-info">
-            <h4 class="project-creator">Nathan Brooks</h4>
-            <p class="project-desc">Clips dinámicos tipo podcast con subtítulos automáticos e iconografía pop.</p>
-          </div>
-        </div>
+        <button class="carousel-nav-btn next" id="portfolio-next" aria-label="Siguiente trabajo">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
       </div>
     </div>
   </section>
