@@ -804,7 +804,7 @@
 .process-section .step-card:hover {
   transform: scale(1.04) translateY(-4px);
   border-color: rgba(2, 142, 224, 0.45);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 25px rgba(2, 142, 224, 0.15);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08), 0 0 25px rgba(2, 142, 224, 0.15);
   z-index: 2;
 }
 

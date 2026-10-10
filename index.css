@@ -1427,7 +1427,22 @@ body {
   line-height: 1.6;
 }
 
-/* Process Section */
+/* Process Section (Fondo claro idéntico a la sección final / footer) */
+.process-section {
+  background-color: #dde2e8;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.process-section .section-title {
+  color: #0a0a0e;
+}
+
+.process-section .section-subtitle {
+  color: #4b5563;
+}
+
 .process-steps {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1436,13 +1451,23 @@ body {
 }
 
 .step-card {
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-primary);
+  background-color: #ffffff;
+  border: 1.5px solid rgba(0, 0, 0, 0.07);
   border-radius: var(--radius-md);
   padding: 32px;
   position: relative;
   overflow: hidden;
   height: 100%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease,
+              box-shadow 0.38s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(2, 142, 224, 0.4);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08), 0 0 25px rgba(2, 142, 224, 0.15);
 }
 
 .step-num-bg {
@@ -1450,15 +1475,15 @@ body {
   right: 24px;
   top: 24px;
   font-family: var(--font-display);
-  font-size: 1.5rem; /* Más chica */
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
   line-height: 1;
-  color: var(--celeste); /* Color celeste del design system */
+  color: var(--celeste);
   transition: color var(--transition-normal);
 }
 
 .step-card:hover .step-num-bg {
-  color: var(--celeste-hover); /* Cambio suave al hover */
+  color: var(--celeste-hover);
 }
 
 .step-content {
@@ -1470,12 +1495,14 @@ body {
   font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 700;
+  color: #0a0a0e;
   margin-bottom: 12px;
 }
 
 .step-desc {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
+  color: #4b5563;
+  font-size: 0.92rem;
+  line-height: 1.6;
 }
 
 .process-cta-container {
